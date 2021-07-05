@@ -71,6 +71,8 @@ export default class FileDrop{
         this.files.forEach(function (file) {
             Event.dispatch(Event.DROP_FILE, file);
         });
+
+        this.files = [];
     }
 
 }

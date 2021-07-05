@@ -16,7 +16,7 @@ export default class Result{
          * but before adding them into the storage.
          */
         this.file = "";
-        this.gameId = null;
+        this.gameId = -1;
     }
 
     data(){

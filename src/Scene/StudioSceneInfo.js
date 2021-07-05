@@ -6,16 +6,25 @@ export default class StudioSceneInfo{
 
     /**
      *
-     * @param props { {name: string, onRender: function, camera: Camera, element: jQuery} }
+     * @param props { {name: string, onRender: function, camera: Camera, control: function, element: jQuery} }
      */
     constructor(props) {
         this.name = props.name;
         this.scene = new ThreeScene();
-        this.control = new ThreeScene();
+        let _this = this;
 
-        this.onRender = props.onRender;
         this.camera = props.camera;
         this.element = props.element;
+
+        this.control = props.control === null ? null : new props.control(this);
+
+
+        this.onRender = function () {
+            if (_this.control !== null)
+                _this.control.update();
+
+            props.onRender();
+        };
     }
 
 }

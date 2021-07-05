@@ -7,6 +7,7 @@ import WebGL from "./WebGL.js";
 
 export default class Studio{
 
+    static FOV = 57.29578; //Default MH2 FOV
 
     /**
      * Global {Result} types for the {Storage} class

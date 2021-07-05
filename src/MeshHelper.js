@@ -27,6 +27,21 @@ export default class MeshHelper{
                 gameId: gameId,
                 name: name
             });
+
+            console.log("SEARCH", {
+                type: Studio.TEXTURE,
+                gameId: gameId,
+                name: name
+            });
+
+            if (texture.length === 0){
+                result.push(new MeshBasicMaterial({
+                    wireframe: true,
+                    vertexColors: VertexColors
+                }));
+                return;
+            }
+
             result.push(new MeshBasicMaterial({
                 // wireframe: true,
                 map: texture[0].data().createThreeTexture(), //todo: actual we need to select the correct txd (model.dff use his model.txd)

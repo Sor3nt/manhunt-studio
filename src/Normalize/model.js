@@ -1,8 +1,8 @@
 
-import Renderware from "./../Plugin/Loader/Renderware/Renderware.js";
 import Helper from './../Helper.js'
 import {Bone, Face3, Matrix4, Skeleton, Vector2, Vector3, Vector4} from "./../Vendor/three.module.js";
 import AbstractNormalize from "./Abstract.js";
+// import MeshHelper from "../MeshHelper.js";
 const assert = Helper.assert;
 
 
@@ -17,6 +17,10 @@ export default class NormalizeModel extends AbstractNormalize{
         this.allBonesMesh = [];
         this.#normalize();
     }
+    //
+    // createThreeModel(){
+    //     return MeshHelper.convertFromNormalized(this);
+    // }
 
     #getFrameBones(){
 

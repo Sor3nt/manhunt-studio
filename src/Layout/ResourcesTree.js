@@ -3,6 +3,7 @@ import NBinary from "./../NBinary.js";
 import Loader from "../Plugin/Loader.js";
 import FileTree from "../Plugin/Component/FileTree.js";
 import Studio from "./../Studio.js";
+import Storage from "./../Storage.js";
 
 export default class ResourcesTree {
 
@@ -51,6 +52,8 @@ export default class ResourcesTree {
 
         let _this = this;
         parsed.forEach(function (entry) {
+            Storage.add(entry);
+
             _this.fileTree.addEntry(entry);
         });
 

@@ -14,15 +14,17 @@ export default class StudioScene{
      * @param element {jQuery}
      * @param name {string}
      * @param camera {Camera}
+     * @param control {function}
      * @param onRender {function}
      * @returns {StudioSceneInfo}
      */
-    static createSceneInfo(element, name, camera, onRender){
+    static createSceneInfo(element, name, camera, control, onRender){
 
         let info = new StudioSceneInfo({
             name: name,
             onRender: onRender,
             camera: camera,
+            control: control,
             element: element
         });
 

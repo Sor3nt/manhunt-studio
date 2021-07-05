@@ -7,7 +7,6 @@ export class ComponentSection{
      */
     container = {};
 
-
     /**
      * @param name {string}
      * @param element {jQuery}
@@ -27,15 +26,12 @@ export class ComponentSection{
 
         this.tabNavigation.add(component);
     }
-
-
 }
 
 export default class Components{
 
     static sections = {};
     static components = [];
-
 
     static registerSections(){
 
@@ -60,6 +56,4 @@ export default class Components{
 
         return Components.sections[name];
     }
-
-
 }

@@ -23,6 +23,7 @@ export default class SceneTexture extends SceneAbstract{
             canvas,
             this.name,
             new PerspectiveCamera( 35, 1, 1, 100 ),
+            null,
             function(){}
         );
 
