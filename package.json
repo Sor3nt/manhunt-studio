@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "fflate": "^0.7.0",
+    "jquery": "^3.6.0"
+  },
+  "devDependencies": {
+    "mocha": "^8.4.0"
+  },
+  "name": "manhunt-studio",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "find ./test -name '*.js' | xargs mocha -R spec"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

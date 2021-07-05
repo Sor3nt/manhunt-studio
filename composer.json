@@ -1,0 +1,5 @@
+{
+    "name": "sor3nt/manhunt-studio",
+    "autoload": { "psr-0": { "": "mht/" } },
+    "require": {}
+}
