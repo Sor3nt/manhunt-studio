@@ -15,11 +15,14 @@ export default class TabNavigation{
      * @param component {AbstractComponent}
      */
     add(component){
-        let tab = jQuery('<li>').html(component.name).click(function () {
+        let tab = jQuery('<li>').html(component.displayName).click(function () {
             component.onFocus();
         });
 
+        tab.append(jQuery('<span class="tab-close">x</span>'));
+
         this.tabs.append(tab);
+        component.element.addClass('component-' + component.name);
         this.content.append(component.element);
 
         this.relation[component.name] = {

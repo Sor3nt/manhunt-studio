@@ -1,0 +1,22 @@
+.nav-tabs li{
+    position: relative;
+
+    padding: 3px 20px 3px 5px;
+    background: #606060;
+    font-size: 11px;
+    color: #fff;
+    border-radius: 5px 5px 0 0;
+}
+
+
+.nav-tabs li span.tab-close {
+    position: absolute;
+    right: 5px;
+    top:0;
+
+}
+
+.nav-tabs-content {
+    color: #d7d7d7;
+    background: #3e3e3e;
+}

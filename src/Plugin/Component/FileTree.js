@@ -1,7 +1,8 @@
 import AbstractComponent from "./Abstract.js";
 
 export default class FileTree extends AbstractComponent{
-    name = "FileTree";
+    name = "fileTree";
+    displayName = "Tree";
     element = jQuery('<ul>');
 
     folder = {};

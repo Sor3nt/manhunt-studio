@@ -26,7 +26,7 @@ export default class WebGL{
         let sceneInfo = StudioScene.getStudioSceneInfo(undefined);
         if (sceneInfo === null) return;
 
-        let bbox = sceneInfo.element.getBoundingClientRect();
+        let bbox = sceneInfo.element.parentNode.getBoundingClientRect();
         sceneInfo.camera.aspect = bbox.width / bbox.height;
         sceneInfo.camera.updateProjectionMatrix();
         WebGL.renderer.setSize(bbox.width, bbox.height);

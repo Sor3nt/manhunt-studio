@@ -5,7 +5,8 @@ import WebGL from "../../WebGL.js";
 import MeshHelper from "../../MeshHelper.js";
 
 export default class Model extends AbstractComponent{
-    name = "Model";
+    name = "model";
+    displayName = "Model";
     element = jQuery('<div>');
 
     /**

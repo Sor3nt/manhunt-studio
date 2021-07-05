@@ -4,7 +4,8 @@ import StudioScene from "../../Scene/StudioScene.js";
 import WebGL from "../../WebGL.js";
 
 export default class Texture extends AbstractComponent{
-    name = "Texture";
+    name = "texture";
+    displayName = "Texture";
     element = jQuery('<div>');
 
     /**

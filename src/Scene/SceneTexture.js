@@ -54,13 +54,10 @@ export default class SceneTexture extends SceneAbstract{
     }
 
     display( texture ){
-        // self._resize(texture.image.width, texture.image.height);
-console.log("try to show texture", texture);
+
         let mat = new MeshStandardMaterial();
         mat.name = 'displayTexture';
-        // mat.color.setRGB(0,0,0);
         mat.map = texture;
-        // mat.transparent = texture.format === THREE.RGBA_S3TC_DXT5_Format;
 
         this.outputCube.material = mat;
         this.outputCube.visible = true;

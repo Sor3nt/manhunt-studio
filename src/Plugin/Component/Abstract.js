@@ -4,6 +4,7 @@ import StudioScene from "../../Scene/StudioScene.js";
 export default class AbstractComponent{
 
     name = "Noname Component";
+    displayName = "Noname Component";
     element = jQuery('<div>');
 
     /**

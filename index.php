@@ -6,13 +6,15 @@
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/select2.min.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/component/fileTree.css">
 
     <script type="module" src="/src/Studio.js"></script>
 
 
     <title>Manhunt Studio</title>
 </head>
-<body id="drop_zone">
+<body id="drop_zone" style="background: #262626">
 
 <!---->
 <!--<div class="container-fluid vh-100" style="position: absolute; z-index: 1">-->
@@ -52,7 +54,7 @@
 
             <!-- Main Content -->
             <div class="col h-75" data-component-section="scene" style="position: relative">
-                <div id="webgl" style="position: absolute; top:50px; width: 100%; height: 100%; background: darkseagreen;"></div>
+                <div id="webgl" style="position: absolute; top:50px; width: 100%; height: 100%; background: #3e3e3e;"></div>
 
                 <ul class="nav nav-tabs"></ul>
                 <div class="nav-tabs-content"></div>

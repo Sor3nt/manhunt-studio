@@ -1,0 +1,17 @@
+.component-fileTree{
+    height: calc(100vh - 100px);
+    overflow: scroll;
+}
+
+.component-fileTree, .component-fileTree ul{
+    padding: 5px 0 0 5px;
+    font-size: 12px;
+    font-weight: bold;
+
+}
+
+.component-fileTree li{
+    font-size: 11px;
+    list-style: none;
+
+}
