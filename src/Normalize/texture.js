@@ -6,6 +6,11 @@ import Helper from "../Helper.js";
 
 export default class NormalizeTexture{
 
+    /**
+     * @type { {data: ArrayBuffer, width: int, height: int, format: int } }
+     */
+    texture;
+
     constructor( info ){
 
         this.info = info;

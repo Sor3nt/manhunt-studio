@@ -54,7 +54,7 @@
 
             <!-- Main Content -->
             <div class="col h-75" data-component-section="scene" style="position: relative">
-                <div id="webgl" style="position: absolute; top:50px; width: 100%; height: 100%; background: #3e3e3e;"></div>
+                <div id="webgl" style="position: absolute; top:23px; width: 100%; height: 100%; background: #3e3e3e;"></div>
 
                 <ul class="nav nav-tabs"></ul>
                 <div class="nav-tabs-content"></div>
@@ -79,7 +79,8 @@
 
             <!-- Lower menu -->
             <div class="col h-50" data-component-section="rightLower">
-                col 2 h50
+                <ul class="nav nav-tabs"></ul>
+                <div class="nav-tabs-content"></div>
             </div>
 
         </div>
