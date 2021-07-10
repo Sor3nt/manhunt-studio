@@ -21,11 +21,8 @@ export default class Studio{
     static TVP = 7;
     static ENTITY = 8;
     static MLS = 9;
-
-    /**
-     * @type {Tab}
-     */
-    static tabHandler;
+    static WORLD = 10;
+    static IMPORTED = 11;
 
     /**
      * @type {Config}
@@ -48,10 +45,10 @@ export default class Studio{
 
             WebGL.render();
             //
-            // Studio.config.getGame(0).loadLevel("der2", function () {
-            //     console.log("loaded");
-            //
-            // });
+            Studio.config.getGame(0).loadLevel("der2", function () {
+                console.log("loaded");
+
+            });
 
             // MANHUNT.engine.init();
             // Studio.tabHandler = new Tab(jQuery('#studio-tab-list'), jQuery('#studio-tab-content'));

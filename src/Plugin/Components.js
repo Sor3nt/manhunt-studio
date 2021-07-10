@@ -5,7 +5,7 @@ export class ComponentSection{
     /**
      * @type {jQuery}
      */
-    container = {};
+    container;
 
     /**
      * @param name {string}

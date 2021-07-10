@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="/css/select2.min.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/component/fileTree.css">
+    <link rel="stylesheet" href="/css/component/iconBoxes.css">
+    <link rel="stylesheet" href="/css/fontawesome/css/all.css">
+    <link rel="stylesheet" href="/css/studio.css">
 
     <script type="module" src="/src/Studio.js"></script>
 

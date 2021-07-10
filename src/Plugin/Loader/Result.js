@@ -1,6 +1,11 @@
 
 export default class Result{
 
+    /**
+     * @type {string}
+     */
+    file;
+
     constructor(type, name, offset, props, getData){
 
         this.type = type;
@@ -16,6 +21,7 @@ export default class Result{
          * but before adding them into the storage.
          */
         this.file = "";
+        this.fileName = "";
         this.gameId = -1;
     }
 

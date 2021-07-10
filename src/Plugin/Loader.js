@@ -9,6 +9,7 @@ import { default as ModelManhunt2Pc } from "./Loader/Game/Manhunt2/Pc/Model.js";
 import RenderwareLoader from "./Loader/Renderware.js";
 import Api from "./../Api.js";
 import Storage from "./../Storage.js";
+import Event from "../Event.js";
 
 export default class Loader{
 
@@ -36,8 +37,14 @@ export default class Loader{
 
             results.forEach(function (result) {
                 result.file = file;
+                result.fileName = file.split("/").slice(-1)[0] ;
                 result.gameId = gameId;
                 Storage.add(result);
+
+                Event.dispatch(Event.ENTRY_LOADED, {
+                    entry: result
+                });
+
             });
 
             callback();

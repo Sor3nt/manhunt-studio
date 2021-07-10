@@ -28,12 +28,6 @@ export default class MeshHelper{
                 name: name
             });
 
-            console.log("SEARCH", {
-                type: Studio.TEXTURE,
-                gameId: gameId,
-                name: name
-            });
-
             if (texture.length === 0){
                 result.push(new MeshBasicMaterial({
                     wireframe: true,

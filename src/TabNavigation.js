@@ -9,12 +9,24 @@ export default class TabNavigation{
 
         this.tabs = componentSection.container.find('.nav-tabs');
         this.content = componentSection.container.find('.nav-tabs-content');
+
+        if (this.tabs.length === 0){
+            this.tabs = jQuery('<ul class="nav nav-tabs">');
+            componentSection.container.append(this.tabs);
+        }
+
+        if (this.content.length === 0){
+            this.content = jQuery('<div class="nav-tabs-content">');
+            componentSection.container.append(this.content);
+        }
     }
 
     /**
      * @param component {AbstractComponent}
      */
     add(component){
+        if (this.relation[component.name] !== undefined)
+            return;
         let tab = jQuery('<li>').html(component.displayName).click(function () {
             component.onFocus();
         });
