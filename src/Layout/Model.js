@@ -24,6 +24,8 @@ export default class Model {
      */
     displayEntry(entry){
         this.model = new ModelComponent({ entry: entry });
+        this.model.displayName = entry.name;
         this.section.add(this.model);
+        this.section.tabNavigation.show(this.model.displayName);
     }
 }

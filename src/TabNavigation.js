@@ -1,3 +1,5 @@
+import Event from "./Event.js";
+
 export default class TabNavigation{
 
     /**
@@ -45,8 +47,6 @@ export default class TabNavigation{
             tab: tab,
             component: component
         };
-
-
     }
 
     /**
@@ -64,5 +64,8 @@ export default class TabNavigation{
         this.activeRelation.component.element.show();
 
         this.activeRelation.component.onFocus();
+
+        if(this.activeRelation.component.props.entry !== undefined)
+            Event.dispatch(Event.VIEW_ENTRY, { entry: this.activeRelation.component.props.entry });
     }
 }

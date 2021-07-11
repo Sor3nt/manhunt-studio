@@ -11,7 +11,7 @@ export default class ResourceInfo {
         // this.textureInfo = new TextureInfo({});
 
         let _this = this;
-        Event.on(Event.OPEN_ENTRY, function (props) {
+        Event.on(Event.VIEW_ENTRY, function (props) {
             _this.setEntry(props.entry);
         });
 
