@@ -13,6 +13,7 @@ export default class ResourcesTree {
      * @param section {ComponentSection}
      */
     constructor(section){
+        this.section = section;
         let _this = this;
         Event.on(Event.DROP_FILE, function (file) {
             _this.fileDropped(file);
@@ -28,11 +29,11 @@ export default class ResourcesTree {
          */
         this.trees = {};
 
-        let iconBox = new IconBoxes({
+        this.iconBox = new IconBoxes({
             onClick: this.showTree
         });
 
-        section.container.find('.nav-tabs-content').append(iconBox.element);
+        section.tabNavigation.content.append(this.iconBox.element);
 
         jQuery.each({
             [Studio.WORLD]: 'globe-americas',
@@ -40,33 +41,37 @@ export default class ResourcesTree {
             [Studio.TEXTURE]: 'images',
             [Studio.ANIMATION]: 'running',
         }, function (typeId, icon) {
+            _this.createTree(typeId, icon);
+        });
 
-            let tree = new FileTree({
-                processType: parseInt(typeId),
-                onEntryClick: _this.onFileTreeNodeClick
-            });
+        //show per default the MODEL section
+        this.iconBox.show(Studio.MODEL);
+    }
 
-            let container = jQuery('<div>');
-            let searchField = jQuery('<div>').html(
-                `<div class="filter input-group input-group-sm">
+    createTree(typeId, icon){
+
+        let tree = new FileTree({
+            processType: parseInt(typeId),
+            onEntryClick: this.onFileTreeNodeClick
+        });
+
+        let container = jQuery('<div>');
+        let searchField = jQuery('<div>').html(
+            `<div class="filter input-group input-group-sm">
                       <input type="text" class="form-control">
                       <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
                       </div>
                     </div>`
-            );
-            container.append(searchField);
-            container.append(tree.element);
+        );
+        container.append(searchField);
+        container.append(tree.element);
 
-            container.hide();
-            iconBox.add(typeId, icon, container);
+        container.hide();
+        this.iconBox.add(typeId, icon, container);
 
-            _this.trees[typeId] = tree;
-            section.container.find('.nav-tabs-content').append(container);
-
-        });
-
-        iconBox.show(Studio.TEXTURE);
+        this.trees[typeId] = tree;
+        this.section.tabNavigation.content.append(container);
     }
 
     showTree(typeId){
@@ -107,7 +112,6 @@ export default class ResourcesTree {
      * @param file {{binary:NBinary, name: string}}
      */
     fileDropped(file){
-        let _this = this;
         let parsed = Loader.parse(file.binary, {});
         parsed.forEach(function (entry) {
             Storage.add(entry);

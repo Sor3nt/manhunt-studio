@@ -1,0 +1,23 @@
+.component-info ul li {
+    padding: 5px 10px 0 10px;
+    font-size: 12px;
+}
+
+.component-info ul li span {
+    text-decoration: underline;
+}
+
+.component-info ul li div {
+    float: right;
+    text-align: right;
+    font-size: 10px;
+}
+
+.component-info ul.material li {
+    padding:0;
+    cursor: pointer;
+}
+
+.component-info ul.material li:hover {
+    text-decoration: underline;
+}

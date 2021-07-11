@@ -2,6 +2,8 @@ import AbstractComponent from "./Abstract.js";
 import Studio from "../../Studio.js";
 import NormalizeTexture from "../../Normalize/texture.js";
 import Renderware from "../Loader/Renderware/Renderware.js";
+import Event from "../../Event.js";
+import Storage from "../../Storage.js";
 
 export default class ResourceInfo extends AbstractComponent{
 
@@ -33,12 +35,46 @@ export default class ResourceInfo extends AbstractComponent{
 
                 let object = normalizedModel.getObjects()[0];
 
+                result.push({
+                    label: 'File',
+                    value: entry.file
+                });
 
                 result.push({
                     label: 'Skinned',
                     value: object.skinning ? 'Yes' : 'No'
                 });
-                // console.log(normalizedModel, object);
+
+                result.push({
+                    label: 'Vertex Count',
+                    value: normalizedModel.data.vertexCount
+                });
+
+                let materialInfo = jQuery('<ul>').addClass('material');
+                object.material.forEach(function (name) {
+                    (function (name) {
+
+                        materialInfo.append(jQuery('<li>').html(name).click(function () {
+
+                            let texture = Storage.findBy({
+                                type: Studio.TEXTURE,
+                                gameId: entry.gameId,
+                                name: name
+                            })[0];
+
+                            Event.dispatch(Event.OPEN_ENTRY, { entry: texture });
+
+                        }));
+                    })(name);
+                });
+
+                result.push({
+                    label: 'Material',
+                    value: materialInfo
+                });
+
+
+                console.log(normalizedModel, object);
 
                 break;
             case Studio.TEXTURE:
@@ -52,6 +88,8 @@ export default class ResourceInfo extends AbstractComponent{
                     value: data.texture.width + 'x' + data.texture.height
                 });
 
+
+                //TODO: die info sollte aus einer texture class kommen und nicht hier bestimmt werden
                 switch (data.info.rasterFormat & 0xf00) {
                     case Renderware.RASTER_565:
                         result.push({
@@ -80,8 +118,6 @@ export default class ResourceInfo extends AbstractComponent{
                         });
                 }
 
-
-
                 break;
 
         }
@@ -89,8 +125,8 @@ export default class ResourceInfo extends AbstractComponent{
         let container = jQuery('<ul>');
         result.forEach(function (info) {
             let li = jQuery('<li>');
-            li.append(jQuery('<span>').html(info.label));
-            li.append(info.value);
+            li.append(jQuery('<span>').append(info.label));
+            li.append(jQuery('<div>').append(info.value));
             container.append(li);
         });
 

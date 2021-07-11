@@ -1,4 +1,4 @@
-import {SpotLight, SkeletonHelper, GridHelper, Mesh,MeshStandardMaterial,PerspectiveCamera, HemisphereLight, CubeGeometry} from "../Vendor/three.module.js";
+import {SkinnedMesh, SpotLight, SkeletonHelper, GridHelper, Mesh,MeshStandardMaterial,PerspectiveCamera, HemisphereLight, CubeGeometry} from "../Vendor/three.module.js";
 import StudioScene from "./StudioScene.js";
 import SceneAbstract from "./Abstract.js";
 import Studio from "../Studio.js";
@@ -42,12 +42,18 @@ export default class SceneModel extends SceneAbstract{
 
     }
 
+    /**
+     *
+     * @param model {Group}
+     */
     display( model ){
 
         this.sceneInfo.scene.add(model);
 
-        const helper = new SkeletonHelper( model );
-        this.sceneInfo.scene.add( helper );
+        if (model.children[0] instanceof SkinnedMesh){
+            const helper = new SkeletonHelper( model );
+            this.sceneInfo.scene.add( helper );
+        }
     }
 
 }
