@@ -1,6 +1,9 @@
 import AbstractLoader from "./../../../Abstract.js";
 import Result from "../../../Result.js";
 import NBinary from "../../../../../NBinary.js";
+import Studio from "../../../../../Studio.js";
+import {DDSLoader} from "../../../../../Vendor/three.dds.loader.js";
+import NormalizeTexture from "../../../../../Normalize/texture.js";
 
 export default class Texture extends AbstractLoader{
     static name = "Texture (Manhunt 2 PC)";
@@ -28,12 +31,20 @@ export default class Texture extends AbstractLoader{
         let currentOffset = binary.consume(4, 'uint32');
 
         while(count--){
+            binary.setCurrent(currentOffset);
             let nextOffset = binary.consume(4, 'uint32');
+            binary.seek(4); //prev offset
+            let name = binary.getString(0, false);
+
+            binary.setCurrent(currentOffset + 96);
+
+            let dataOffset = binary.consume(4,'uint32');
             binary.seek(4);
-            let name = binary.consume(32, 'nbinary').getString(0, false);
+            let size = binary.consume(4,'uint32');
 
 
-            (function (offset, name) {
+
+            (function (offset, size, name) {
                 results.push(new Result(
                     Studio.TEXTURE,
                     name,
@@ -41,13 +52,13 @@ export default class Texture extends AbstractLoader{
                     {},
                     function(){
                         binary.setCurrent(offset);
-
-                        return MANHUNT.converter.dds2texture(
-                            Texture.parseTexture(binary)
-                        );
+                        let dds = binary.consume(size, 'nbinary');
+                        let texture = (new DDSLoader()).parse(dds.data);
+                        texture.name = name;
+                        return new NormalizeTexture(texture);
                     }
                 ));
-            })(currentOffset, name);
+            })(dataOffset, size, name);
 
             currentOffset = nextOffset;
             if (currentOffset === 36) break;

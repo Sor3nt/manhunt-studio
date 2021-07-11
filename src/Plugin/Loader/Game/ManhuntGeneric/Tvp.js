@@ -10,9 +10,7 @@ export default class Tvp extends AbstractLoader{
      * @returns {boolean}
      */
     static canHandle(binary){
-        let current = binary.current();
         let text = binary.data.toString();
-        binary.setCurrent(current);
 
         text = text.replace(/#.*/g, '');
         let matches = text.match(/(#FORCE\n)?RECORD\s(.*\s)*?END/mig);

@@ -52,6 +52,11 @@ export default class Studio{
 
             });
 
+            Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
+                console.log("loaded");
+
+            });
+
             // MANHUNT.engine.init();
             // Studio.tabHandler = new Tab(jQuery('#studio-tab-list'), jQuery('#studio-tab-content'));
             //

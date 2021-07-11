@@ -8,7 +8,6 @@ export default class ResourceInfo {
      */
     constructor(section){
         this.section = section;
-        // this.textureInfo = new TextureInfo({});
 
         let _this = this;
         Event.on(Event.VIEW_ENTRY, function (props) {

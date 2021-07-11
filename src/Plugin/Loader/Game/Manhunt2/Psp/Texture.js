@@ -1,6 +1,7 @@
 import AbstractLoader from "./../../../Abstract.js";
 import Result from "../../../Result.js";
 import NBinary from "../../../../../NBinary.js";
+import Studio from "../../../../../Studio.js";
 
 export default class Texture extends AbstractLoader{
     static name = "Texture (Manhunt 2 PSP)";
@@ -11,6 +12,7 @@ export default class Texture extends AbstractLoader{
      */
     static canHandle(binary){
         //TCDT
+        return false;
         return AbstractLoader.checkFourCC(binary,1413759828);
     }
 

@@ -91,13 +91,18 @@ export default class Loader{
     static parse(binary, options){
         options = options || {};
 
+        let current = binary.current();
+
         for (let i in Loader.plugins){
             if (!Loader.plugins.hasOwnProperty(i))
                 continue;
 
             let plugin = Loader.plugins[i];
-            if (plugin.canHandle(binary) === false)
+            if (plugin.canHandle(binary) === false){
+                binary.setCurrent(current);
                 continue;
+            }
+            binary.setCurrent(current);
 
             Status.set(`Create List from binary (Size: ${binary.length()})`);
             return plugin.list(binary, options);

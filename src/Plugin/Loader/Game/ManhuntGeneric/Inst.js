@@ -121,8 +121,6 @@ export default class Inst extends AbstractLoader{
      */
     static canHandle(binary){
 
-        let current = binary.current();
-
         let count = binary.consume(4, 'int32');
         if (count > binary.remain()) return false;
 
@@ -132,7 +130,6 @@ export default class Inst extends AbstractLoader{
         }
 
         let remain = binary.remain();
-        binary.setCurrent(current);
 
         return remain === calcSize;
     }

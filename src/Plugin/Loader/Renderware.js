@@ -92,7 +92,6 @@ export default class RenderwareLoader extends AbstractLoader{
                     break;
 
                 case Renderware.CHUNK_TEXDICTIONARY:
-                    // binary.setCurrent(current);
 
                     (function (binary) {
 
@@ -105,18 +104,18 @@ export default class RenderwareLoader extends AbstractLoader{
                             switch ( texNative.result.rasterFormat & 0xf00 ) {
 
                                 case Renderware.RASTER_565:
-                                    texNative.result.mipmap[0] = Helper.dxt().decodeBC1(texNative.result.mipmap[0], texNative.result.width[0], texNative.result.height[0]);
-                                    texNative.result.format = RGBAFormat;
+                                    texNative.texture.mipmaps[0].data = Helper.dxt().decodeBC1(texNative.texture.mipmaps[0].data, texNative.texture.width, texNative.texture.height);
+                                    texNative.texture.format = RGBAFormat;
                                     break;
 
                                 case Renderware.RASTER_1555:
-                                    texNative.result.mipmap[0] = Helper.dxt().decodeBC1(texNative.result.mipmap[0], texNative.result.width[0], texNative.result.height[0], true);
-                                    texNative.result.format = RGBFormat;
+                                    texNative.texture.mipmaps[0].data = Helper.dxt().decodeBC1(texNative.texture.mipmaps[0].data, texNative.texture.width, texNative.texture.height, true);
+                                    texNative.texture.format = RGBFormat;
                                     break;
 
                                 case Renderware.RASTER_4444:
-                                    texNative.result.mipmap[0] = Helper.dxt().decodeBC2(texNative.result.mipmap[0], texNative.result.width[0], texNative.result.height[0], false);
-                                    texNative.result.format = RGBAFormat;
+                                    texNative.texture.mipmaps[0].data = Helper.dxt().decodeBC2(texNative.texture.mipmaps[0].data, texNative.texture.width, texNative.texture.height, false);
+                                    texNative.texture.format = RGBAFormat;
                                     break;
 
                                 // case Renderware.RASTER_8888:
@@ -151,7 +150,7 @@ export default class RenderwareLoader extends AbstractLoader{
                                     //hack since three.js can not (currently) read the BC1 / BC2 textures (?)
                                     convertUnsupportedThreeTexture(texNative);
 
-                                    return new NormalizeTexture(texNative.result);
+                                    return new NormalizeTexture(texNative.texture);
                                 }
                             ));
 

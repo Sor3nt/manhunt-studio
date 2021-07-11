@@ -5,6 +5,14 @@ const assert = Helper.assert;
 
 export default class TextureNative extends Chunk{
 
+    texture = {
+        mipmapCount: 1,
+        mipmaps: [],
+        width: 0,
+        height: 0,
+        format: 0
+    };
+
     result = {
         platform: null,
         filterFlags: null,
@@ -186,8 +194,19 @@ export default class TextureNative extends Chunk{
         assert(bufferSize, struct.binary.remain(), "remained data does not match!");
 // console.log("ee", struct.binary.consume(bufferSize, 'nbinary'));
 // die;
-        this.result.mipmap = [];
-        this.result.mipmap.push(new  DataView(struct.binary.consume(bufferSize, 'arraybuffer')));
+
+        this.texture.mipmaps.push({
+            data: struct.binary.consume(bufferSize, 'dataview'),
+            width: this.result.width[0],
+            height: this.result.height[0]
+        });
+
+        this.texture.width = this.result.width[0];
+        this.texture.height = this.result.height[0];
+        this.texture.name = this.result.name;
+
+        // this.result.mipmap = [];
+        // this.result.mipmap.push(new  DataView(struct.binary.consume(bufferSize, 'arraybuffer')));
 
         // console.log(this.result.rasterType);
 
@@ -215,10 +234,40 @@ export default class TextureNative extends Chunk{
 
     parseXbox(struct){
 
+        /**
+         // 4354= 16bit <- ALWAYS IF XBOX
+         // 4358= 8bpp
+         // 4354= 32bpp
+         // 4358= DXT3
+         // 0000= DXT1
+         // 4354= NONRECOMPRESIBLE DXT - hud and such images.
+         */
         this.result.filterFlags = struct.binary.consume(4, 'uint32');
 
         this.result.name = struct.binary.consume(32, 'nbinary').getString(0);
         this.result.alphaName = struct.binary.consume(32, 'nbinary').getString(0);
+
+        /**
+         // alpha flags
+         // 512 = 16bpp no alpha
+         // 768 = 16bpp with alpha
+
+         // 9728= 8bpp no alpha
+         // 9472= 8bpp with alpha
+
+         // 1536= 32bpp no alpha   < -+- SET IF ANY XBOX
+         // 1280= 32bpp with alpha < /
+
+         // 512? = dxt1 no alpha
+         // 768 = dxt3 with alpha
+         // ? = dxt3 no alpha
+
+         // 256 = used in generic.txd (first of 2 duplicates in img file)
+         // and in hud.txd too
+
+         // 6 = was used for body in ashdexx's sample
+         // custom xbox working txd
+         */
         this.result.rasterFormat = struct.binary.consume(4, 'uint32');
         this.result.hasAlpha = struct.binary.consume(4, 'uint32');
         this.result.width.push(struct.binary.consume(2, 'uint16'));

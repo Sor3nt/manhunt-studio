@@ -1,4 +1,5 @@
 import Manhunt from './Game/Manhunt.js';
+import Manhunt2 from './Game/Manhunt2.js';
 import AbstractGame from './Game/Abstract.js';
 
 export default class Game{
@@ -30,6 +31,7 @@ export default class Game{
 
     static registerGames(){
         this.registerGame(Manhunt);
+        this.registerGame(Manhunt2);
     }
 
     static registerGame( game ){

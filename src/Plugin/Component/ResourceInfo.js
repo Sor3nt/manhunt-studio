@@ -89,33 +89,33 @@ export default class ResourceInfo extends AbstractComponent{
                 });
 
                 //TODO: die info sollte aus einer texture class kommen und nicht hier bestimmt werden
-                switch (data.info.rasterFormat & 0xf00) {
-                    case Renderware.RASTER_565:
-                        result.push({
-                            label: 'Format',
-                            value: 'DXT 1 (RGBA)'
-                        });
-                        break;
-                    case Renderware.RASTER_1555:
-                        result.push({
-                            label: 'Format',
-                            value: 'DXT 1 (RGB)'
-                        });
-
-                        break;
-                    case Renderware.RASTER_4444:
-                        result.push({
-                            label: 'Format',
-                            value: 'DXT 2'
-                        });
-
-                        break;
-                    default:
-                        result.push({
-                            label: 'Format',
-                            value: 'Unknown ' + (data.info.rasterFormat & 0xf00)
-                        });
-                }
+                // switch (data.info.rasterFormat & 0xf00) {
+                //     case Renderware.RASTER_565:
+                //         result.push({
+                //             label: 'Format',
+                //             value: 'DXT 1 (RGBA)'
+                //         });
+                //         break;
+                //     case Renderware.RASTER_1555:
+                //         result.push({
+                //             label: 'Format',
+                //             value: 'DXT 1 (RGB)'
+                //         });
+                //
+                //         break;
+                //     case Renderware.RASTER_4444:
+                //         result.push({
+                //             label: 'Format',
+                //             value: 'DXT 2'
+                //         });
+                //
+                //         break;
+                //     default:
+                //         result.push({
+                //             label: 'Format',
+                //             value: 'Unknown ' + (data.info.rasterFormat & 0xf00)
+                //         });
+                // }
 
                 break;
 

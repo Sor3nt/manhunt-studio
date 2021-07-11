@@ -12,9 +12,7 @@ export default class Glg extends AbstractLoader{
      * @returns {boolean}
      */
     static canHandle(binary){
-        let current = binary.current();
         let text = binary.toString();
-        binary.setCurrent(current);
 
         text = text.replace(/\#.*/g, '');
         var matches = text.match(/(\#FORCE\n)?RECORD\s(.*\s)*?END/mig);
