@@ -1,0 +1,26 @@
+ul.icon-boxes {
+    padding: 0;
+    display: inline-block;
+    background: #171717;
+    width: 100%;
+
+}
+
+ul.icon-boxes li {
+    list-style: none;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    float: left;
+    text-align: center;
+}
+
+ul.icon-boxes li:hover{
+    background: #3e3e3e;
+}
+
+
+ul.icon-boxes li i{
+    padding-top: 8px;
+    font-size: 30px;
+}

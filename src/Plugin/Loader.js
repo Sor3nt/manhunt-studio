@@ -37,7 +37,8 @@ export default class Loader{
 
             results.forEach(function (result) {
                 result.file = file;
-                result.fileName = file.split("/").slice(-1)[0] ;
+                result.fileName = file.split("/").slice(-1)[0].split(".")[0];
+                result.level = file.split("/")[1];
                 result.gameId = gameId;
                 Storage.add(result);
 

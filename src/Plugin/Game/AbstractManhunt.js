@@ -12,17 +12,17 @@ export default class AbstractManhunt extends AbstractGame{
      */
     processLevel(){
         this.createEntities();
-
-        let mapEntries = Storage.findBy({
-            type: Studio.MAP,
-            gameId: this.gameId
-        });
-
-        mapEntries.forEach(function (map) {
-
-            let mesh = MeshHelper.convertFromNormalized( map );
-            console.log("map data", mesh);
-        });
+        //
+        // let mapEntries = Storage.findBy({
+        //     type: Studio.MAP,
+        //     gameId: this.gameId
+        // });
+        //
+        // mapEntries.forEach(function (map) {
+        //
+        //     // let mesh = MeshHelper.convertFromNormalized( map );
+        //     // console.log("map data", mesh);
+        // });
 
 
     }

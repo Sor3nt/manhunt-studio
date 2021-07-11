@@ -73,11 +73,18 @@ export default class FileTree extends AbstractComponent{
     onParentClick(entry){
         let usedParentNode = this.getParentNode(entry);
 
-        if (this.activeParent !== undefined)
-            this.activeParent.children.hide();
+        if (this.activeParent !== undefined){
+            this.activeParent.children.animate({
+                left: "100%"
+            }, 300);
+            this.activeParent.element.removeClass('active');
+        }
 
         this.activeParent = usedParentNode;
-        usedParentNode.children.show();
+        usedParentNode.children.css('left', "100%").show().animate({
+            left: "50%"
+        });
+        usedParentNode.element.addClass('active');
 
     }
 
@@ -116,8 +123,9 @@ export default class FileTree extends AbstractComponent{
 
             //Gamefolder name
             if (usedParentNode === undefined){
+
                 usedParentNode = new TreeNode({
-                    value: jQuery(`<div><i class="icon-game-${game.game}" />${entry.fileName}</div>`),
+                    value: jQuery(`<div><i class="icon-game-${game.game}" /><span class="badge badge-secondary">${entry.level}</span>${entry.fileName}</div>`),
                     onClick: function () {
                         _this.onParentClick(entry);
                     }

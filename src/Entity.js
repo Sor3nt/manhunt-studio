@@ -17,6 +17,11 @@ export default class Entity{
         this.name = instResult.name;
         this.mesh = null;
 
+        /**
+         * @type {Result}
+         */
+        this.model;
+
 
         //Each Entity (inst) is related to one GLG entry
         this.glgEntry = Storage.findOneBy({
@@ -26,8 +31,16 @@ export default class Entity{
         });
 
         Helper.assert(this.glgEntry !== null);
-
         this.#loadModel();
+
+    }
+
+    getMesh(){
+        // if (this.mesh !== null)
+        //     return this.mesh;
+
+        this.mesh = MeshHelper.convertFromNormalized( this.model );
+        return this.mesh;
     }
 
     #loadModel(){
@@ -58,7 +71,8 @@ export default class Entity{
         if (models.length > 1)
             console.warn("There are multiple models for the same name", modelName, models);
 
-        this.mesh = MeshHelper.convertFromNormalized( models[0] );
+        this.model = models[0];
+
 
     }
 

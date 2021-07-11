@@ -22,6 +22,7 @@ export default class Result{
          */
         this.file = "";
         this.fileName = "";
+        this.level = "";
         this.gameId = -1;
     }
 
