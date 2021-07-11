@@ -18,7 +18,6 @@ export default class RenderwareLoader extends AbstractLoader{
         if (binary.length() <= 12) return false;
 
         let current = binary.current();
-        console.log(current,binary);
         let header = Renderware.parseHeader(binary);
         binary.setCurrent(current);
 
@@ -129,8 +128,6 @@ export default class RenderwareLoader extends AbstractLoader{
             binary.setCurrent(current + 12 + header.size);
 
         }
-
-        console.log("end");
 
         return results;
     }

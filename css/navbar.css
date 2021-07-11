@@ -8,6 +8,10 @@
     border-radius: 5px 5px 0 0;
 }
 
+.nav-tabs li.active{
+    background: #262626;
+}
+
 
 .nav-tabs li span.tab-close {
     position: absolute;

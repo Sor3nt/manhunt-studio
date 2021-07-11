@@ -34,6 +34,19 @@ ul {
     padding-left: 2px;
 }
 
+.input-group-sm>.custom-select, .input-group-sm>.form-control, .input-group-sm>.input-group-append>.btn, .input-group-sm>.input-group-append>.input-group-text, .input-group-sm>.input-group-prepend>.btn, .input-group-sm>.input-group-prepend>.input-group-text {
+    font-size: .675rem;
+}
+
+.input-group-sm>.custom-select, .input-group-sm>.form-control:not(textarea) {
+    height: calc(1.5em + 0.1rem + 2px);
+}
+
+.filter input{
+    background: #ccc;
+    height: 40px;
+}
+
 dl, ol, ul {
     margin-bottom: 0;
 }

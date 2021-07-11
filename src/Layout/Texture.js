@@ -20,9 +20,6 @@ export default class Texture {
 
             _this.displayEntry(entry);
         });
-
-
-
     }
 
     /**
@@ -30,7 +27,9 @@ export default class Texture {
      */
     displayEntry(entry){
         this.texture = new TextureComponent({ entry: entry });
+        this.texture.displayName = entry.name;
         this.section.add(this.texture);
+        this.section.tabNavigation.show(this.texture.displayName);
     }
 
 }

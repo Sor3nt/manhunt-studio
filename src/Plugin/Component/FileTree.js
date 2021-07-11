@@ -72,6 +72,8 @@ export default class FileTree extends AbstractComponent{
      */
     onParentClick(entry){
         let usedParentNode = this.getParentNode(entry);
+        if (this.activeParent === usedParentNode)
+            return;
 
         if (this.activeParent !== undefined){
             this.activeParent.children.animate({
@@ -125,8 +127,15 @@ export default class FileTree extends AbstractComponent{
             if (usedParentNode === undefined){
 
                 usedParentNode = new TreeNode({
-                    value: jQuery(`<div><i class="icon-game-${game.game}" /><span class="badge badge-secondary">${entry.level}</span>${entry.fileName}</div>`),
-                    onClick: function () {
+                    value: jQuery(`<div>
+                            <i class="icon-game-${game.game}" />
+                            <div class="badges">
+                                <span class="badge badge-warning">${game.platform}</span>
+                                <span class="badge badge-secondary">${entry.level}</span>
+                            </div>
+                            ${entry.fileName}
+                        </div>`),
+                    onClick: function (props, event) {
                         _this.onParentClick(entry);
                     }
                 });
@@ -150,10 +159,11 @@ export default class FileTree extends AbstractComponent{
 
         let usedParentNode = this.getParentNode(entry);
 
+        let _this = this;
         let node = new TreeNode({
             value: entry.name,
-            onClick: function () {
-
+            onClick: function (props, event) {
+                _this.props.onEntryClick(entry, event);
             }
         });
 

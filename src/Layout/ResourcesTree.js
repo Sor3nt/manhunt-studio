@@ -43,32 +43,30 @@ export default class ResourcesTree {
 
             let tree = new FileTree({
                 processType: parseInt(typeId),
-                // onEntryClick: _this.onFileTreeNodeClick,
-                // onFolderClick: _this.onFolderTreeNodeClick
+                onEntryClick: _this.onFileTreeNodeClick
             });
 
+            let container = jQuery('<div>');
+            let searchField = jQuery('<div>').html(
+                `<div class="filter input-group input-group-sm">
+                      <input type="text" class="form-control">
+                      <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                      </div>
+                    </div>`
+            );
+            container.append(searchField);
+            container.append(tree.element);
 
-            tree.element.hide();
-            iconBox.add(typeId, icon, tree.element);
+            container.hide();
+            iconBox.add(typeId, icon, container);
 
             _this.trees[typeId] = tree;
-            section.container.find('.nav-tabs-content').append(tree.element);
+            section.container.find('.nav-tabs-content').append(container);
 
         });
 
         iconBox.show(Studio.TEXTURE);
-
-        //
-        //
-        // this.fileTree = new FileTree({
-        //     onEntryClick: this.onFileTreeNodeClick,
-        //     onFolderClick: this.onFolderTreeNodeClick
-        // });
-        //
-        // this.fileTree.addFolder(Studio.MODEL,"Manhunt 1");
-        // this.fileTree.addFolder(Studio.TEXTURE,"Imported");
-
-
     }
 
     showTree(typeId){
@@ -80,18 +78,10 @@ export default class ResourcesTree {
             return;
 
         tree.element.show();
-
     }
 
-    onFolderTreeNodeClick(typeId, event){
-        console.log("onFolderTreeNodeClick",typeId);
-
-        event.preventDefault();
-        return false;
-    }
 
     onFileTreeNodeClick(entry, event){
-        console.log("onFileTreeNodeClick",entry);
 
         Event.dispatch(Event.OPEN_ENTRY, { entry: entry });
 
@@ -121,7 +111,6 @@ export default class ResourcesTree {
         let parsed = Loader.parse(file.binary, {});
         parsed.forEach(function (entry) {
             Storage.add(entry);
-
 
             Event.dispatch(Event.ENTRY_LOADED, {
                 entry: entry

@@ -20,15 +20,23 @@
     font-size: 12px;
 }
 
+
 .fileTree > li{
     padding-top: 5px;
     padding-bottom: 5px;
 }
 
-.fileTree .badge {
+.fileTree > li:hover{
+    background: #171717;
+
+}
+
+.fileTree .badges {
     position: absolute;
-    top: -11px;
-    font-size: 7px;
+    top: -14px;
+    font-size: 10px;
+    left: 34px;
+    width: 100%;
 }
 
 .fileTree li.active{
@@ -36,7 +44,7 @@
 }
 .fileTree ul.children{
     position: absolute;
-    top: 50px;
+    top: 76px;
     left: 50%;
     font-size: 10px;
     /*WTF why is this not correct in each viewport ?!*/

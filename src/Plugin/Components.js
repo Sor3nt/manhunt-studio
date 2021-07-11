@@ -22,7 +22,7 @@ export class ComponentSection{
      * @param component {AbstractComponent}
      */
     add(component){
-        console.log("Add new component ", component.name, "to section", this.name, "container", this.container);
+        // console.log("Add new component ", component.name, "to section", this.name, "container", this.container);
 
         this.tabNavigation.add(component);
     }

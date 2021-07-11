@@ -25,10 +25,14 @@ export default class TabNavigation{
      * @param component {AbstractComponent}
      */
     add(component){
-        if (this.relation[component.name] !== undefined)
+        if (this.relation[component.displayName] !== undefined)
             return;
+
+        let _this = this;
         let tab = jQuery('<li>').html(component.displayName).click(function () {
-            component.onFocus();
+
+            _this.show(component.displayName);
+
         });
 
         tab.append(jQuery('<span class="tab-close">x</span>'));
@@ -37,23 +41,28 @@ export default class TabNavigation{
         component.element.addClass('component-' + component.name);
         this.content.append(component.element);
 
-        this.relation[component.name] = {
+        this.relation[component.displayName] = {
             tab: tab,
-            content: component.element
+            component: component
         };
+
+
     }
 
     /**
      * @param name {string}
      */
     show(name){
+
         if (this.activeRelation !== null){
             this.activeRelation.tab.removeClass('active');
-            this.activeRelation.content.hide();
+            this.activeRelation.component.element.hide();
         }
 
         this.activeRelation = this.relation[name];
         this.activeRelation.tab.addClass('active');
-        this.activeRelation.content.show();
+        this.activeRelation.component.element.show();
+
+        this.activeRelation.component.onFocus();
     }
 }
