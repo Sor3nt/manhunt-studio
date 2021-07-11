@@ -4,6 +4,7 @@ import Game from "./Plugin/Game.js";
 import Components from "./Plugin/Components.js";
 import Layout from "./Layout.js";
 import WebGL from "./WebGL.js";
+import Status from "./Status.js";
 
 export default class Studio{
 
@@ -37,6 +38,7 @@ export default class Studio{
 
     static boot() {
 
+        Status.element = jQuery('#status');
         WebGL.boot();
         Studio.registerPlugins();
 

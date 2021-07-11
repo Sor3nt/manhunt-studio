@@ -9,6 +9,8 @@ import TextureNative from "./Renderware/Chunk/TextureNative.js";
 import NormalizeMap from "./../../Normalize/map.js";
 import NormalizeModel from "./../../Normalize/model.js";
 import NormalizeTexture from "./../../Normalize/texture.js";
+import Status from "../../Status.js";
+import {RGBAFormat, RGBFormat} from "../../Vendor/three.module.js";
 
 
 export default class RenderwareLoader extends AbstractLoader{
@@ -50,8 +52,11 @@ export default class RenderwareLoader extends AbstractLoader{
                             offset,
                             {},
                             function(){
+                                Status.set(`Parse Map Data`);
                                 binary.setCurrent(offset);
                                 let tree = Renderware.parse(binary);
+
+                                Status.set(`Normalize Map Data`);
                                 return new NormalizeMap(tree);
                             }
                         ));
@@ -91,6 +96,40 @@ export default class RenderwareLoader extends AbstractLoader{
 
                     (function (binary) {
 
+                        /**
+                         *
+                         * @param texNative {TextureNative}
+                         */
+                        function convertUnsupportedThreeTexture(texNative){
+
+                            switch ( texNative.result.rasterFormat & 0xf00 ) {
+
+                                case Renderware.RASTER_565:
+                                    texNative.result.mipmap[0] = Helper.dxt().decodeBC1(texNative.result.mipmap[0], texNative.result.width[0], texNative.result.height[0]);
+                                    texNative.result.format = RGBAFormat;
+                                    break;
+
+                                case Renderware.RASTER_1555:
+                                    texNative.result.mipmap[0] = Helper.dxt().decodeBC1(texNative.result.mipmap[0], texNative.result.width[0], texNative.result.height[0], true);
+                                    texNative.result.format = RGBFormat;
+                                    break;
+
+                                case Renderware.RASTER_4444:
+                                    texNative.result.mipmap[0] = Helper.dxt().decodeBC2(texNative.result.mipmap[0], texNative.result.width[0], texNative.result.height[0], false);
+                                    texNative.result.format = RGBAFormat;
+                                    break;
+
+                                // case Renderware.RASTER_8888:
+                                //     rgba = info.mipmap[0].buffer;
+                                //     texture.format = RGBAFormat;
+                                //     break;
+                                default:
+                                    console.error("decode not dxt", texture.rasterFormat & 0xf00);
+                                    debugger;
+                            }
+
+                        }
+
                         let texDic = new TexDictionary(binary, header, {});
 
                         texDic.list().forEach(function (info) {
@@ -108,6 +147,9 @@ export default class RenderwareLoader extends AbstractLoader{
 
                                     let texNative = new TextureNative(binary, chunk, {});
                                     texNative.parse();
+
+                                    //hack since three.js can not (currently) read the BC1 / BC2 textures (?)
+                                    convertUnsupportedThreeTexture(texNative);
 
                                     return new NormalizeTexture(texNative.result);
                                 }

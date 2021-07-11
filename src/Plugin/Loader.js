@@ -10,6 +10,7 @@ import RenderwareLoader from "./Loader/Renderware.js";
 import Api from "./../Api.js";
 import Storage from "./../Storage.js";
 import Event from "../Event.js";
+import Status from "../Status.js";
 
 export default class Loader{
 
@@ -23,6 +24,7 @@ export default class Loader{
      * @param callback {function}
      */
     static load( gameId, file, options, callback ){
+        Status.set(`Load File ${file}`);
         Api.load(gameId, file, function (binary) {
             let results = Loader.parse(binary, options);
             if (results === false){
@@ -96,6 +98,8 @@ export default class Loader{
             let plugin = Loader.plugins[i];
             if (plugin.canHandle(binary) === false)
                 continue;
+
+            Status.set(`Create List from binary (Size: ${binary.length()})`);
             return plugin.list(binary, options);
         }
 

@@ -1,6 +1,7 @@
 import {Group, Geometry, BufferGeometry, Mesh, MeshBasicMaterial, SkinnedMesh, Vector3, VertexColors} from "./Vendor/three.module.js";
 import Studio from "./Studio.js";
 import Storage from "./Storage.js";
+import Status from "./Status.js";
 
 export default class MeshHelper{
 
@@ -9,6 +10,7 @@ export default class MeshHelper{
         if (skinning === undefined)
             debugger;
 
+        Status.set(`Search Material...`);
 
         let result = [];
 
@@ -45,6 +47,7 @@ export default class MeshHelper{
             }));
         });
 
+        Status.set(`Search Material done`);
         return result;
     }
 
@@ -54,6 +57,7 @@ export default class MeshHelper{
      * @returns {Group}
      */
     static convertFromNormalized(result){
+        Status.set(`Convert ${result.name} to Mesh...`);
 
         let generic = result.data();
 
@@ -121,6 +125,8 @@ export default class MeshHelper{
 
             group.add(mesh);
         });
+
+        Status.set(`Convert ${result.name} to Mesh done`);
 
         return group;
     }

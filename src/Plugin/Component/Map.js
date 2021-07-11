@@ -5,6 +5,7 @@ import WebGL from "../../WebGL.js";
 import Studio from "../../Studio.js";
 import Storage from "../../Storage.js";
 import MeshHelper from "../../MeshHelper.js";
+import Status from "../../Status.js";
 
 export default class Map extends AbstractComponent{
     name = "map";
@@ -26,6 +27,7 @@ export default class Map extends AbstractComponent{
 
         this.studioScene = new SceneMap(props.entry.name, WebGL.renderer.domElement);
 
+        //we try to set the original player position
         if (props.entry.gameId > -1){
             let playerInst = Storage.findOneBy({
                 gameId: props.entry.gameId,
@@ -35,6 +37,7 @@ export default class Map extends AbstractComponent{
 
             this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y, playerInst.position.z);
         }
+
 
         let mesh = MeshHelper.convertFromNormalized(props.entry);
         this.studioScene.display(mesh);

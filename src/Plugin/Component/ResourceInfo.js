@@ -88,19 +88,18 @@ export default class ResourceInfo extends AbstractComponent{
                     value: data.texture.width + 'x' + data.texture.height
                 });
 
-
                 //TODO: die info sollte aus einer texture class kommen und nicht hier bestimmt werden
                 switch (data.info.rasterFormat & 0xf00) {
                     case Renderware.RASTER_565:
                         result.push({
                             label: 'Format',
-                            value: 'DXT 1'
+                            value: 'DXT 1 (RGBA)'
                         });
                         break;
                     case Renderware.RASTER_1555:
                         result.push({
                             label: 'Format',
-                            value: 'DXT 1'
+                            value: 'DXT 1 (RGB)'
                         });
 
                         break;

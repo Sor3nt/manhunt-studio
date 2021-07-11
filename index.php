@@ -39,7 +39,10 @@
 
 <div class="container-fluid vh-100">
     <div class="row">
-        <div class="col" data-component-section="top"> Main Menu</div>
+        <div class="col" data-component-section="top">
+
+            <div style="float:right; color: #fff" id="status"></div>
+        </div>
     </div>
 
 

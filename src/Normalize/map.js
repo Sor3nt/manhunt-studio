@@ -2,6 +2,7 @@
 import Renderware from "./../Plugin/Loader/Renderware/Renderware.js";
 import Helper from './../Helper.js'
 import AbstractNormalize from "./Abstract.js";
+import Status from "../Status.js";
 const assert = Helper.assert;
 
 
@@ -68,9 +69,12 @@ export default class NormalizeMap extends AbstractNormalize{
 
     #normalize(){
         let meshes = [];
+        Status.set(`Normalize Map Material`);
         let materialList = this.#getMaterialList();
+        Status.set(`Normalize Map Geometry`);
         let geometryValues = this.#getGeometryValues(this.data);
 
+        Status.set(`Normalize Map (convert)`);
         geometryValues.forEach(function (geometryValue) {
 
             meshes.push({
