@@ -19,11 +19,11 @@ export default class StudioSceneInfo{
         this.control = props.control === null ? null : new props.control(this);
 
 
-        this.onRender = function () {
+        this.onRender = function (delta) {
             if (_this.control !== null)
-                _this.control.update();
+                _this.control.update(delta);
 
-            props.onRender();
+            props.onRender(delta);
         };
     }
 

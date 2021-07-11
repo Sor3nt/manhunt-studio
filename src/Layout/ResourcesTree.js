@@ -36,7 +36,7 @@ export default class ResourcesTree {
         section.tabNavigation.content.append(this.iconBox.element);
 
         jQuery.each({
-            [Studio.WORLD]: 'globe-americas',
+            [Studio.MAP]: 'globe-americas',
             [Studio.MODEL]: 'male',
             [Studio.TEXTURE]: 'images',
             [Studio.ANIMATION]: 'running',

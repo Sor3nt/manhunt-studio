@@ -4,6 +4,10 @@ import Helper from "./Helper.js";
 import MeshHelper from "./MeshHelper.js";
 
 export default class Entity{
+    /**
+     * @type {Result}
+     */
+    model;
 
     /**
      *
@@ -16,12 +20,6 @@ export default class Entity{
         this.gameId = gameId;
         this.name = instResult.name;
         this.mesh = null;
-
-        /**
-         * @type {Result}
-         */
-        this.model;
-
 
         //Each Entity (inst) is related to one GLG entry
         this.glgEntry = Storage.findOneBy({
