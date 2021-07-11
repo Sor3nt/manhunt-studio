@@ -10,7 +10,7 @@ export default class Layout{
         new ResourcesTree(Components.getSection('left'));
         new Texture(Components.getSection('scene'));
         new Model(Components.getSection('scene'));
-        new ResourceInfo(Components.getSection('rightLower'));
+        new ResourceInfo(Components.getSection('rightUpper'));
 
 
     }

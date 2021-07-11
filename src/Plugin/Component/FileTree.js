@@ -163,6 +163,8 @@ export default class FileTree extends AbstractComponent{
         let node = new TreeNode({
             value: entry.name,
             onClick: function (props, event) {
+                usedParentNode.children.find('li').removeClass('active');
+                jQuery(event.target).addClass('active');
                 _this.props.onEntryClick(entry, event);
             }
         });

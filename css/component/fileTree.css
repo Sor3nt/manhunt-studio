@@ -20,6 +20,10 @@
     font-size: 12px;
 }
 
+.fileTree li{
+    cursor: pointer;
+}
+
 
 .fileTree > li{
     padding-top: 5px;
@@ -42,9 +46,17 @@
 .fileTree li.active{
     background: #171717;
 }
+.fileTree ul.children li:hover,
+.fileTree ul.children li.active{
+    background: #3e3e3e;
+    margin-left: -5px;
+    padding-left: 5px;
+    font-weight: bold;
+}
+
 .fileTree ul.children{
     position: absolute;
-    top: 76px;
+    top: 61px;
     left: 50%;
     font-size: 10px;
     /*WTF why is this not correct in each viewport ?!*/

@@ -59,7 +59,7 @@ export default class NormalizeTexture{
                 break;
 
             case Renderware.RASTER_4444:
-                rgba = Helper.dxt().decodeBC2(info.mipmap[0], info.width[0], info.height[0], true);
+                rgba = Helper.dxt().decodeBC2(info.mipmap[0], info.width[0], info.height[0], false);
                 texture.format = RGBAFormat;
                 break;
 

@@ -6,6 +6,7 @@ export default class IconBoxes extends AbstractComponent{
     element = jQuery('<ul>').addClass('icon-boxes');
 
     contentByTypeId = {};
+    iconByTypeId = {};
 
     /**
      * @type {jQuery}
@@ -21,10 +22,14 @@ export default class IconBoxes extends AbstractComponent{
 
     show(typeId){
         if (this.active !== undefined)
-            this.active.hide();
+            this.active.hide().removeClass('active');
 
         this.active = this.contentByTypeId[typeId];
-        this.active.show();
+        this.active.show().addClass('active');
+
+        this.element.find('li').removeClass('active');
+        this.iconByTypeId[typeId].addClass('active');
+
     }
 
     onClick(typeId){
@@ -38,12 +43,15 @@ export default class IconBoxes extends AbstractComponent{
         let icon = jQuery(`<i class="fas fa-${iconName}">`);
 
         li.click(function () {
+            _this.element.find('li').removeClass('active');
+            li.addClass('active');
             _this.onClick(typeId);
         });
 
         li.append(icon);
         this.element.append(li);
         this.contentByTypeId[typeId] = content;
+        this.iconByTypeId[typeId] = li;
     }
 
 
