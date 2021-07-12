@@ -33,7 +33,7 @@ export default class Map extends AbstractComponent{
                 gameId: props.entry.gameId,
                 type: Studio.INST,
                 name: 'player'
-            }).getData();
+            }).data();
 
             this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y, playerInst.position.z);
         }

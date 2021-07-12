@@ -118,10 +118,6 @@ export default class RenderwareLoader extends AbstractLoader{
                                     texNative.texture.format = RGBAFormat;
                                     break;
 
-                                // case Renderware.RASTER_8888:
-                                //     rgba = info.mipmap[0].buffer;
-                                //     texture.format = RGBAFormat;
-                                //     break;
                                 default:
                                     console.error("decode not dxt", texture.rasterFormat & 0xf00);
                                     debugger;

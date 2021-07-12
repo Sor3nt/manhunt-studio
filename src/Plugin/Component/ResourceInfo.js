@@ -31,7 +31,7 @@ export default class ResourceInfo extends AbstractComponent{
                 /**
                  * @type {NormalizeModel}
                  */
-                let normalizedModel = entry.getData();
+                let normalizedModel = entry.data();
 
                 let object = normalizedModel.getObjects()[0];
 
@@ -81,7 +81,7 @@ export default class ResourceInfo extends AbstractComponent{
                 /**
                  * @type {NormalizeTexture}
                  */
-                let data = entry.getData();
+                let data = entry.data();
 
                 result.push({
                     label: 'Dimensions',

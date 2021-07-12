@@ -23,7 +23,7 @@ export default class Texture extends AbstractComponent{
 
         this.studioScene = new SceneTexture(props.entry.name, WebGL.renderer.domElement);
         // this.studioScene.name = props.entry.name;
-        this.studioScene.display(props.entry.getData().createThreeTexture());
+        this.studioScene.display(props.entry.data().createThreeTexture());
 
         StudioScene.changeScene(this.studioScene.name);
     }
