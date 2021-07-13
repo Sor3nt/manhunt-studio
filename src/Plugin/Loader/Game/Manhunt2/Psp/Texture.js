@@ -2,9 +2,13 @@ import AbstractLoader from "./../../../Abstract.js";
 import Result from "../../../Result.js";
 import NBinary from "../../../../../NBinary.js";
 import Studio from "../../../../../Studio.js";
+import {DDSLoader} from "../../../../../Vendor/three.dds.loader.js";
+import NormalizeTexture from "../../../../../Normalize/texture.js";
+import Playstation from "../../../../../Helper/Texture/Playstation.js";
+import {RGBAFormat} from "../../../../../Vendor/three.module.js";
 
 export default class Texture extends AbstractLoader{
-    static name = "Texture (Manhunt 2 PSP)";
+    static name = "Texture (Manhunt 2 PSP/PS2)";
 
     /**
      * @param binary {NBinary}
@@ -12,8 +16,15 @@ export default class Texture extends AbstractLoader{
      */
     static canHandle(binary){
         //TCDT
-        return false;
-        return AbstractLoader.checkFourCC(binary,1413759828);
+        let fourCCCheck = AbstractLoader.checkFourCC(binary,1413759828);
+        if (fourCCCheck === false) return false;
+
+        if (binary.length() <= 196)
+            return false;
+
+        binary.seek(192);
+        //DDS
+        return binary.consume(4, 'uint32') !== 542327876;
     }
 
     /**
@@ -25,15 +36,21 @@ export default class Texture extends AbstractLoader{
 
         let results = [];
 
-        binary.seek(8 * 4);
+        binary.seek(32);
         let count = binary.consume(4, 'uint32');
         let currentOffset = binary.consume(4, 'uint32');
 
         while(count--){
+            binary.setCurrent(currentOffset);
             let nextOffset = binary.consume(4, 'uint32');
-            binary.seek(4);
-            let name = binary.consume(64, 'nbinary').getString(0, false);
+            binary.seek(4); //prev offset
+            let name = binary.getString(0, false);
 
+            binary.setCurrent(currentOffset + 72);
+// console.log(currentOffset + 96);
+//             let dataOffset = binary.consume(4,'uint32');
+//             binary.seek(4);
+//             let size = binary.consume(4,'uint32');
 
             (function (offset, name) {
                 results.push(new Result(
@@ -44,12 +61,39 @@ export default class Texture extends AbstractLoader{
                     function(){
                         binary.setCurrent(offset);
 
-                        return MANHUNT.converter.dds2texture(
-                            Texture.parseTexture(binary)
-                        );
+                        let texture = {
+                            width: binary.consume(4, 'uint32'),
+                            height: binary.consume(4, 'uint32'),
+                            bitPerPixel: binary.consume(4, 'uint32'),
+                            rasterFormat: binary.consume(4, 'uint32'),
+                            pixelFormat: binary.consume(4, 'uint32'),
+                            numMipLevels: binary.consume(1, 'uint8'),
+                            swizzleMask: binary.consume(1, 'uint8'),
+                            pad: binary.consume(2, 'uint16'),
+                            dataOffset: binary.consume(4, 'uint32'),
+                            paletteOffset: binary.consume(4, 'uint32')
+                        };
+
+                        let paletteSize = Playstation.getPaletteSize(texture.rasterFormat, texture.bitPerPixel);
+                        let dataSize = Playstation.getRasterSize(texture.rasterFormat, texture.width, texture.height, texture.bitPerPixel);
+
+                        binary.setCurrent(texture.paletteOffset);
+                        texture.palette = binary.consume(paletteSize, 'nbinary');
+
+                        binary.setCurrent(texture.dataOffset);
+                        texture.data = binary.consume(dataSize, 'nbinary');
+
+                        let rgba = Playstation.convertToRgba(texture, 'psp');
+                        console.log("rgba", rgba);
+                        return new NormalizeTexture({
+                            mipmaps: [ { data: new Uint8Array(rgba), width: texture.width, height: texture.height }],
+                            width: texture.width,
+                            height: texture.height,
+                            format: RGBAFormat
+                        });
                     }
                 ));
-            })(currentOffset, name);
+            })(currentOffset + 72, name);
 
             currentOffset = nextOffset;
             if (currentOffset === 36) break;
@@ -59,151 +103,30 @@ export default class Texture extends AbstractLoader{
         return results;
     }
 
-
-    /**
-     * Todo: refactor, this is bulllshit...
-     *
-     * @param format
-     * @param width
-     * @param height
-     * @param bpp
-     * @returns {number}
-     */
-    static getRasterSize( format, width, height, bpp ){
-
-        if (format === 128 && bpp === 32) return width * height;
-        if (format === 128 && bpp === 8) return width * height;
-        if (format === "08000000" && bpp === 4) return (width * height) / 2;
-        if (format === 16 && bpp === 4) return (width * height) / 2;
-        if (format === 128 && bpp === 4) return (width * height) / 2;
-        if (format === "00010000" && bpp === 8) return width * height;
-        if (format === 32 && bpp === 4) return (width * height) / 2;
-        if (format === "00010000" && bpp === 4) return width * height;
-        if (format === 64 && bpp === 4) return (width * height) / 2;
-        if (format === 64 && bpp === 8) return width * height;
-        if (format === 32 && bpp === 8) return width * height;
-        if (format === 16 && bpp === 8) return width * height;
-        if (format === "00010000" && bpp === 32) return width * height;
-        if (format === "00020000" && bpp === 8) return width * height;
-
-        console.error("Unknown raster format " + format + " bpp:" + bpp);
-        debugger;
-
-    }
-
-    /**
-     * Todo: refactor, this is bulllshit...
-     *
-     * @param format
-     * @param bpp
-     * @returns {number}
-     */
-    static getPaletteSize( format, bpp ){
-        // if (format === "00010000" && bpp === 8) return 1024;
-        if (format === 16 && bpp === 8) return 1024;
-        if (format === 32 && bpp === 8) return 1024;
-        if (format === 64 && bpp === 8) return 1024;
-        if (format === 128 && bpp === 32) return 1024;
-        if (format === 128 && bpp === 8) return 1024;
-        // if (format === "80000000" && bpp === 4) return 1024;
-        // if (format === "00010000" && bpp === 32) return 1024;
-        //
-        //
-        if (format === 128 && bpp === 4) return 64;
-        if (format === 16 && bpp === 4) return 64;
-        if (format === 32 && bpp === 4) return 64;
-        if (format === 64 && bpp === 4) return 64;
-        // if (format === "00010000" && bpp === 4) return 64;
-        // if (format === "00020000" && bpp === 8) return 1024;
-
-        console.error("Unknown palette format " + format + " bpp:" + bpp);
-        die;
-    }
-
     static parseTexture( binary ){
 
         let texture = {
-            'prevOffset'        : binary.consume(4, 'int32'),
             'nextOffset'        : binary.consume(4, 'int32'),
-            'name'              : binary.consume(64, 'nbinary').getString(0, false),
-
+            'prevOffset'        : binary.consume(4, 'int32'),
+            'name'              : binary.consume(32, 'nbinary').getString(0, false),
+            'alphaFlags'        : binary.consume(32, 'dataview'),
             'width'             : binary.consume(4, 'int32'),
             'height'            : binary.consume(4, 'int32'),
             'bitPerPixel'       : binary.consume(4, 'int32'),
-            'rasterFormat'      : binary.consume(4, 'int32'),
-
-            'pixelFormat'       : binary.consume(4,  'int32'),
+            'pitchOrLinearSize' : binary.consume(4, 'int32'),
+            'flags'             : binary.consume(4,  'dataview'),
             'mipMapCount'       : binary.consume(1,  'int8'),
-            'swizzleMask'       : binary.consume(1,  'int8'),
-            'padding'           : binary.consume(2, 'uint16'),
-
+            'unknown'           : binary.consume(3,  'dataview'),
             'dataOffset'        : binary.consume(4, 'int32'),
             'paletteOffset'     : binary.consume(4, 'int32'),
-
-            'palette'           : false
+            'size'              : binary.consume(4, 'int32'),
+            'unknown2'          : binary.consume(4, 'dataview')
         };
-
-        if (texture.paletteOffset > 0){
-            binary.setCurrent(texture.paletteOffset);
-
-            texture.palette = binary.consume(
-                Texture.getPaletteSize(texture.rasterFormat, texture.bitPerPixel),
-                'nbinary'
-            );
-        }
 
         binary.setCurrent(texture.dataOffset);
 
-        texture.data = binary.consume(
-            Texture.getRasterSize(texture.rasterFormat, texture.width, texture.height, texture.bitPerPixel),
-            'nbinary'
-        );
-
+        texture.data = binary.consume(texture['size'], 'arraybuffer');
         return texture;
     }
 
-    //
-    // static parse(binary){
-    //
-    //
-    //     let header = {
-    //         'magic'             : binary.consume(4,  'string'),
-    //         'constNumber'       : binary.consume(4, 'int32'),
-    //         'fileSize'          : binary.consume(4, 'int32'),
-    //         'indexTableOffset'  : binary.consume(4, 'int32'),
-    //         'indexTableOffset2' : binary.consume(4, 'int32'),
-    //         'numIndex'          : binary.consume(4, 'int32'),
-    //         'unknown'           : binary.consume(8,  'dataview'),
-    //         'numTextures'       : binary.consume(4, 'int32'),
-    //         'firstOffset'       : binary.consume(4, 'int32'),
-    //         'lastOffset'       : binary.consume(4, 'int32')
-    //     };
-    //
-    //     let currentOffset = header.firstOffset;
-    //
-    //     let textures = [];
-    //     while(header.numTextures > 0) {
-    //         let texture = Texture.parseTexture(currentOffset, binary);
-    //
-    //         if (texture.width <= 2 && texture.height <= 2){
-    //             currentOffset = texture.nextOffset;
-    //
-    //             header.numTextures--;
-    //             continue;
-    //         }
-    //
-    //         textures.push(
-    //             {
-    //                 name: texture.name,
-    //                 data: texture.data,
-    //             }
-    //         );
-    //
-    //         currentOffset = texture.nextOffset;
-    //         if (currentOffset === 36) return textures;
-    //
-    //         header.numTextures--;
-    //     }
-    //     return textures;
-    // }
 }

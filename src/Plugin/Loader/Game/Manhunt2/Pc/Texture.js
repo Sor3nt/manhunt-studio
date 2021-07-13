@@ -13,8 +13,16 @@ export default class Texture extends AbstractLoader{
      * @returns {boolean}
      */
     static canHandle(binary){
-        //PMLC
-        return AbstractLoader.checkFourCC(binary,1413759828);
+        //TCDT
+        let fourCCCheck = AbstractLoader.checkFourCC(binary,1413759828);
+        if (fourCCCheck === false) return false;
+
+        if (binary.length() <= 196)
+            return false;
+
+        binary.seek(192);
+        //DDS
+        return binary.consume(4, 'uint32') === 542327876;
     }
 
     /**
@@ -41,8 +49,6 @@ export default class Texture extends AbstractLoader{
             let dataOffset = binary.consume(4,'uint32');
             binary.seek(4);
             let size = binary.consume(4,'uint32');
-
-
 
             (function (offset, size, name) {
                 results.push(new Result(

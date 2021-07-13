@@ -4,7 +4,7 @@ import {
 	RGBA_S3TC_DXT3_Format,
 	RGBA_S3TC_DXT5_Format,
 	RGB_ETC1_Format,
-	RGB_S3TC_DXT1_Format
+	RGB_S3TC_DXT1_Format,AlphaFormat, LuminanceAlphaFormat, LuminanceFormat
 } from "./three.module.js";
 
 var DDSLoader = function ( manager ) {
@@ -29,34 +29,34 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 
 		var DDS_MAGIC = 0x20534444;
 
-		// var DDSD_CAPS = 0x1;
-		// var DDSD_HEIGHT = 0x2;
-		// var DDSD_WIDTH = 0x4;
-		// var DDSD_PITCH = 0x8;
-		// var DDSD_PIXELFORMAT = 0x1000;
-		var DDSD_MIPMAPCOUNT = 0x20000;
-		// var DDSD_LINEARSIZE = 0x80000;
-		// var DDSD_DEPTH = 0x800000;
+		var DDSD_CAPS = 0x1,
+			DDSD_HEIGHT = 0x2,
+			DDSD_WIDTH = 0x4,
+			DDSD_PITCH = 0x8,
+			DDSD_PIXELFORMAT = 0x1000,
+			DDSD_MIPMAPCOUNT = 0x20000,
+			DDSD_LINEARSIZE = 0x80000,
+			DDSD_DEPTH = 0x800000;
 
-		// var DDSCAPS_COMPLEX = 0x8;
-		// var DDSCAPS_MIPMAP = 0x400000;
-		// var DDSCAPS_TEXTURE = 0x1000;
+		var DDSCAPS_COMPLEX = 0x8,
+			DDSCAPS_MIPMAP = 0x400000,
+			DDSCAPS_TEXTURE = 0x1000;
 
-		var DDSCAPS2_CUBEMAP = 0x200;
-		var DDSCAPS2_CUBEMAP_POSITIVEX = 0x400;
-		var DDSCAPS2_CUBEMAP_NEGATIVEX = 0x800;
-		var DDSCAPS2_CUBEMAP_POSITIVEY = 0x1000;
-		var DDSCAPS2_CUBEMAP_NEGATIVEY = 0x2000;
-		var DDSCAPS2_CUBEMAP_POSITIVEZ = 0x4000;
-		var DDSCAPS2_CUBEMAP_NEGATIVEZ = 0x8000;
-		// var DDSCAPS2_VOLUME = 0x200000;
+		var DDSCAPS2_CUBEMAP = 0x200,
+			DDSCAPS2_CUBEMAP_POSITIVEX = 0x400,
+			DDSCAPS2_CUBEMAP_NEGATIVEX = 0x800,
+			DDSCAPS2_CUBEMAP_POSITIVEY = 0x1000,
+			DDSCAPS2_CUBEMAP_NEGATIVEY = 0x2000,
+			DDSCAPS2_CUBEMAP_POSITIVEZ = 0x4000,
+			DDSCAPS2_CUBEMAP_NEGATIVEZ = 0x8000,
+			DDSCAPS2_VOLUME = 0x200000;
 
-		// var DDPF_ALPHAPIXELS = 0x1;
-		// var DDPF_ALPHA = 0x2;
-		var DDPF_FOURCC = 0x4;
-		// var DDPF_RGB = 0x40;
-		// var DDPF_YUV = 0x200;
-		// var DDPF_LUMINANCE = 0x20000;
+		var DDPF_ALPHAPIXELS = 0x1,
+			DDPF_ALPHA = 0x2,
+			DDPF_FOURCC = 0x4,
+			DDPF_RGB = 0x40,
+			DDPF_YUV = 0x200,
+			DDPF_LUMINANCE = 0x20000;
 
 		function fourCCToInt32( value ) {
 
@@ -78,9 +78,9 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 
 		}
 
-		function loadARGBMip( buffer, dataOffset, width, height ) {
+		function loadARGBMip( buffer, dataOffset, width, height, alphaMask ) {
 
-			var dataLength = width * height * 4;
+			var dataLength = width * height * (alphaMask ? 4 : 3);
 			var srcBuffer = new Uint8Array( buffer, dataOffset, dataLength );
 			var byteArray = new Uint8Array( dataLength );
 			var dst = 0;
@@ -92,16 +92,44 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 					var b = srcBuffer[ src ]; src ++;
 					var g = srcBuffer[ src ]; src ++;
 					var r = srcBuffer[ src ]; src ++;
-					var a = srcBuffer[ src ]; src ++;
+					if ( alphaMask ) {
+						var a = srcBuffer[ src ]; src ++;
+					}
 					byteArray[ dst ] = r; dst ++;	//r
 					byteArray[ dst ] = g; dst ++;	//g
 					byteArray[ dst ] = b; dst ++;	//b
-					byteArray[ dst ] = a; dst ++;	//a
+					if ( alphaMask ) {
+						byteArray[ dst ] = a; dst ++;	//a
+					}
 
 				}
 
 			}
+			return byteArray;
 
+		}
+
+		function loadLAMip( buffer, dataOffset, width, height, alphaMask ) {
+
+			var dataLength = width * height * (alphaMask ? 2 : 1);
+			var srcBuffer = new Uint8Array( buffer, dataOffset, dataLength );
+			var byteArray = new Uint8Array( dataLength );
+			var dst = 0;
+			var src = 0;
+			for ( var y = 0; y < height; y ++ ) {
+
+				for ( var x = 0; x < width; x ++ ) {
+
+					var r = srcBuffer[ src ]; src ++;
+					if ( alphaMask ) {
+						var a = srcBuffer[ src ]; src ++;
+						byteArray[ dst ] = a; dst ++;
+					}
+					byteArray[ dst ] = r; dst ++;
+
+				}
+
+			}
 			return byteArray;
 
 		}
@@ -109,7 +137,6 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 		var FOURCC_DXT1 = fourCCToInt32( "DXT1" );
 		var FOURCC_DXT3 = fourCCToInt32( "DXT3" );
 		var FOURCC_DXT5 = fourCCToInt32( "DXT5" );
-		var FOURCC_ETC1 = fourCCToInt32( "ETC1" );
 
 		var headerLengthInt = 31; // The header length in 32 bit ints
 
@@ -132,10 +159,10 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 		var off_BBitMask = 25;
 		var off_ABitMask = 26;
 
-		// var off_caps = 27;
+		var off_caps = 27;
 		var off_caps2 = 28;
-		// var off_caps3 = 29;
-		// var off_caps4 = 30;
+		var off_caps3 = 29;
+		var off_caps4 = 30;
 
 		// Parse header
 
@@ -143,14 +170,14 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 
 		if ( header[ off_magic ] !== DDS_MAGIC ) {
 
-			console.error( 'THREE.DDSLoader.parse: Invalid magic number in DDS header.' );
+			console.error( 'DDSLoader.parse: Invalid magic number in DDS header.' );
 			return dds;
 
 		}
 
 		if ( ! header[ off_pfFlags ] & DDPF_FOURCC ) {
 
-			console.error( 'THREE.DDSLoader.parse: Unsupported format, must contain a FourCC code.' );
+			console.error( 'DDSLoader.parse: Unsupported format, must contain a FourCC code.' );
 			return dds;
 
 		}
@@ -159,7 +186,11 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 
 		var fourCC = header[ off_pfFourCC ];
 
-		var isRGBAUncompressed = false;
+		var isRGBAUncompressed	= false;
+		var isRGBUncompressed	= false;
+		var isLAUncompressed	= false;
+		var isLUncompressed		= false;
+		var isAUncompressed		= false;
 
 		switch ( fourCC ) {
 
@@ -181,12 +212,6 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 				dds.format = RGBA_S3TC_DXT5_Format;
 				break;
 
-			case FOURCC_ETC1:
-
-				blockBytes = 8;
-				dds.format = RGB_ETC1_Format;
-				break;
-
 			default:
 
 				if ( header[ off_RGBBitCount ] === 32
@@ -199,13 +224,64 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 					blockBytes = 64;
 					dds.format = RGBAFormat;
 
+				} else if ( header[ off_RGBBitCount ] === 24
+					&& header[ off_RBitMask ] & 0xff0000
+					&& header[ off_GBitMask ] & 0xff00
+					&& header[ off_BBitMask ] & 0xff
+					&& header[ off_ABitMask ] === 0 ) {
+
+					isRGBUncompressed = true;
+					blockBytes = 48;
+					dds.format = RGBFormat;
+
+				} else if ( header[ off_RGBBitCount ] === 16 ) {
+
+					blockBytes = 32;
+
+					if ( header[ off_GBitMask ] & 0x7e0 ) {
+
+						isRGBUncompressed = true;
+						dds.format = RGBFormat;
+
+					} else if ( header[ off_GBitMask ] & 0xf0 ) {
+
+						isRGBAUncompressed = true;
+						dds.format = RGBAFormat;
+
+					} else if ( header[ off_GBitMask ] & 0x3e0 ) {
+
+						isRGBAUncompressed = true;
+						dds.format = RGBAFormat;
+
+					} else if ( header[ off_GBitMask ] === 0 ) {
+
+						isLAUncompressed = true;
+						dds.format = LuminanceAlphaFormat;
+
+					}
+
+				} else if ( header[ off_RGBBitCount ] === 8 ) {
+
+					blockBytes = 24;
+
+					if ( header[ off_ABitMask ] > 0 ) {
+
+						isAUncompressed = true;
+						dds.format = AlphaFormat;
+
+					} else if ( header[ off_ABitMask ] === 0 ) {
+
+						isLUncompressed = true;
+						dds.format = LuminanceFormat;
+
+					}
+
 				} else {
 
-					console.error( 'THREE.DDSLoader.parse: Unsupported FourCC code ', int32ToFourCC( fourCC ) );
+					console.error( 'DDSLoader.parse: Unsupported FourCC code ', int32ToFourCC( fourCC ) );
 					return dds;
 
 				}
-
 		}
 
 		dds.mipmapCount = 1;
@@ -227,7 +303,7 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 			! ( caps2 & DDSCAPS2_CUBEMAP_NEGATIVEZ )
 		) ) {
 
-			console.error( 'THREE.DDSLoader.parse: Incomplete cubemap faces' );
+			console.error( 'DDSLoader.parse: Incomplete cubemap faces' );
 			return dds;
 
 		}
@@ -248,9 +324,14 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 
 			for ( var i = 0; i < dds.mipmapCount; i ++ ) {
 
-				if ( isRGBAUncompressed ) {
+				if ( isRGBAUncompressed || isRGBUncompressed ) {
 
-					var byteArray = loadARGBMip( buffer, dataOffset, width, height );
+					var byteArray = loadARGBMip( buffer, dataOffset, width, height, isRGBAUncompressed );
+					var dataLength = byteArray.length;
+
+				} else if ( isLAUncompressed || isLUncompressed || isAUncompressed ) {
+
+					var byteArray = loadLAMip( buffer, dataOffset, width, height, isLAUncompressed );
 					var dataLength = byteArray.length;
 
 				} else {
@@ -273,6 +354,7 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 		}
 
 		return dds;
+
 
 	}
 
