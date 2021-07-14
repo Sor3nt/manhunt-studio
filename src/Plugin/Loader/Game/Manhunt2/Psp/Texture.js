@@ -2,7 +2,6 @@ import AbstractLoader from "./../../../Abstract.js";
 import Result from "../../../Result.js";
 import NBinary from "../../../../../NBinary.js";
 import Studio from "../../../../../Studio.js";
-import {DDSLoader} from "../../../../../Vendor/three.dds.loader.js";
 import NormalizeTexture from "../../../../../Normalize/texture.js";
 import Playstation from "../../../../../Helper/Texture/Playstation.js";
 import {RGBAFormat} from "../../../../../Vendor/three.module.js";
@@ -23,7 +22,7 @@ export default class Texture extends AbstractLoader{
             return false;
 
         binary.seek(192);
-        //DDS
+        //not DDS
         return binary.consume(4, 'uint32') !== 542327876;
     }
 
@@ -47,12 +46,9 @@ export default class Texture extends AbstractLoader{
             let name = binary.getString(0, false);
 
             binary.setCurrent(currentOffset + 72);
-// console.log(currentOffset + 96);
-//             let dataOffset = binary.consume(4,'uint32');
-//             binary.seek(4);
-//             let size = binary.consume(4,'uint32');
 
             (function (offset, name) {
+
                 results.push(new Result(
                     Studio.TEXTURE,
                     name,
@@ -69,7 +65,8 @@ export default class Texture extends AbstractLoader{
                             pixelFormat: binary.consume(4, 'uint32'),
                             numMipLevels: binary.consume(1, 'uint8'),
                             swizzleMask: binary.consume(1, 'uint8'),
-                            pad: binary.consume(2, 'uint16'),
+                            pPixel: binary.consume(1, 'uint8'),
+                            renderPass: binary.consume(1, 'uint8'),
                             dataOffset: binary.consume(4, 'uint32'),
                             paletteOffset: binary.consume(4, 'uint32')
                         };
@@ -83,8 +80,19 @@ export default class Texture extends AbstractLoader{
                         binary.setCurrent(texture.dataOffset);
                         texture.data = binary.consume(dataSize, 'nbinary');
 
-                        let rgba = Playstation.convertToRgba(texture, 'psp');
-                        console.log("rgba", rgba);
+                        /**
+                         * WARNING: this is a workaround!!!
+                         * Issue: PSP and PS2 share the same struct but PS2 require palette unswizzle
+                         *        There is no flag which tell us if the file is PSP or PS2.
+                         *        So far known PSP always has only one MipMap and PS2 at least 2!
+                         */
+                        let platform = "ps2";
+                        if (texture.numMipLevels === 1){
+                            platform = "psp";
+                        }
+
+                        let rgba = Playstation.convertToRgba(texture, platform);
+
                         return new NormalizeTexture({
                             mipmaps: [ { data: new Uint8Array(rgba), width: texture.width, height: texture.height }],
                             width: texture.width,
@@ -103,30 +111,5 @@ export default class Texture extends AbstractLoader{
         return results;
     }
 
-    static parseTexture( binary ){
-
-        let texture = {
-            'nextOffset'        : binary.consume(4, 'int32'),
-            'prevOffset'        : binary.consume(4, 'int32'),
-            'name'              : binary.consume(32, 'nbinary').getString(0, false),
-            'alphaFlags'        : binary.consume(32, 'dataview'),
-            'width'             : binary.consume(4, 'int32'),
-            'height'            : binary.consume(4, 'int32'),
-            'bitPerPixel'       : binary.consume(4, 'int32'),
-            'pitchOrLinearSize' : binary.consume(4, 'int32'),
-            'flags'             : binary.consume(4,  'dataview'),
-            'mipMapCount'       : binary.consume(1,  'int8'),
-            'unknown'           : binary.consume(3,  'dataview'),
-            'dataOffset'        : binary.consume(4, 'int32'),
-            'paletteOffset'     : binary.consume(4, 'int32'),
-            'size'              : binary.consume(4, 'int32'),
-            'unknown2'          : binary.consume(4, 'dataview')
-        };
-
-        binary.setCurrent(texture.dataOffset);
-
-        texture.data = binary.consume(texture['size'], 'arraybuffer');
-        return texture;
-    }
 
 }
