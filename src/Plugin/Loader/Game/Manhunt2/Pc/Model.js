@@ -2,6 +2,7 @@ import AbstractLoader from "./../../../Abstract.js";
 import Result from "./../../../Result.js";
 import { VertexColors, Face3, Color, Vector2, Vector3, Vector4, Bone, Matrix4, Skeleton, MeshStandardMaterial } from "./../../../../../Vendor/three.module.js";
 import NBinary from "../../../../../NBinary.js";
+import Studio from "../../../../../Studio.js";
 
 export default class Model extends AbstractLoader{
     static name = "Model (Manhunt 2 PC)";

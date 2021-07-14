@@ -7,10 +7,10 @@ import TexDictionary from "./Renderware/Chunk/TexDictionary.js";
 import TextureNative from "./Renderware/Chunk/TextureNative.js";
 
 import NormalizeMap from "./../../Normalize/map.js";
-import NormalizeModel from "./../../Normalize/model.js";
 import NormalizeTexture from "./../../Normalize/texture.js";
 import Status from "../../Status.js";
 import {RGBAFormat, RGBFormat} from "../../Vendor/three.module.js";
+import NormalizeModel from "./Renderware/Utils/NormalizeModel.js";
 
 
 export default class RenderwareLoader extends AbstractLoader{

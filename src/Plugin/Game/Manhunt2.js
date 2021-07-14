@@ -14,7 +14,9 @@ export default class Manhunt2 extends AbstractManhunt{
 
     loadLevel( levelName, callback ){
         let files = [
-            'psp_MODELS.TXD',
+            // 'ps2_TEX.TXD',
+            'levels/A01_Escape_Asylum/modelspc.mdl',
+            // 'psp_MODELS.TXD',
             // 'levels/' + levelName + '/modelspc.tex',
             // 'levels/GLOBAL/CHARPAK/cash_pc.txd',
             // 'levels/GLOBAL/CHARPAK/cash_pc.dff',

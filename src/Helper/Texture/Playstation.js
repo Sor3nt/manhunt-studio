@@ -207,17 +207,15 @@ export default class Playstation{
 
         if (texture.width <= 16) return bmpRgba;
 
-        let BlockWidth = as4Bit ? 32 : 16;
-        let BlockHeight = 8;
+        let blockWidth = as4Bit ? 32 : 16;
+        let blockHeight = 8;
 
-        if (texture.width === 16){
-            BlockWidth = 16;
-        }
+        if (texture.width === 16)
+            blockWidth = 16;
 
-        let BlockSize = BlockHeight * BlockWidth;
+        let blockSize = blockHeight * blockWidth;
 
         let start = 0;
-        let end = bmpRgba.length;
 
         let unswizzled = [];
         bmpRgba.forEach(function () {
@@ -225,22 +223,19 @@ export default class Playstation{
         });
         let swizzled = bmpRgba;
 
-        let size = end - start;
-        let blockCount = size / BlockSize;
-        let blocksPerRow = texture.width / BlockWidth;
+        let size = bmpRgba.length - start;
+        let blockCount = size / blockSize;
+        let blocksPerRow = texture.width / blockWidth;
 
         for (let  block = 0; block < blockCount; ++block)
         {
-            let by = parseInt((block / blocksPerRow) * BlockHeight);
-            let bx = parseInt((block % blocksPerRow) * BlockWidth);
+            let by = parseInt((block / blocksPerRow) * blockHeight);
+            let bx = parseInt((block % blocksPerRow) * blockWidth);
 
-            for (let y = 0; y < BlockHeight; y++)
-            {
-
-                for (let x = 0; x < BlockWidth; x++)
-                {
+            for (let y = 0; y < blockHeight; y++) {
+                for (let x = 0; x < blockWidth; x++) {
                     unswizzled[start + (by + y) * texture.width + bx + x] =
-                        swizzled[start + block * BlockSize + y * BlockWidth + x];
+                        swizzled[start + block * blockSize + y * blockWidth + x];
                 }
             }
         }
@@ -297,7 +292,7 @@ export default class Playstation{
             console.error("Unknown bitPerPixel format " + texture.bitPerPixel);
             debugger;
         }
-
+console.log(texture.swizzleMask);
         if (platform === "ps2" && texture.swizzleMask & 0x1 !== 0) {
             bmpRgba = Playstation.unswizzlePs2(texture, bmpRgba);
         }else if (platform === "psp"){
