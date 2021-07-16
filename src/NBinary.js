@@ -52,7 +52,7 @@ export default class NBinary{
     }
 
     consume(bytes, type, little) {
-        little = little || true;
+        little = little === undefined  ? true : little;
         let view = new DataView(this.data, this._current);
 
         this._current += bytes;

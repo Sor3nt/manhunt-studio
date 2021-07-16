@@ -137,7 +137,8 @@ export default class Helper{
             return utils.extractBitsFromUin16Array(alphaIndices, (3 * (15 - pixelIndex)), 3);
         };
 
-        function decodeBC1 (imageData, width, height, rgb) {
+        function decodeBC1 (imageData, width, height, rgb, little) {
+            little = little === undefined ? true : little;
             rgb = rgb || false;
             var rgba = new Uint8Array(width * height * 4),
                 height_4 = (height / 4) | 0,
@@ -155,7 +156,7 @@ export default class Helper{
 
             for (h = 0; h < height_4; h++) {
                 for (w = 0; w < width_4; w++) {
-                    colorValues = utils.interpolateColorValues(imageData.getUint16(offset, true), imageData.getUint16(offset + 2, true), true);
+                    colorValues = utils.interpolateColorValues(imageData.getUint16(offset, little ), imageData.getUint16(offset + 2, little), true);
                     colorIndices = imageData.getUint32(offset + 4, true);
 
                     for (y = 0; y < 4; y++) {

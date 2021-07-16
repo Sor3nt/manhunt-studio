@@ -1,5 +1,6 @@
 import { default as TextureManhunt2Pc } from "./Loader/Game/Manhunt2/Pc/Texture.js";
 import { default as TextureManhunt2Psp } from "./Loader/Game/Manhunt2/Psp/Texture.js";
+import { default as TextureManhunt2Wii } from "./Loader/Game/Manhunt2/Wii/Texture.js";
 import { default as TextureManhuntGenericGlg } from "./Loader/Game/ManhuntGeneric/Glg.js";
 import { default as TextureManhuntGenericIfp } from "./Loader/Game/ManhuntGeneric/Ifp.js";
 import { default as TextureManhuntGenericInst } from "./Loader/Game/ManhuntGeneric/Inst.js";
@@ -74,6 +75,7 @@ export default class Loader{
          */
         Loader.registerPlugin(TextureManhunt2Psp);
         Loader.registerPlugin(TextureManhunt2Pc);
+        Loader.registerPlugin(TextureManhunt2Wii);
         Loader.registerPlugin(ModelManhunt2Pc);
     }
 
