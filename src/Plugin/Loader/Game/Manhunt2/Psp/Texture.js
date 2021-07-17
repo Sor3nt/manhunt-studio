@@ -62,20 +62,26 @@ export default class Texture extends AbstractLoader{
                             height: binary.consume(4, 'uint32'),
                             bitPerPixel: binary.consume(4, 'uint32'),
                             rasterFormat: binary.consume(4, 'uint32'),
+
                             pixelFormat: binary.consume(4, 'uint32'),
                             numMipLevels: binary.consume(1, 'uint8'),
                             swizzleMask: binary.consume(1, 'uint8'),
+
                             pPixel: binary.consume(1, 'uint8'),
                             renderPass: binary.consume(1, 'uint8'),
+
                             dataOffset: binary.consume(4, 'uint32'),
-                            paletteOffset: binary.consume(4, 'uint32')
+                            paletteOffset: binary.consume(4, 'uint32'),
+                            palette: false
                         };
 
                         let paletteSize = Playstation.getPaletteSize(texture.rasterFormat, texture.bitPerPixel);
                         let dataSize = Playstation.getRasterSize(texture.rasterFormat, texture.width, texture.height, texture.bitPerPixel);
 
-                        binary.setCurrent(texture.paletteOffset);
-                        texture.palette = binary.consume(paletteSize, 'nbinary');
+                        if (texture.paletteOffset > 0){
+                            binary.setCurrent(texture.paletteOffset);
+                            texture.palette = binary.consume(paletteSize, 'nbinary');
+                        }
 
                         binary.setCurrent(texture.dataOffset);
                         texture.data = binary.consume(dataSize, 'nbinary');

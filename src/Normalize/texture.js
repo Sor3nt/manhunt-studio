@@ -9,7 +9,7 @@ import { RGB_S3TC_DXT1_Format,
 export default class NormalizeTexture{
 
     /**
-     * @type { { mipmaps: {data: ArrayBuffer, width: int, height: int}[], width: int, height: int, format: int } }
+     * @type { { mipmaps: {data: ArrayBuffer, width: int, height: int}[], width: int, height: int, format: int, alphaMap: {data: ArrayBuffer, width: int, height: int} } }
      */
     texture;
 
@@ -17,6 +17,31 @@ export default class NormalizeTexture{
         // this.info = info;
         this.texture = texture;
         // this.#normalize(info);
+    }
+
+    hasAlphaMap(){
+        return this.texture.alphaMap !== null;
+    }
+
+    createThreeTextureAlphaMap(){
+// console.log(this.texture.texFormat, this.texture.alphaMap.texFormat);
+        let realTexture = new DataTexture(
+            this.texture.alphaMap.data,
+            this.texture.alphaMap.width,
+            this.texture.alphaMap.height,
+            1023
+        );
+
+
+        realTexture.name = this.texture.name;
+        realTexture.wrapS = RepeatWrapping;
+        realTexture.wrapT = RepeatWrapping;
+        // realTexture.magFilter = LinearFilter;
+        // realTexture.minFilter = LinearFilter;
+        // realTexture.format = this.texture.format;
+        realTexture.needsUpdate = true;
+
+        return realTexture;
     }
 
     createThreeTexture(){

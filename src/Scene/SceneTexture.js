@@ -53,12 +53,32 @@ export default class SceneTexture extends SceneAbstract{
         this.sceneInfo.scene.add(this.outputCube);
     }
 
-    display( texture ){
+    /**
+     *
+     * @param entry {Result}
+     */
+    display( entry ){
+
+        /**
+         * @type {NormalizeTexture}
+         */
+        let texture = entry.data();
 
         let mat = new MeshStandardMaterial();
         mat.name = 'displayTexture';
-        mat.map = texture;
-
+        mat.map = texture.createThreeTexture();
+//
+//         if (texture.hasAlphaMap()){
+//             // mat.alphaMap = texture.createThreeTextureAlphaMap();
+//             mat.transparent = true;
+//
+//             // console.log(mat.alphaMap);
+//             mat.map = texture.createThreeTextureAlphaMap();
+//         }else{
+//             // mat.map = texture.createThreeTexture();
+//
+//         }
+// console.log(mat);
         this.outputCube.material = mat;
         this.outputCube.visible = true;
     }

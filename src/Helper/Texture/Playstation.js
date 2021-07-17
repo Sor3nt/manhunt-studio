@@ -92,7 +92,6 @@ export default class Playstation{
     }
 
     static convertIndexed4ToRGBA(binary, count, palette) {
-
         let result = [];
 
         for (let i = 0; i < count; i = i + 2) {
@@ -103,7 +102,6 @@ export default class Playstation{
         }
 
         return result;
-
     }
 
     static paletteUnswizzle(palette) {
@@ -204,7 +202,6 @@ export default class Playstation{
     }
 
     static unswizzlePsp(texture, bmpRgba, as4Bit) {
-
         if (texture.width <= 16) return bmpRgba;
 
         let blockWidth = as4Bit ? 32 : 16;
@@ -229,8 +226,8 @@ export default class Playstation{
 
         for (let  block = 0; block < blockCount; ++block)
         {
-            let by = parseInt((block / blocksPerRow) * blockHeight);
-            let bx = parseInt((block % blocksPerRow) * blockWidth);
+            let by = parseInt((block / blocksPerRow)) * blockHeight;
+            let bx = parseInt((block % blocksPerRow)) * blockWidth;
 
             for (let y = 0; y < blockHeight; y++) {
                 for (let x = 0; x < blockWidth; x++) {
@@ -292,7 +289,7 @@ export default class Playstation{
             console.error("Unknown bitPerPixel format " + texture.bitPerPixel);
             debugger;
         }
-console.log(texture.swizzleMask);
+
         if (platform === "ps2" && texture.swizzleMask & 0x1 !== 0) {
             bmpRgba = Playstation.unswizzlePs2(texture, bmpRgba);
         }else if (platform === "psp"){
