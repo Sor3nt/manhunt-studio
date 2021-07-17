@@ -60,7 +60,7 @@ export default class SceneTexture extends SceneAbstract{
     display( entry ){
 
         /**
-         * @type {NormalizeTexture}
+         * @type {NormalizedTexture}
          */
         let texture = entry.data();
 

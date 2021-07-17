@@ -2,9 +2,8 @@ import AbstractLoader from "./../../../Abstract.js";
 import Result from "../../../Result.js";
 import NBinary from "../../../../../NBinary.js";
 import Studio from "../../../../../Studio.js";
-import NormalizeTexture from "../../../../../Normalize/texture.js";
 import Playstation from "../../../../../Helper/Texture/Playstation.js";
-import {RGBAFormat} from "../../../../../Vendor/three.module.js";
+import {NormalizedTexture} from "../../../../../Normalize/texture.js";
 
 export default class Texture extends AbstractLoader{
     static name = "Texture (Manhunt 2 PSP/PS2)";
@@ -97,14 +96,17 @@ export default class Texture extends AbstractLoader{
                             platform = "psp";
                         }
 
-                        let rgba = Playstation.convertToRgba(texture, platform);
+                        return new NormalizedTexture(
+                            texture.data,
+                            texture.palette,
+                            texture.width,
+                            texture.height,
+                            texture.bitPerPixel,
+                            platform,
+                            NormalizedTexture.FORMAT_PLAYSTATION,
+                            texture.swizzleMask & 0x1 !== 0
+                        );
 
-                        return new NormalizeTexture({
-                            mipmaps: [ { data: new Uint8Array(rgba), width: texture.width, height: texture.height }],
-                            width: texture.width,
-                            height: texture.height,
-                            format: RGBAFormat
-                        });
                     }
                 ));
             })(currentOffset + 72, name);

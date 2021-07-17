@@ -179,6 +179,27 @@ export default class Playstation{
 
     }
 
+    static unswizzlePlaystation2(rgbaArray, width, height) {
+
+        let result = [];
+
+        for (let y = 0; y < height; y++){
+
+            for (let x = 0; x < width; x++) {
+                let block_loc = (y&(~0x0F))*width + (x&(~0x0F))*2;
+                let swap_sel = (((y+2)>>2)&0x01)*4;
+                let ypos = (((y&(~3))>>1) + (y&1))&0x07;
+                let column_loc = ypos*width*2 + ((x+swap_sel)&0x07)*4;
+                let byte_sum = ((y>>1)&1) + ((x>>2)&2);
+                let swizzled = block_loc + column_loc + byte_sum;
+
+                result[y*width+x] = rgbaArray[swizzled];
+            }
+
+        }
+
+        return result;
+    }
     static unswizzlePs2(texture, bmpRgba) {
 
         let result = [];
@@ -199,6 +220,45 @@ export default class Playstation{
         }
 
         return result;
+    }
+
+    static unswizzlePlaystationPortable(bmpRgba, width, height, as4Bit) {
+        if (width <= 16) return bmpRgba;
+
+        let blockWidth = as4Bit ? 32 : 16;
+        let blockHeight = 8;
+
+        if (width === 16)
+            blockWidth = 16;
+
+        let blockSize = blockHeight * blockWidth;
+
+        let start = 0;
+
+        let unswizzled = [];
+        bmpRgba.forEach(function () {
+            unswizzled.push([0,0,0,0]);
+        });
+        let swizzled = bmpRgba;
+
+        let size = bmpRgba.length - start;
+        let blockCount = size / blockSize;
+        let blocksPerRow = width / blockWidth;
+
+        for (let  block = 0; block < blockCount; ++block)
+        {
+            let by = parseInt((block / blocksPerRow)) * blockHeight;
+            let bx = parseInt((block % blocksPerRow)) * blockWidth;
+
+            for (let y = 0; y < blockHeight; y++) {
+                for (let x = 0; x < blockWidth; x++) {
+                    unswizzled[start + (by + y) * width + bx + x] =
+                        swizzled[start + block * blockSize + y * blockWidth + x];
+                }
+            }
+        }
+
+        return unswizzled;
     }
 
     static unswizzlePsp(texture, bmpRgba, as4Bit) {

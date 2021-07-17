@@ -1,7 +1,5 @@
 import AbstractComponent from "./Abstract.js";
 import Studio from "../../Studio.js";
-import NormalizeTexture from "../../Normalize/texture.js";
-import Renderware from "../Loader/Renderware/Renderware.js";
 import Event from "../../Event.js";
 import Storage from "../../Storage.js";
 
@@ -79,7 +77,7 @@ export default class ResourceInfo extends AbstractComponent{
                 break;
             case Studio.TEXTURE:
                 /**
-                 * @type {NormalizeTexture}
+                 * @type {NormalizedTexture}
                  */
                 let data = entry.data();
 

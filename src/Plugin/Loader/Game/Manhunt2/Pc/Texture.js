@@ -2,8 +2,7 @@ import AbstractLoader from "./../../../Abstract.js";
 import Result from "../../../Result.js";
 import NBinary from "../../../../../NBinary.js";
 import Studio from "../../../../../Studio.js";
-import {DDSLoader} from "../../../../../Vendor/three.dds.loader.js";
-import NormalizeTexture from "../../../../../Normalize/texture.js";
+import {NormalizedTexture} from "../../../../../Normalize/texture.js";
 
 export default class Texture extends AbstractLoader{
     static name = "Texture (Manhunt 2 PC)";
@@ -59,9 +58,18 @@ export default class Texture extends AbstractLoader{
                     function(){
                         binary.setCurrent(offset);
                         let dds = binary.consume(size, 'nbinary');
-                        let texture = (new DDSLoader()).parse(dds.data);
-                        texture.name = name;
-                        return new NormalizeTexture(texture);
+
+                        return new NormalizedTexture(
+                            dds.data,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            NormalizedTexture.FORMAT_DDS,
+                            false
+                        );
+
                     }
                 ));
             })(dataOffset, size, name);
