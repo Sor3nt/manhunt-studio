@@ -103,6 +103,7 @@ export default class Renderware{
     static RASTER_24 = 0x0800;
     static RASTER_32 = 0x0900;
     static RASTER_555 = 0x0a00;
+    static RASTER_MASK = 0x0F00;
 
     // static RASTER_AUTOMIPMAP = 0x1000;
     static RASTER_PAL8 = 0x2000;

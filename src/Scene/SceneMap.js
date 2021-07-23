@@ -41,7 +41,7 @@ export default class SceneMap extends SceneAbstract{
 
         this.sceneInfo.camera.position.set(-140.83501492578623, 119.29015658522931, -73.34957947924103);
 
-        var spotLight = new SpotLight(0xffffff);
+        let spotLight = new SpotLight(0xffffff);
         spotLight.position.set(1, 1, 1);
         this.sceneInfo.scene.add(spotLight);
 

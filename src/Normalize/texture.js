@@ -1,5 +1,5 @@
 
-import { RGBAFormat,  RGB_S3TC_DXT1_Format,
+import { RGBFormat, RGBAFormat,  RGB_S3TC_DXT1_Format,
     RGBA_S3TC_DXT1_Format,
     RGBA_S3TC_DXT3_Format,
     RGBA_S3TC_DXT5_Format,
@@ -80,13 +80,16 @@ export class NormalizedTexture{
         realTexture.wrapS = RepeatWrapping;
         realTexture.wrapT = RepeatWrapping;
         realTexture.needsUpdate = true;
-
+        realTexture.minFilter = 1006;
+console.log("source", this.source);
+console.log("FINAL", realTexture);
         return realTexture;
     }
 
     #decode(){
         if (this.source.format === NormalizedTexture.FORMAT_DDS){
             this.texture = (new DDSLoader()).parse(this.source.textureData);
+            this.texture.generateMipmaps = false;
             return;
         }
 
@@ -102,12 +105,29 @@ export class NormalizedTexture{
 
         else if (this.source.platform === "pc")
             this.texture.mipmaps = this.#decodePc();
+
+        else if (this.source.platform === "xbox"){
+            this.texture.mipmaps = this.#decodeXbox();
+            this.texture.format = this.source.format;
+
+        }
     }
 
 
 
+    #decodeXbox() {
+        let data = this.source.textureData;
+
+        return [{
+            data: new Uint8Array(data.buffer),
+            width: this.source.width,
+            height: this.source.height,
+        }];
+    }
+
+
     #decodePc() {
-        let data;
+        let data = this.source.textureData;
 
         switch (this.source.format) {
             case NormalizedTexture.FORMAT_BC1_RGBA:

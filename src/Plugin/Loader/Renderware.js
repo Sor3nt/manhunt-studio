@@ -114,26 +114,40 @@ export default class RenderwareLoader extends AbstractLoader{
 
                                     let texNative = new TextureNative(binary, chunk, {});
                                     texNative.parse();
-
-
                                     let normalizeFormat = null;
-                                    switch ( texNative.result.rasterFormat & 0xf00 ) {
+                                    let platform = null;
 
-                                        case Renderware.RASTER_565:
-                                            normalizeFormat = NormalizedTexture.FORMAT_BC1_RGBA;
-                                            break;
+                                    if (texNative.result.platform === Renderware.PLATFORM_XBOX){
+                                        platform = "xbox";
 
-                                        case Renderware.RASTER_1555:
-                                            normalizeFormat = NormalizedTexture.FORMAT_BC1_RGB;
-                                            break;
+                                        // texNative.convertTo32Bit();
+                                        // DXT.decompressDxt4(texNative.texture);
+                                        normalizeFormat = 33776;
 
-                                        case Renderware.RASTER_4444:
-                                            normalizeFormat = NormalizedTexture.FORMAT_BC2_RGBA;
-                                            break;
+                                        // die;
+                                    }else{
+                                        platform = "pc";
 
-                                        default:
-                                            console.error("decode not dxt", texture.rasterFormat & 0xf00);
-                                            debugger;
+                                        switch ( texNative.result.rasterFormat & Renderware.RASTER_MASK ) {
+
+                                            case Renderware.RASTER_565:
+                                                normalizeFormat = NormalizedTexture.FORMAT_BC1_RGBA;
+                                                break;
+
+                                            case Renderware.RASTER_1555:
+                                                normalizeFormat = NormalizedTexture.FORMAT_BC1_RGB;
+                                                break;
+
+                                            case Renderware.RASTER_4444:
+                                                normalizeFormat = NormalizedTexture.FORMAT_BC2_RGBA;
+                                                break;
+
+                                            default:
+                                                normalizeFormat = NormalizedTexture.FORMAT_BC1_RGBA;
+                                                // console.error("decode not dxt", texture.rasterFormat & 0xf00);
+                                                debugger;
+                                        }
+
                                     }
 
                                     return new NormalizedTexture(
@@ -142,7 +156,7 @@ export default class RenderwareLoader extends AbstractLoader{
                                         texNative.texture.width,
                                         texNative.texture.height,
                                         texNative.result.depth,
-                                        'pc', //todo
+                                        platform, //todo
                                         normalizeFormat,
                                         false
                                     );

@@ -111,18 +111,12 @@ export default class Texture extends AbstractLoader{
 
                             binary.setCurrent(pixelDataOffset + info[i].pixelOffset);
 
-                            let data = binary.consume(singleDataSize , 'dataview');
-
-
                             textures.push({
                                 width: info[i].width,
                                 height: info[i].height,
                                 texFormat: info[i].texFormat,
-                                data: data,
-                                // data: new Uint8Array(data),
+                                data: binary.consume(singleDataSize , 'dataview')
                             });
-
-                            // console.log(info[i].texFormat);
                         }
 
                         return new NormalizedTexture(
@@ -164,6 +158,7 @@ export default class Texture extends AbstractLoader{
 
     }
 
+    //todo: move to "Nintendo.js"
     static flipBlocks(data){
 
         /**
@@ -199,6 +194,7 @@ export default class Texture extends AbstractLoader{
         return rgbaNew;
     }
 
+    //todo: move to "Nintendo.js"
     static unswizzle(data, width, height, blockWidth, blockHeight ){
         let result = new ArrayBuffer(data.byteLength);
         let view = new DataView(result);

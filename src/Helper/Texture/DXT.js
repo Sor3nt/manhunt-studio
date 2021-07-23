@@ -1,6 +1,6 @@
-export default class DXT{
+export default class DXT {
 
-    static decodeBC1 (imageData, width, height, rgb, little) {
+    static decodeBC1(imageData, width, height, rgb, little) {
         little = little === undefined ? true : little;
         rgb = rgb || false;
         let rgba = new Uint8Array(width * height * 4),
@@ -19,7 +19,7 @@ export default class DXT{
 
         for (h = 0; h < height_4; h++) {
             for (w = 0; w < width_4; w++) {
-                colorValues = DXT.interpolateColorValues(imageData.getUint16(offset, little ), imageData.getUint16(offset + 2, little), true);
+                colorValues = DXT.interpolateColorValues(imageData.getUint16(offset, little), imageData.getUint16(offset + 2, little), true);
                 colorIndices = imageData.getUint32(offset + 4, true);
 
                 for (y = 0; y < 4; y++) {
@@ -41,8 +41,8 @@ export default class DXT{
 
         return rgba;
     }
-    
-    static decodeBC2 (imageData, width, height, premultiplied) {
+
+    static decodeBC2(imageData, width, height, premultiplied) {
         let rgba = new Uint8Array(width * height * 4),
             height_4 = (height / 4) | 0,
             width_4 = (width / 4) | 0,
@@ -94,8 +94,8 @@ export default class DXT{
 
         return rgba;
     }
-    
-    static decodeBC3 (imageData, width, height, premultiplied) {
+
+    static decodeBC3(imageData, width, height, premultiplied) {
         let rgba = new Uint8Array(width * height * 4),
             height_4 = (height / 4) | 0,
             width_4 = (width / 4) | 0,
@@ -151,11 +151,12 @@ export default class DXT{
         return rgba;
     }
 
-    static lerp (v1, v2, r) {
+
+    static lerp(v1, v2, r) {
         return v1 * (1 - r) + v2 * r;
     }
 
-    static convert565ByteToRgb (byte) {
+    static convert565ByteToRgb(byte) {
         return [
             Math.round(((byte >>> 11) & 31) * (255 / 31)),
             Math.round(((byte >>> 5) & 63) * (255 / 63)),
@@ -163,7 +164,7 @@ export default class DXT{
         ];
     }
 
-    static extractBitsFromUin16Array (array, shift, length) {
+    static extractBitsFromUin16Array(array, shift, length) {
         // sadly while javascript operates with doubles, it does all its binary operations on 32 bytes integers
         // so we have to get a bit dirty to do the bitshifting on the 48 bytes integer for the alpha values of DXT5
 
@@ -190,8 +191,8 @@ export default class DXT{
 
         return result;
     }
-    
-    static interpolateColorValues (firstVal, secondVal, isDxt1) {
+
+    static interpolateColorValues(firstVal, secondVal, isDxt1) {
         let firstColor = DXT.convert565ByteToRgb(firstVal),
             secondColor = DXT.convert565ByteToRgb(secondVal),
             colorValues = [].concat(firstColor, 255, secondColor, 255);
@@ -225,7 +226,7 @@ export default class DXT{
         return colorValues;
     }
 
-    static interpolateAlphaValues (firstVal, secondVal) {
+    static interpolateAlphaValues(firstVal, secondVal) {
         let alphaValues = [firstVal, secondVal];
 
         if (firstVal > secondVal) {
@@ -250,7 +251,7 @@ export default class DXT{
 
         return alphaValues;
     }
-    
+
     static multiply(component, multiplier) {
         if (!isFinite(multiplier) || multiplier === 0) {
             return 0;
@@ -258,12 +259,12 @@ export default class DXT{
 
         return Math.round(component * multiplier);
     }
-    
-    static getAlphaValueBc2 (alphaValue, pixelIndex) {
+
+    static getAlphaValueBc2(alphaValue, pixelIndex) {
         return DXT.extractBitsFromUin16Array(alphaValue, (4 * (15 - pixelIndex)), 4) * 17;
     }
-    
-    static getAlphaIndexBc3 (alphaIndices, pixelIndex) {
+
+    static getAlphaIndexBc3(alphaIndices, pixelIndex) {
         return DXT.extractBitsFromUin16Array(alphaIndices, (3 * (15 - pixelIndex)), 3);
     }
 }

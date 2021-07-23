@@ -12,6 +12,7 @@ import Api from "./../Api.js";
 import Storage from "./../Storage.js";
 import Event from "../Event.js";
 import Status from "../Status.js";
+import DDS from "./Loader/Generic/DDS.js";
 
 export default class Loader{
 
@@ -60,6 +61,7 @@ export default class Loader{
          * Engine related parser
          */
         Loader.registerPlugin(RenderwareLoader);
+        Loader.registerPlugin(DDS);
 
         /**
          * Manhunt parser which works for Manhunt 1 and 2

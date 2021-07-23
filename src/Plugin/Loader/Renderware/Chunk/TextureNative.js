@@ -76,7 +76,7 @@ export default class TextureNative extends Chunk{
             case Renderware.PLATFORM_XBOX:
 
                 this.binary.seek(4); //filterFlag
-                name = struct.binary.consume(32, 'nbinary').getString(0);
+                name = this.binary.consume(32, 'nbinary').getString(0);
 
                 break;
 
@@ -156,11 +156,14 @@ export default class TextureNative extends Chunk{
         }
 
 
-        while(this.binary.remain() > 0){
-            this.result.chunks.push(this.processChunk(this.binary));
+        if (this.result.platform !== Renderware.PLATFORM_XBOX){
+
+            while(this.binary.remain() > 0){
+                this.result.chunks.push(this.processChunk(this.binary));
+            }
+            this.validateParsing(this);
         }
 
-        this.validateParsing(this);
     }
 
     parsePc(struct){
@@ -273,28 +276,19 @@ export default class TextureNative extends Chunk{
         this.result.width.push(struct.binary.consume(2, 'uint16'));
         this.result.height.push(struct.binary.consume(2, 'uint16'));
         this.result.depth = struct.binary.consume(1, 'uint8');
-        let mipmapCount = struct.binary.consume(1, 'uint8');
+        this.result.mipmapCount = struct.binary.consume(1, 'uint8');
         this.result.rasterType = struct.binary.consume(1, 'uint8');
         assert(this.result.rasterType, 4, "RasterType should be always 4 but it is " + this.result.rasterType);
+
+        // 12 - DXT1, 13 - DXT2, 14 - DXT3, 15 - DXT5, 0 - normal)
         this.result.dxtCompression = struct.binary.consume(1, 'uint8');
 
-        let paletteSize =
-            (
-                this.result.rasterFormat & Renderware.RASTER_PAL8) ?
-                0x100 : (
-                    this.result.rasterFormat & Renderware.RASTER_PAL4 ?
-                        0x20 :
-                        0
-                )
-        ;
+        struct.binary.seek(4); //unknown
 
-        this.result.palette = false;
-        if (paletteSize > 0){
-            this.result.palette = this.binary.consume(paletteSize, 'nbinary');
-        }
+        console.log("dxtCompression", this.result.dxtCompression);
 
         this.result.mipmap = [];
-        for (let i = 0; i < mipmapCount; i++) {
+        for (let i = 0; i < this.result.mipmapCount; i++) {
             if (i !== 0) {
                 this.result.width.push(this.result.width[i-1]/2);
                 this.result.height.push(this.result.height[i-1]/2);
@@ -310,19 +304,23 @@ export default class TextureNative extends Chunk{
             }
 
             let dataSizes = this.result.width[i] * this.result.height[i];
-            if (this.result.dxtCompression === 0)
-                dataSizes *= (this.result.depth/8);
-            else if (this.result.dxtCompression === 0xC)
+            // console.log(this.result.dxtCompression === 0xC, dataSizes);
+            // if (this.result.dxtCompression === 0)
+            //     dataSizes *= (this.result.depth/8);
+            // else
+            if (this.result.dxtCompression === 0xC)
                 dataSizes /= 2;
+            //
+            // console.log(this.result.dxtCompression === 0xC, dataSizes);
+            // die;
 
-            this.result.mipmap.push(struct.binary.consume(dataSizes, 'dataview'));
+            this.texture.mipmaps.push({
+                data: new DataView(struct.binary.consume(dataSizes, 'arraybuffer')),
+                width: this.result.height[i],
+                height: this.result.height[i]
+            });
 
         }
-
-        //unkown 4 bytes at the end of the struct
-        //todo guess this is just a bug... i miss somewhere 4bytes -.-
-        assert(struct.binary.remain(), 4);
-        struct.binary.seek(4);
 
         assert(struct.binary.remain(), 0, 'CHUNK_TEXTURENATIVE XBOX struct: Unable to parse fully the data! Remain ' + struct.binary.remain());
 
@@ -332,6 +330,11 @@ export default class TextureNative extends Chunk{
 
         this.validateParsing(struct);
 
+
+        this.texture.width = this.texture.mipmaps[0].width;
+        this.texture.height = this.texture.mipmaps[0].height;
+        this.texture.name = this.result.name;
+        this.texture.format = Renderware.RASTER_8888;
     }
 
     parsePs2(){
@@ -431,4 +434,91 @@ export default class TextureNative extends Chunk{
         this.result.swizzleMask = this.result.swizzleHeight[0] !== this.result.height[0] ? 0x1 : 0x00;
 
     }
+
+
+//     convertTo32Bit() {
+//         // depth is always 8 (even if the palette is 4 bit)
+//         if (this.result.rasterFormat & Renderware.RASTER_PAL8 || this.result.rasterFormat & Renderware.RASTER_PAL4) {
+//             for (let j = 0; j < this.result.mipmapCount; j++) {
+//                 let dataSize = this.result.width[j] * this.result.height[j] * 4;
+//                 let newtexels = new Uint8Array(dataSize);
+//                 for (let i = 0; i < this.result.width[j] * this.result.height[j]; i++) {
+//                     // swap r and b
+//                     newtexels.setUint8(i * 4 + 2, this.result.palette.getUint8(this.texture.mipmaps[j].getUint8(i) * 4));
+//                     newtexels.setUint8(i * 4 + 1, this.result.palette.getUint8(this.texture.mipmaps[j].getUint8(i) * 4 + 1));
+//                     newtexels.setUint8(i * 4, this.result.palette.getUint8(this.texture.mipmaps[j].getUint8(i) * 4 + 2));
+//                     newtexels.setUint8(i * 4 + 3, this.result.palette.getUint8(this.texture.mipmaps[j].getUint8(i) * 4 + 3));
+//                 }
+// console.log("neew 1", newtexels);
+//                 this.texture.mipmaps[j] = newtexels;
+//             }
+//
+//             this.result.rasterFormat &= ~(Renderware.RASTER_PAL4 | Renderware.RASTER_PAL8);
+//             this.result.depth = 0x20;
+//
+//         }
+//
+//         else if ((this.result.rasterFormat & Renderware.RASTER_MASK) === this.result.RASTER_1555) {
+//             for (let j = 0; j < this.result.mipmapCount; j++) {
+//                 let dataSize = this.result.width[j] * this.result.height[j] * 4;
+//                 let newtexels = new Uint8Array(dataSize);
+//                 for (let i = 0; i < this.result.width[j] * this.result.height[j]; i++) {
+//                     let col = this.texture.mipmaps[j].getUInt16(i * 2);
+//                     newtexels.setUint8(i * 4, ((col & 0x001F) >> 0x0) * 0xFF / 0x1F);
+//                     newtexels.setUint8(i * 4 + 1, ((col & 0x03E0) >> 0x5) * 0xFF / 0x1F);
+//                     newtexels.setUint8(i * 4 + 2, ((col & 0x7C00) >> 0xa) * 0xFF / 0x1F);
+//                     newtexels.setUint8(i * 4 + 3, ((col & 0x8000) >> 0xf) * 0xFF);
+//                 }
+//                 console.log("neew 2", newtexels);
+//                 this.texture.mipmaps[j] = newtexels;
+//             }
+//
+//             this.result.rasterFormat = Renderware.RASTER_8888;
+//             this.result.depth = 0x20;
+//
+//         }
+//
+//         else if ((this.result.rasterFormat & Renderware.RASTER_MASK) === Renderware.RASTER_565) {
+//             for (let j = 0; j < this.result.mipmapCount; j++) {
+//                 let dataSize = this.texture.mipmaps[j].width * this.texture.mipmaps[j].height * 4;
+//                 let newtexels = new ArrayBuffer(dataSize);
+//                 let view = new DataView(newtexels);
+//
+//                 for (let i = 0; i < this.texture.mipmaps[j].width * this.texture.mipmaps[j].height; i++) {
+//
+//                     let col = this.texture.mipmaps[j].data.getUint16(i * 2);
+//                     view.setUint8(i * 4, ((col & 0x001F) >> 0x0) * 0xFF / 0x1);
+//                     view.setUint8(i * 4 + 1, ((col & 0x07E0) >> 0x5) * 0xFF / 0x3F);
+//                     view.setUint8(i * 4 + 2, ((col & 0xF800) >> 0xb) * 0xFF / 0x1F);
+//                     view.setUint8(i * 4 + 3, 255);
+//                 }
+//                 // console.log("neew 3", view);
+//                 this.texture.mipmaps[j].data = view;
+//             }
+//             this.result.rasterFormat = Renderware.RASTER_888;
+//             this.result.depth = 0x20;
+//         }
+//
+//         else if ((this.result.rasterFormat & Renderware.RASTER_MASK) === Renderware.RASTER_4444) {
+//             for (let j = 0; j < this.result.mipmapCount; j++) {
+//                 let dataSize = this.result.width[j] * this.result.height[j] * 4;
+//                 let newtexels = new Uint8Array(dataSize);
+//                 for (let i = 0; i < this.result.width[j] * this.result.height[j]; i++) {
+//                     let col = this.texture.mipmaps[j].getUInt16(i * 2);
+//                     // swap r and b
+//                     newtexels.setUint8(i * 4, ((col & 0x000F) >> 0x0) * 0xFF / 0xF);
+//                     newtexels.setUint8(i * 4 + 1, ((col & 0x00F0) >> 0x4) * 0xFF / 0xF);
+//                     newtexels.setUint8(i * 4 + 2, ((col & 0x0F00) >> 0x8) * 0xFF / 0xF);
+//                     newtexels.setUint8(i * 4 + 3, ((col & 0xF000) >> 0xc) * 0xFF / 0xF);
+//                 }
+//                 console.log("neew 4", newtexels);
+//                 this.texture.mipmaps[j] = newtexels;
+//             }
+//             this.result.rasterFormat = Renderware.RASTER_8888;
+//             this.result.depth = 0x20;
+//         }else{
+//             // no support for other raster formats yet
+//             debugger;
+//         }
+//     }
 }
