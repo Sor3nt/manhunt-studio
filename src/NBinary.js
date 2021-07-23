@@ -51,6 +51,51 @@ export default class NBinary{
         return result;
     }
 
+    uInt32(){
+        return this.consume(4, 'uint32');
+    }
+
+    uInt16(){
+        return this.consume(2, 'uint16');
+    }
+
+    uInt8(){
+        return this.consume(1, 'uint8');
+    }
+
+    int32(){
+        return this.consume(4, 'int32');
+    }
+
+    int16(){
+        return this.consume(2, 'int16');
+    }
+
+    int8(){
+        return this.consume(1, 'int8');
+    }
+
+    parseStruct(obj){
+
+        let result = {};
+        for(let attr in obj){
+            if (!obj.hasOwnProperty(attr)) continue;
+
+            if (typeof obj[attr] === "object"){
+                if (obj[attr][0] === "string0"){
+                    result[attr] = this.consume(obj[attr][1], 'nbinary').getString(0);
+                }else{
+                    debugger;
+                }
+            }else{
+                result[attr] = this[obj[attr]]();
+            }
+        }
+
+        return result;
+
+    }
+
     consume(bytes, type, little) {
         little = little === undefined  ? true : little;
         let view = new DataView(this.data, this._current);

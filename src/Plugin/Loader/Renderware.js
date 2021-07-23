@@ -118,7 +118,7 @@ export default class RenderwareLoader extends AbstractLoader{
                                     return new NormalizedTexture(
                                         texNative.texture.mipmaps,
                                         null,
-                                        texNative.result.depth,   //todo move to .texture
+                                        texNative.texture.bitPerPixel,
                                         texNative.platform,
                                         texNative.texture.format,
                                         false
