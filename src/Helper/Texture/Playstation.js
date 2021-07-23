@@ -62,6 +62,8 @@ export default class Playstation{
         if (format === 16 && bpp === 8) return 1024;
         if (format === 16 && bpp === 4) return 64;
 
+        if (format === 8 && bpp === 4) return 64;
+
         console.error("Unknown palette format " + format + " bpp:" + bpp);
         debugger;
     }

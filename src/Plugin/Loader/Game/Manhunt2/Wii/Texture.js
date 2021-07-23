@@ -120,10 +120,8 @@ export default class Texture extends AbstractLoader{
                         }
 
                         return new NormalizedTexture(
-                            textures[0].data,
+                            [textures[0]],
                             null,
-                            textures[0].width,
-                            textures[0].height,
                             null,
                             'wii',
                             NormalizedTexture.FORMAT_BC1_RGBA_WII,

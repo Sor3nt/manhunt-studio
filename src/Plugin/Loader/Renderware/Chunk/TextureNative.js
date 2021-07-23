@@ -1,16 +1,20 @@
 import Renderware from "./../Renderware.js";
 import Helper from './../../../../Helper.js'
 import Chunk from "./Chunk.js";
+import {RGBA_S3TC_DXT3_Format,RGB_S3TC_DXT1_Format, RGBA_S3TC_DXT5_Format} from "../../../../Vendor/three.module.js";
+import {NormalizedTexture} from "../../../../Normalize/texture.js";
 const assert = Helper.assert;
 
 export default class TextureNative extends Chunk{
+
+    platform = "";
 
     texture = {
         mipmapCount: 1,
         mipmaps: [],
         width: 0,
         height: 0,
-        format: 0
+        format: 0,
     };
 
     result = {
@@ -69,11 +73,13 @@ export default class TextureNative extends Chunk{
         switch (platform) {
             case Renderware.PLATFORM_PS2:
             case Renderware.PLATFORM_PS2FOURCC:
+                this.platform = "ps2";
                 this.binary.seek(12); //string header
                 name = this.binary.getString(0);
                 break;
 
             case Renderware.PLATFORM_XBOX:
+                this.platform = "xbox";
 
                 this.binary.seek(4); //filterFlag
                 name = this.binary.consume(32, 'nbinary').getString(0);
@@ -82,6 +88,7 @@ export default class TextureNative extends Chunk{
 
             case Renderware.PLATFORM_D3D8:
             case Renderware.PLATFORM_D3D9:
+                this.platform = "pc";
 
                 let nameLen = 32;
                 if (struct.version === 784){
@@ -208,6 +215,26 @@ export default class TextureNative extends Chunk{
         this.texture.height = this.result.height[0];
         this.texture.name = this.result.name;
 
+        switch ( this.result.rasterFormat & Renderware.RASTER_MASK ) {
+
+            case Renderware.RASTER_565:
+                this.texture.format = NormalizedTexture.FORMAT_BC1_RGBA;
+                break;
+
+            case Renderware.RASTER_1555:
+                this.texture.format = NormalizedTexture.FORMAT_BC1_RGB;
+                break;
+
+            case Renderware.RASTER_4444:
+                this.texture.format = NormalizedTexture.FORMAT_BC2_RGBA;
+                break;
+
+            default:
+                // this.texture.format = NormalizedTexture.FORMAT_BC1_RGBA;
+                // console.error("decode not dxt", texture.rasterFormat & 0xf00);
+                debugger;
+        }
+
         // this.result.mipmap = [];
         // this.result.mipmap.push(new  DataView(struct.binary.consume(bufferSize, 'arraybuffer')));
 
@@ -305,14 +332,12 @@ export default class TextureNative extends Chunk{
 
             let dataSizes = this.result.width[i] * this.result.height[i];
             // console.log(this.result.dxtCompression === 0xC, dataSizes);
-            // if (this.result.dxtCompression === 0)
-            //     dataSizes *= (this.result.depth/8);
-            // else
+            if (this.result.dxtCompression === 0)
+                dataSizes *= (this.result.depth/8);
+            else
             if (this.result.dxtCompression === 0xC)
                 dataSizes /= 2;
-            //
-            // console.log(this.result.dxtCompression === 0xC, dataSizes);
-            // die;
+
 
             this.texture.mipmaps.push({
                 data: new DataView(struct.binary.consume(dataSizes, 'arraybuffer')),
@@ -322,19 +347,26 @@ export default class TextureNative extends Chunk{
 
         }
 
-        assert(struct.binary.remain(), 0, 'CHUNK_TEXTURENATIVE XBOX struct: Unable to parse fully the data! Remain ' + struct.binary.remain());
+        this.validateParsing(struct);
 
         let extension = this.processChunk(this.binary);
         assert(extension.type, Renderware.CHUNK_EXTENSION);
         assert(extension.header.size, 0);
 
-        this.validateParsing(struct);
 
 
         this.texture.width = this.texture.mipmaps[0].width;
         this.texture.height = this.texture.mipmaps[0].height;
         this.texture.name = this.result.name;
-        this.texture.format = Renderware.RASTER_8888;
+
+        if (this.result.dxtCompression === 12)
+            this.texture.format = RGB_S3TC_DXT1_Format;
+        else if (this.result.dxtCompression === 14)
+            this.texture.format = RGBA_S3TC_DXT3_Format;
+        else if (this.result.dxtCompression === 15)
+            this.texture.format = RGBA_S3TC_DXT5_Format;
+        else
+            debugger;
     }
 
     parsePs2(){

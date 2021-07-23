@@ -114,50 +114,13 @@ export default class RenderwareLoader extends AbstractLoader{
 
                                     let texNative = new TextureNative(binary, chunk, {});
                                     texNative.parse();
-                                    let normalizeFormat = null;
-                                    let platform = null;
-
-                                    if (texNative.result.platform === Renderware.PLATFORM_XBOX){
-                                        platform = "xbox";
-
-                                        // texNative.convertTo32Bit();
-                                        // DXT.decompressDxt4(texNative.texture);
-                                        normalizeFormat = 33776;
-
-                                        // die;
-                                    }else{
-                                        platform = "pc";
-
-                                        switch ( texNative.result.rasterFormat & Renderware.RASTER_MASK ) {
-
-                                            case Renderware.RASTER_565:
-                                                normalizeFormat = NormalizedTexture.FORMAT_BC1_RGBA;
-                                                break;
-
-                                            case Renderware.RASTER_1555:
-                                                normalizeFormat = NormalizedTexture.FORMAT_BC1_RGB;
-                                                break;
-
-                                            case Renderware.RASTER_4444:
-                                                normalizeFormat = NormalizedTexture.FORMAT_BC2_RGBA;
-                                                break;
-
-                                            default:
-                                                normalizeFormat = NormalizedTexture.FORMAT_BC1_RGBA;
-                                                // console.error("decode not dxt", texture.rasterFormat & 0xf00);
-                                                debugger;
-                                        }
-
-                                    }
 
                                     return new NormalizedTexture(
-                                        texNative.texture.mipmaps[0].data,
+                                        texNative.texture.mipmaps,
                                         null,
-                                        texNative.texture.width,
-                                        texNative.texture.height,
-                                        texNative.result.depth,
-                                        platform, //todo
-                                        normalizeFormat,
+                                        texNative.result.depth,   //todo move to .texture
+                                        texNative.platform,
+                                        texNative.texture.format,
                                         false
                                     );
 

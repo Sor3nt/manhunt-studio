@@ -60,14 +60,13 @@ export default class Texture extends AbstractLoader{
                         let dds = binary.consume(size, 'nbinary');
 
                         return new NormalizedTexture(
-                            dds.data,
-                            null,
                             null,
                             null,
                             null,
                             null,
                             NormalizedTexture.FORMAT_DDS,
-                            false
+                            false,
+                            dds.data
                         );
 
                     }

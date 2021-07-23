@@ -97,10 +97,8 @@ export default class Texture extends AbstractLoader{
                         }
 
                         return new NormalizedTexture(
-                            texture.data,
+                            [{ data: texture.data, width: texture.width, height: texture.height }],
                             texture.palette,
-                            texture.width,
-                            texture.height,
                             texture.bitPerPixel,
                             platform,
                             NormalizedTexture.FORMAT_PLAYSTATION,
