@@ -2,6 +2,7 @@ import Helper from './../../../../Helper.js'
 import Chunk from "./Chunk.js";
 const assert = Helper.assert;
 import Renderware from "./../Renderware.js";
+import GeomentryHelper from "../../../../Helper/GeomentryHelper.js";
 
 /*
 Allen (leeao):
@@ -60,23 +61,23 @@ export default class Geometry extends Chunk{
 //         let struct = this.processChunk(this.binary);
 //         assert(struct.type, Renderware.CHUNK_STRUCT);
 //
-//         let FormatFlags = struct.binary.consume(2, 'uint16');
+//         let FormatFlags = struct.binary.uInt16();
 //         let numUV = struct.binary.consume(1, 'uint8');
 //         let nativeFlags = struct.binary.consume(1, 'uint8');
-//         let numFace = struct.binary.consume(4, 'uint32');
-//         let numVert = struct.binary.consume(4, 'uint32');
-//         let numMorphTargets = struct.binary.consume(4, 'uint32');
+//         let numFace = struct.binary.uInt32();
+//         let numVert = struct.binary.uInt32();
+//         let numMorphTargets = struct.binary.uInt32();
 //
 //         if (nativeFlags === 0){
 //             console.log("not implemented");
 //             debugger;
 //             return;
 //         }
-//         let unk1 = struct.binary.consume(4, 'uint32');
+//         let unk1 = struct.binary.uInt32();
 //
 //         this.result.boundingSphere.position = struct.binary.consumeMulti(3, 4, 'float32');
-//         this.result.boundingSphere.radius = struct.binary.consume(4, 'float32');
-//         let unk = struct.binary.consume(4, 'uint32');
+//         this.result.boundingSphere.radius = struct.binary.float32();
+//         let unk = struct.binary.uInt32();
 //         //
 //         // let unk2 = struct.binary.consume(1, 'uint32');
 //
@@ -109,8 +110,8 @@ export default class Geometry extends Chunk{
 //
 //         }
 //
-//         let dataSize = struct.binary.consume(4, 'uint32');
-//         let meshType = struct.binary.consume(4, 'uint32');
+//         let dataSize = struct.binary.uInt32();
+//         let meshType = struct.binary.uInt32();
 //
 //         if (meshType === 0){
 //             console.log("todo...");
@@ -129,8 +130,8 @@ export default class Geometry extends Chunk{
 //
 //         this.validateParsing(struct);
 //
-//         let numVertex = struct.binary.consume(4, 'uint32');
-//         let flag = struct.binary.consume(4, 'uint32');
+//         let numVertex = struct.binary.uInt32();
+//         let flag = struct.binary.uInt32();
 //
 //         let unk44 = struct.binary.consumeMulti(44, 1, 'uint8');
 //
@@ -143,41 +144,35 @@ export default class Geometry extends Chunk{
         let struct = this.processChunk(this.binary);
         assert(struct.type, Renderware.CHUNK_STRUCT);
 
-        let unk1 = struct.binary.consume(2, 'uint16');  //0x37 - 55 (fixed)
-        let unk2 = struct.binary.consume(2, 'uint16');  //0x01 - 01 (fixed)
+        struct.binary.seek(4);  //unk;
 
-        let faceCount = struct.binary.consume(4, 'uint32');
-        this.rootData.vertexCount = struct.binary.consume(4, 'uint32');
+        let faceCount = struct.binary.uInt32();
+        this.rootData.vertexCount = struct.binary.uInt32();
 
-        //1
-        let flag = struct.binary.consume(4, 'uint32');
+        let flag = struct.binary.uInt32();
 
         for(let i = 0; i < this.rootData.vertexCount; i++){
             this.result.uv1.push([
-                struct.binary.consume(4, 'float32'),
-                struct.binary.consume(4, 'float32')
+                struct.binary.float32(),
+                struct.binary.float32()
             ]);
         }
 
         for (let i = 0; i < faceCount; i++) {
 
-            let f2 = struct.binary.consume(2, 'uint16');
-            let f1 = struct.binary.consume(2, 'uint16');
-            let matId = struct.binary.consume(2, 'uint16');
-            let f3 = struct.binary.consume(2, 'uint16');
-
-            this.result.faceMat.face.push([f1, f2, f3]);
-            this.result.faceMat.matId.push(matId);
+            let face = GeomentryHelper.face21Mat3(struct.binary);
+            this.result.faceMat.face.push(face.face3);
+            this.result.faceMat.matId.push(face.materialId);
         }
 
 
-        let unk3 = struct.binary.consume(2, 'uint16');  //0
-        let unk4 = struct.binary.consume(2, 'uint16');  //14160 or 0
+        let unk3 = struct.binary.uInt16();  //0
+        let unk4 = struct.binary.uInt16();  //14160 or 0
 
         this.result.boundingSphere.position = struct.binary.consumeMulti(3, 4, 'float32');
 
-        let unk5 = struct.binary.consume(4, 'uint32');  //1
-        let unk6 = struct.binary.consume(4, 'uint32');  //1
+        let unk5 = struct.binary.uInt32();  //1
+        let unk6 = struct.binary.uInt32();  //1
 
         for (let i = 0; i < this.rootData.vertexCount; i++) {
             this.result.vert.push(struct.binary.consumeMulti(3, 4, 'float32'));
@@ -209,82 +204,64 @@ export default class Geometry extends Chunk{
         let struct = this.processChunk(this.binary);
         assert(struct.type, Renderware.CHUNK_STRUCT);
 
-        let formatFlags = struct.binary.consume(2, 'uint16'); // flags
+        let formatFlags = struct.binary.uInt16(); // flags
         this.rootData.formatFlag = formatFlags;
 
         struct.binary.seek(1); //NumTexCoorsCustom  / numUVs
-        this.rootData.hasNativeGeometry = struct.binary.consume(1, 'int8') !== 0; //GeometryNativeFlags
+        this.rootData.hasNativeGeometry = struct.binary.int8() !== 0; //GeometryNativeFlags
 
-        let faceCount = struct.binary.consume(4, 'uint32');
-        this.rootData.vertexCount = struct.binary.consume(4, 'uint32');
-        this.result.numMorphTargets = struct.binary.consume(4, 'uint32'); //numMorphTargets
-
+        let faceCount = struct.binary.uInt32();
+        this.rootData.vertexCount = struct.binary.uInt32();
+        struct.binary.seek(4); //numMorphTargets
 
         //light info
         if (this.header.version < 0x34000) {
-            this.result.light.ambient = struct.binary.consume(4, 'float32');
-            this.result.light.specular = struct.binary.consume(4, 'float32');
-            this.result.light.diffuse = struct.binary.consume(4, 'float32');
+            this.result.light.ambient = struct.binary.float32();
+            this.result.light.specular = struct.binary.float32();
+            this.result.light.diffuse = struct.binary.float32();
         }
 
         if (!this.rootData.hasNativeGeometry){
 
             if ((formatFlags & Renderware.rpGEOMETRYPRELIT) === Renderware.rpGEOMETRYPRELIT){
-                // if (formatFlags & FLAGS_PRELIT){
                 for(let i = 0; i < this.rootData.vertexCount; i++){
                     this.result.vColor.push(struct.binary.readColorRGBA());
                 }
             }
 
             if ((formatFlags & Renderware.rpGEOMETRYTEXTURED) === Renderware.rpGEOMETRYTEXTURED || (formatFlags & Renderware.rpGEOMETRYTEXTURED2) === Renderware.rpGEOMETRYTEXTURED2){
-                // if (formatFlags & FLAGS_TEXTURED){
+
                 for(let i = 0; i < this.rootData.vertexCount; i++){
                     this.result.uv1.push([
-                        struct.binary.consume(4, 'float32'),
-                        struct.binary.consume(4, 'float32')
+                        struct.binary.float32(),
+                        struct.binary.float32()
                     ]);
                 }
             }
 
             if ((formatFlags & Renderware.rpGEOMETRYTEXTURED2) === Renderware.rpGEOMETRYTEXTURED2){
-                // if (formatFlags & FLAGS_TEXTURED2){
                 for(let i = 0; i < this.rootData.vertexCount; i++){
                     this.result.uv2.push([
-                        struct.binary.consume(4, 'float32'),
-                        struct.binary.consume(4, 'float32')
+                        struct.binary.float32(),
+                        struct.binary.float32()
                     ]);
                 }
-
-                // for(let u = 0; u < numUv; u++){
-                //     for(let i = 0; i < RW.parserTmp.vertexCount; i++){
-                //         this.result.UV2_array.push([
-                //             struct.binary.consume(4, 'float32'),
-                //             struct.binary.consume(4, 'float32')
-                //         ]);
-                //     }
-                // }
             }
 
-
             for (let i = 0; i < faceCount; i++) {
+                let face = GeomentryHelper.face21Mat3(struct.binary);
 
-                let f2 = struct.binary.consume(2, 'uint16');
-                let f1 = struct.binary.consume(2, 'uint16');
-                let matId = struct.binary.consume(2, 'uint16');
-                let f3 = struct.binary.consume(2, 'uint16');
-
-                this.result.faceMat.face.push([f1, f2, f3]);
-                this.result.faceMat.matId.push(matId);
+                this.result.faceMat.face.push(face.face3);
+                this.result.faceMat.matId.push(face.materialId);
             }
 
         }
 
         this.result.boundingSphere.position = struct.binary.consumeMulti(3, 4, 'float32');
-        this.result.boundingSphere.radius = struct.binary.consume(4, 'float32');
+        this.result.boundingSphere.radius = struct.binary.float32();
 
         struct.binary.seek(4); //hasPosition
         struct.binary.seek(4); //hasNormal: need to recompute. Edit: hmmw why?
-        // let hasNormals = (formatFlags & FLAGS_NORMALS) ? 1 : 0;
 
         // if (struct.binary.remain() > 0){
         if (!this.rootData.hasNativeGeometry){
@@ -297,7 +274,6 @@ export default class Geometry extends Chunk{
                     this.result.normal.push(struct.binary.consumeMulti(3, 4, 'float32'));
                 }
             }
-
         }
 
         this.validateParsing(struct);

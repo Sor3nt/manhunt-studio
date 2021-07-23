@@ -9,6 +9,7 @@ import NBinary from "../NBinary.js";
 import Playstation from "../Helper/Texture/Playstation.js";
 import {default as Wii} from "../Plugin/Loader/Game/Manhunt2/Wii/Texture.js";
 import {DDSLoader} from "../Vendor/three.dds.loader.js";
+import Nintendo from "../Helper/Texture/Nintendo.js";
 
 
 export class NormalizedTexture{
@@ -142,9 +143,9 @@ export class NormalizedTexture{
                     _this.texture.format = RGBAFormat;
                     break;
                 case NormalizedTexture.FORMAT_BC1_RGBA_WII:
-                    let _data = Wii.unswizzle(mipmap.data, mipmap.width, mipmap.height, 8, 8);
+                    let _data = Nintendo.unswizzle(mipmap.data, mipmap.width, mipmap.height, 8, 8);
                     _data = DXT.decodeBC1(_data, mipmap.width, mipmap.height, false, false);
-                    data = new Uint8Array(Wii.flipBlocks(_data));
+                    data = new Uint8Array(Nintendo.flipBlocks(_data));
                     _this.texture.format = RGBAFormat;
                     break;
                 default:

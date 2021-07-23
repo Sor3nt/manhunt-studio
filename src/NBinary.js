@@ -51,28 +51,32 @@ export default class NBinary{
         return result;
     }
 
-    uInt32(){
-        return this.consume(4, 'uint32');
+    uInt32(little){
+        return this.consume(4, 'uint32',little);
     }
 
-    uInt16(){
-        return this.consume(2, 'uint16');
+    uInt16(little){
+        return this.consume(2, 'uint16',little);
     }
 
-    uInt8(){
-        return this.consume(1, 'uint8');
+    uInt8(little){
+        return this.consume(1, 'uint8',little);
     }
 
-    int32(){
-        return this.consume(4, 'int32');
+    int32(little){
+        return this.consume(4, 'int32',little);
     }
 
-    int16(){
-        return this.consume(2, 'int16');
+    int16(little){
+        return this.consume(2, 'int16',little);
     }
 
-    int8(){
-        return this.consume(1, 'int8');
+    int8(little){
+        return this.consume(1, 'int8',little);
+    }
+
+    float32(little){
+        return this.consume(4, 'float32',little);
     }
 
     parseStruct(obj){
@@ -82,10 +86,22 @@ export default class NBinary{
             if (!obj.hasOwnProperty(attr)) continue;
 
             if (typeof obj[attr] === "object"){
-                if (obj[attr][0] === "string0"){
+                if (obj[attr][0] === "string0") {
                     result[attr] = this.consume(obj[attr][1], 'nbinary').getString(0);
+                }else if (obj[attr][0] === "seek"){
+                    this.seek(obj[attr][1]);
+                    result[attr] = undefined;
                 }else{
-                    debugger;
+                    if (typeof obj[attr][1] === "function") {
+                        let val = this[obj[attr][0]]();
+                        result[attr] = obj[attr][1](val);
+                    }else if (typeof obj[attr][1] === "boolean"){
+                        result[attr] = this[obj[attr][0]](obj[attr][1]);
+
+                    }else{
+                        debugger;
+
+                    }
                 }
             }else{
                 result[attr] = this[obj[attr]]();

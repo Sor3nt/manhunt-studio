@@ -65,11 +65,13 @@ export default class Texture extends AbstractLoader{
                     function(){
                         binary.setCurrent(offset);
 
-                        let pixelDataOffset = binary.consume(4, 'uint32', false);
-                        binary.seek(4); //unk
+                        let header = binary.parseStruct({
+                            pixelDataOffset: ['uInt32', false],
+                            unk1:            ['seek', 4],
+                            pixelDataSize:   'uInt32'
+                        });
 
-                        let pixelDataSize = binary.consume(4, 'uint32');
-                        binary.setCurrent(pixelDataOffset);
+                        binary.setCurrent(header.pixelDataOffset);
                         binary.seek(4); // chunkFlag
 
                         let numHeader = binary.consume(4, 'uint32',false);
@@ -78,7 +80,7 @@ export default class Texture extends AbstractLoader{
                         let info = [];
                         for(let i = 0; i < numHeader; i++){
                             let headerOffset = binary.consume(4, 'uint32',false);
-                            headerOffset += pixelDataOffset;
+                            headerOffset += header.pixelDataOffset;
                             binary.seek(4); //unk
 
                             let nextOfs = binary.current();
@@ -103,13 +105,13 @@ export default class Texture extends AbstractLoader{
                                 if (i === 0){
                                     singleDataSize = info[i+1].pixelOffset - info[i].pixelOffset;
                                 }else{
-                                    singleDataSize = pixelDataSize -  info[i].pixelOffset;
+                                    singleDataSize = header.pixelDataSize -  info[i].pixelOffset;
                                 }
                             } else{
-                                singleDataSize = pixelDataSize - info[i].pixelOffset;
+                                singleDataSize = header.pixelDataSize - info[i].pixelOffset;
                             }
 
-                            binary.setCurrent(pixelDataOffset + info[i].pixelOffset);
+                            binary.setCurrent(header.pixelDataOffset + info[i].pixelOffset);
 
                             textures.push({
                                 width: info[i].width,
@@ -139,81 +141,4 @@ export default class Texture extends AbstractLoader{
         return results;
     }
 
-    static decodeAlpha(data, width, height){
-        let rgba = [];
-        for(let i = 0; i < (width * height); i++){
-            let val = data.getUint16(i);
-
-            rgba.push(
-                val & 0xFF,
-                val & 0xFF,
-                val & 0xFF,
-                (val >> 8)
-            );
-        }
-
-        return rgba;
-
-    }
-
-    //todo: move to "Nintendo.js"
-    static flipBlocks(data){
-
-        /**
-         * Flip 4x4 blocks
-         */
-        let rgbaNew = [];
-        let rgbaBlocks = [];
-
-        let pixels = [] ;
-
-        let chunk = 4;
-        for (let i = 0,j = data.byteLength; i < j; i += chunk) {
-            pixels.push(data.slice(i, i + chunk))
-        }
-
-        let current = 0;
-        while (current < pixels.length){
-            rgbaBlocks.push(pixels[current + 3]);
-            rgbaBlocks.push(pixels[current + 2]);
-            rgbaBlocks.push(pixels[current + 1]);
-            rgbaBlocks.push(pixels[current]);
-
-            current += 4;
-        }
-
-        //flat result
-        rgbaBlocks.forEach(function (rgbaBlock) {
-            rgbaBlock.forEach(function (color) {
-                rgbaNew.push(color);
-            })
-        });
-
-        return rgbaNew;
-    }
-
-    //todo: move to "Nintendo.js"
-    static unswizzle(data, width, height, blockWidth, blockHeight ){
-        let result = new ArrayBuffer(data.byteLength);
-        let view = new DataView(result);
-
-        let BlocksPerW = width / blockWidth;
-        let BlocksPerH = height / blockHeight;
-
-        for (let h = 0; h < BlocksPerH; h++){
-            for (let w = 0; w < BlocksPerW; w++) {
-                for (let BlocksPerRow = 0; BlocksPerRow < 2; BlocksPerRow++) {
-                    let swizzled = h * BlocksPerW * 32 + w * 32 + BlocksPerRow * 16;
-                    let unswizzled = h * BlocksPerW * 32 + w * 16 + BlocksPerRow * BlocksPerW * 16;
-
-                    for (let n = 0; n < 16; n++){
-                        view.setUint8(unswizzled + n, data.getUint8(swizzled + n) );
-                    }
-                }
-            }
-
-        }
-
-        return view;
-    }
 }
