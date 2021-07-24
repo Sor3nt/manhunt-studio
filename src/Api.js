@@ -18,7 +18,7 @@ export default class Api{
 
     static  request( json, callback){
         let oReq = new XMLHttpRequest();
-        oReq.open("POST", "/php/api.php", true);
+        oReq.open("POST", "php/api.php", true);
         oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         oReq.responseType = "arraybuffer";
 
