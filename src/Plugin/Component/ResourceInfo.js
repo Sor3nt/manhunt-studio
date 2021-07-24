@@ -2,6 +2,7 @@ import AbstractComponent from "./Abstract.js";
 import Studio from "../../Studio.js";
 import Event from "../../Event.js";
 import Storage from "../../Storage.js";
+import NormalizeModel from "../Loader/Renderware/Utils/NormalizeModel.js";
 
 export default class ResourceInfo extends AbstractComponent{
 
@@ -29,7 +30,7 @@ export default class ResourceInfo extends AbstractComponent{
                 /**
                  * @type {NormalizeModel}
                  */
-                let normalizedModel = entry.data();
+                let normalizedModel = new NormalizeModel(entry.data());
 
                 let object = normalizedModel.getObjects()[0];
 

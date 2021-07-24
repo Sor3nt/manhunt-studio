@@ -59,8 +59,6 @@ export class NormalizedTexture{
         if (this.texture.format === null)
             this.#decode();
 
-        console.log("JJJJ", this.texture);
-
         let realTexture;
         if (
             this.texture.format === RGB_S3TC_DXT1_Format ||
@@ -96,7 +94,6 @@ export class NormalizedTexture{
     }
 
     #decode(){
-        console.log("source", this.source);
         if (this.source.format === NormalizedTexture.FORMAT_DDS){
             this.texture = (new DDSLoader()).parse(this.source.data);
             this.texture.generateMipmaps = false;

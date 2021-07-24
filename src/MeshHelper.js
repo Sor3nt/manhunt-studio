@@ -10,7 +10,7 @@ export default class MeshHelper{
         if (skinning === undefined)
             debugger;
 
-        Status.set(`Search Material...`);
+        // Status.set(`Search Material...`);
 
         let result = [];
 
@@ -47,36 +47,38 @@ export default class MeshHelper{
             }));
         });
 
-        Status.set(`Search Material done`);
+        // Status.set(`Search Material done`);
         return result;
     }
 
     /**
      *
-     * @param result {Result}
+     * @param result {NormalizeModel}
+     * @param gameId {int}
      * @returns {Group}
      */
-    static convertFromNormalized(result){
-        Status.set(`Convert ${result.name} to Mesh...`);
-
-        let generic = result.data();
+    static convertFromNormalized(result, gameId){
+        // Status.set(`Convert ${result.name} to Mesh...`);
+// console.log(result);
+// die;
+        let generic = result;
 
         let group = new Group();
         group.userData.LODIndex = 0;
-        group.name = result.name;
+        // group.name = result.name;
 
         let objects = generic.getObjects();
         let material = [];
 
         if (generic.getMaterial() !== false)
-            material = MeshHelper.generateMaterial(result.gameId, generic.getMaterial(), objects[0].skinning);
+            material = MeshHelper.generateMaterial(gameId, generic.getMaterial(), objects[0].skinning);
 
 
         objects.forEach(function (entry, index) {
 
 
             if (typeof entry.material !== "undefined")
-                material = MeshHelper.generateMaterial(result.gameId, entry.material, entry.skinning);
+                material = MeshHelper.generateMaterial(gameId, entry.material, entry.skinning);
 
 
             let geometry = new Geometry();
@@ -114,7 +116,7 @@ export default class MeshHelper{
             ;
 
             //only the first LOD is visible (does not apply to player or map)
-            // mesh.visible = index === 0;
+            // mesh.visible = true;//index === 0;
 
             let _skeleton = generic.getSkeleton();
             if (index === 0 && entry.skinning === true && _skeleton !== false){
@@ -126,7 +128,7 @@ export default class MeshHelper{
             group.add(mesh);
         });
 
-        Status.set(`Convert ${result.name} to Mesh done`);
+        // Status.set(`Convert ${result.name} to Mesh done`);
 
         return group;
     }

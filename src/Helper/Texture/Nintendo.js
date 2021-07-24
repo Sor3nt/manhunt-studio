@@ -1,32 +1,34 @@
 export default class Nintendo {
 
-    //todo: move to "Nintendo.js"
+    /**
+     * @param data {ArrayBuffer}
+     * @returns {int[]}
+     */
     static flipBlocks(data){
 
         /**
          * Flip 4x4 blocks
          */
-        let rgbaNew = [];
-        let rgbaBlocks = [];
-
         let pixels = [] ;
-
-        let chunk = 4;
-        for (let i = 0,j = data.byteLength; i < j; i += chunk) {
-            pixels.push(data.slice(i, i + chunk))
+        for (let i = 0,j = data.byteLength; i < j; i += 4) {
+            pixels.push(data.slice(i, i + 4))
         }
 
         let current = 0;
+        let rgbaBlocks = [];
         while (current < pixels.length){
-            rgbaBlocks.push(pixels[current + 3]);
-            rgbaBlocks.push(pixels[current + 2]);
-            rgbaBlocks.push(pixels[current + 1]);
-            rgbaBlocks.push(pixels[current]);
+            rgbaBlocks.push(
+                pixels[current + 3],
+                pixels[current + 2],
+                pixels[current + 1],
+                pixels[current]
+            );
 
             current += 4;
         }
 
         //flat result
+        let rgbaNew = [];
         rgbaBlocks.forEach(function (rgbaBlock) {
             rgbaBlock.forEach(function (color) {
                 rgbaNew.push(color);
@@ -36,7 +38,15 @@ export default class Nintendo {
         return rgbaNew;
     }
 
-    //todo: move to "Nintendo.js"
+    /**
+     *
+     * @param data {DataView}
+     * @param width {int}
+     * @param height {int}
+     * @param blockWidth {int}
+     * @param blockHeight {int}
+     * @returns {DataView}
+     */
     static unswizzle(data, width, height, blockWidth, blockHeight ){
         let result = new ArrayBuffer(data.byteLength);
         let view = new DataView(result);

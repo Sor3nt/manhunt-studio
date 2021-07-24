@@ -69,12 +69,12 @@ export default class NormalizeMap extends AbstractNormalize{
 
     #normalize(){
         let meshes = [];
-        Status.set(`Normalize Map Material`);
+        // Status.set(`Normalize Map Material`);
         let materialList = this.#getMaterialList();
-        Status.set(`Normalize Map Geometry`);
+        // Status.set(`Normalize Map Geometry`);
         let geometryValues = this.#getGeometryValues(this.data);
 
-        Status.set(`Normalize Map (convert)`);
+        // Status.set(`Normalize Map (convert)`);
         geometryValues.forEach(function (geometryValue) {
 
             meshes.push({

@@ -25,21 +25,21 @@ export default class Map extends AbstractComponent{
 
         this.name = props.entry.name;
 
-        this.studioScene = new SceneMap(props.entry.name, WebGL.renderer.domElement);
+        this.studioScene = new SceneMap(props.entry, WebGL.renderer.domElement);
 
         //we try to set the original player position
         if (props.entry.gameId > -1){
             let playerInst = Storage.findOneBy({
                 gameId: props.entry.gameId,
                 type: Studio.INST,
-                name: 'player'
+                name: 'hBog'
+                // name: 'player'
             }).data();
 
             this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y, playerInst.position.z);
         }
 
-
-        let mesh = MeshHelper.convertFromNormalized(props.entry);
+        let mesh = MeshHelper.convertFromNormalized(props.entry.data(), props.entry.gameId);
         this.studioScene.display(mesh);
 
         StudioScene.changeScene(this.studioScene.name);

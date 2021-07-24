@@ -26,7 +26,7 @@ export default class Loader{
      * @param callback {function}
      */
     static load( gameId, file, options, callback ){
-        Status.set(`Load File ${file}`);
+        // Status.set(`Load File ${file}`);
         Api.load(gameId, file, function (binary) {
             let results = Loader.parse(binary, options);
             if (results === false){
@@ -108,7 +108,7 @@ export default class Loader{
             }
             binary.setCurrent(current);
 
-            Status.set(`Create List from binary (Size: ${binary.length()})`);
+            // Status.set(`Create List from binary (Size: ${binary.length()})`);
             return plugin.list(binary, options);
         }
 

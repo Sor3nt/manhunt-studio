@@ -6,9 +6,7 @@ import OrbitAndTransform from "./Controler/OrbitAndTransform.js";
 
 export default class SceneModel extends SceneAbstract{
 
-
     /**
-     *
      * @type {StudioSceneInfo}
      */
     sceneInfo = null;
@@ -26,19 +24,18 @@ export default class SceneModel extends SceneAbstract{
             }
         );
 
-        //todo renderOnlyOnce
         this.#setup();
     }
 
     #setup(){
-        this.sceneInfo.camera.position.set(-140.83501492578623, 119.29015658522931, -73.34957947924103);
+        // this.sceneInfo.camera.position.set(-140.83501492578623, 119.29015658522931, -73.34957947924103);
 
         let spotLight = new SpotLight(0xffffff);
         spotLight.position.set(1, 1, 1);
         this.sceneInfo.scene.add(spotLight);
 
         this.sceneInfo.scene.add(new HemisphereLight(0xffffff, 0x444444));
-        this.sceneInfo.scene.add(new GridHelper(1000, 10, 0x888888, 0x444444));
+        this.sceneInfo.scene.add(new GridHelper(100, 100, 0x888888, 0x444444));
 
     }
 

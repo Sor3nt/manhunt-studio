@@ -2,12 +2,19 @@ import Storage from "./Storage.js";
 import Studio from "./Studio.js";
 import Helper from "./Helper.js";
 import MeshHelper from "./MeshHelper.js";
+import {Euler, Quaternion} from "./Vendor/three.module.js";
+import NormalizeModel from "./Plugin/Loader/Renderware/Utils/NormalizeModel.js";
 
 export default class Entity{
     /**
      * @type {Result}
      */
     model;
+
+    /**
+     * @type {Group|boolean}
+     */
+    mesh;
 
     /**
      *
@@ -19,7 +26,6 @@ export default class Entity{
         this.inst = instResult;
         this.gameId = gameId;
         this.name = instResult.name;
-        this.mesh = null;
 
         //Each Entity (inst) is related to one GLG entry
         this.glgEntry = Storage.findOneBy({
@@ -28,17 +34,51 @@ export default class Entity{
             name: this.inst.props.glgRecord
         });
 
-        Helper.assert(this.glgEntry !== null);
+        let modelName = this.glgEntry.props.getValue('MODEL');
+        if (modelName === false)
+            return;
+
+        this.model = Storage.findOneBy({
+            type: Studio.MODEL,
+            gameId: this.gameId,
+            name: this.glgEntry.props.getValue('MODEL')
+        });
+
         this.#loadModel();
+
 
     }
 
     getMesh(){
-        // if (this.mesh !== null)
-        //     return this.mesh;
+        if (this.model === undefined)
+            return false;
 
-        this.mesh = MeshHelper.convertFromNormalized( this.model );
+        if (this.mesh !== undefined)
+            return this.mesh;
+
+
+        // console.log(this.model);
+        this.mesh = MeshHelper.convertFromNormalized( new NormalizeModel(this.model.data()), this.model.gameId );
+
+        let instData = this.inst.getData();
+        this.setPosition(instData.position.x,instData.position.y,instData.position.z);
+        this.setRotation(instData.rotation.x,instData.rotation.y,instData.rotation.z,instData.rotation.w);
+
         return this.mesh;
+    }
+
+
+    setPosition(x,y,z) {
+        this.mesh.position.set(x, y, z)
+    }
+
+    setRotation(x, y, z, w) {
+        let quaternion = new Quaternion(x, z, -y, w * -1);
+
+        let v = new Euler();
+        v.setFromQuaternion(quaternion);
+
+        this.mesh.rotation.copy(v);
     }
 
     #loadModel(){

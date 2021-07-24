@@ -44,7 +44,7 @@ export default class AbstractManhunt extends AbstractGame{
 
             let entity = new Entity(gameId, inst);
 
-            Storage.add(new Result(
+            let entry = new Result(
                 Studio.ENTITY,
                 entity.name,
                 0,
@@ -54,7 +54,11 @@ export default class AbstractManhunt extends AbstractGame{
                 function(){
                     return entity;
                 }
-            ));
+            );
+
+            entry.gameId = gameId;
+
+            Storage.add(entry);
 
         });
     }

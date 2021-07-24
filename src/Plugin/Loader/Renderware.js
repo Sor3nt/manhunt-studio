@@ -54,11 +54,11 @@ export default class RenderwareLoader extends AbstractLoader{
                             offset,
                             {},
                             function(){
-                                Status.set(`Parse Map Data`);
+                                // Status.set(`Parse Map Data`);
                                 binary.setCurrent(offset);
                                 let tree = Renderware.parse(binary);
 
-                                Status.set(`Normalize Map Data`);
+                                // Status.set(`Normalize Map Data`);
                                 return new NormalizeMap(tree);
                             }
                         ));
@@ -81,7 +81,8 @@ export default class RenderwareLoader extends AbstractLoader{
                             function(){
                                 binary.setCurrent(info.offset);
                                 let tree = Renderware.parse(binary);
-                                return new NormalizeModel(tree.rootData);
+                                return tree.rootData;
+                                // return new NormalizeModel(tree.rootData);
                             }
                         ));
 
