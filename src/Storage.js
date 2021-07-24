@@ -54,7 +54,10 @@ export default class Storage{
                 criteria.name = criteria.name.substr(0, maxLen);
             }
 
-            return Storage.byTypeGameName[ `S_${criteria.type}_${criteria.gameId}_${criteria.name}` ];
+            let entries = Storage.byTypeGameName[ `S_${criteria.type}_${criteria.gameId}_${criteria.name}` ];
+            if (entries === undefined)
+                return [];
+            return entries;
         }
 
         console.warn("Slow Storage search is used for query", criteria);

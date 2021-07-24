@@ -32,8 +32,7 @@ export default class Map extends AbstractComponent{
             let playerInst = Storage.findOneBy({
                 gameId: props.entry.gameId,
                 type: Studio.INST,
-                name: 'hBog'
-                // name: 'player'
+                name: 'player'
             }).data();
 
             this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y, playerInst.position.z);

@@ -47,7 +47,7 @@ export default class Studio{
 
             WebGL.render();
             //
-            Studio.config.getGame(0).loadLevel("der2", function () {
+            Studio.config.getGame(0).loadLevel("ramirez", function () {
                 console.log("loaded");
 
             });

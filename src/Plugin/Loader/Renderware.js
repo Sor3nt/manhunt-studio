@@ -134,8 +134,8 @@ export default class RenderwareLoader extends AbstractLoader{
                     break;
 
                 default:
-                    console.error('Unknown Renderware Chunk given');
-                    debugger;
+                    // console.error('Unknown Renderware Chunk given');
+                    // debugger;
                     break;
 
             }

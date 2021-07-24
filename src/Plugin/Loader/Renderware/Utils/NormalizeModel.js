@@ -239,11 +239,12 @@ export default class NormalizeModel{
 
                 face.materialIndex = mesh.materialPerFace[x];
 
-                face.vertexNormals =[
-                    mesh.normal[face.a],
-                    mesh.normal[face.b],
-                    mesh.normal[face.c]
-                ];
+                if (mesh.normal.length > 0)
+                    face.vertexNormals = [
+                        mesh.normal[face.a],
+                        mesh.normal[face.b],
+                        mesh.normal[face.c]
+                    ];
 
                 if(mesh.uv1.length > 0){
                     genericObject.faceVertexUvs[0].push([
