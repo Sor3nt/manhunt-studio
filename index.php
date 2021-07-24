@@ -98,7 +98,7 @@
 
 <script type="module">
     import Studio from './src/Studio.js';
-    import  './../../node_modules/jquery/dist/jquery.js';
+    import './node_modules/jquery/dist/jquery.js';
     import FileDrop from "./src/FileDrop.js";
 
     Studio.boot();
