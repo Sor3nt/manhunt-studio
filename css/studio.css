@@ -7,6 +7,10 @@ ul {
     list-style: none;
 }
 
+canvas {
+    outline: none;
+}
+
 [data-component-section="left"] .nav-tabs-content {
 
     height: 95vh;

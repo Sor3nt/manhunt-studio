@@ -59,7 +59,7 @@
         <!-- Inner -->
         <div class="col-8 vh-100">
 
-            <!-- Main Content -->
+            <!-- Main Content Layout Full -->
             <div class="col h-75" data-component-section="scene" style="position: relative">
                 <div id="webgl" style="position: absolute; top:23px; width: 100%; height: 100%; background: #3e3e3e;"></div>
 
@@ -81,7 +81,9 @@
 
             <!-- Upper menu -->
             <div class="col h-50" data-component-section="rightUpper">
-                col 1 h50
+
+                <ul class="nav nav-tabs"></ul>
+                <div class="nav-tabs-content"></div>
             </div>
 
             <!-- Lower menu -->

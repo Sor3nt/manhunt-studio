@@ -6,6 +6,10 @@ export default class AbstractComponent{
     name = "Noname Component";
     displayName = "Noname Component";
     element = jQuery('<div>');
+    /**
+     * @type {jQuery}
+     */
+    tab;
 
     /**
      * @type {SceneAbstract}
@@ -21,8 +25,9 @@ export default class AbstractComponent{
     }
 
     onFocus(){
-        console.log("CHANGE SCENE", this.studioScene.name);
-        StudioScene.changeScene(this.studioScene.name);
+
+        if (this.studioScene !== null)
+            StudioScene.changeScene(this.studioScene.name);
 
     }
 

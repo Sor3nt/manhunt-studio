@@ -14,7 +14,6 @@ export default class MatList extends Chunk{
         struct.binary.seek(materialCount * 4); // constant
 
         this.validateParsing(struct);
-
         for (let i = 0; i < materialCount; i++) {
             this.result.chunks.push(this.processChunk(this.binary));
         }

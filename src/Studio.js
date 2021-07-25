@@ -47,7 +47,7 @@ export default class Studio{
 
             WebGL.render();
             //
-            Studio.config.getGame(0).loadLevel("ramirez", function () {
+            Studio.config.getGame(0).loadLevel("asylum", function () {
                 console.log("loaded");
 
             });

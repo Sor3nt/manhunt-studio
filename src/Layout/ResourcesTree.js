@@ -9,6 +9,8 @@ import IconBoxes from "../Plugin/Component/IconBoxes.js";
 
 export default class ResourcesTree {
 
+    container = jQuery('<div>');
+
     /**
      * @param section {ComponentSection}
      */
@@ -46,6 +48,11 @@ export default class ResourcesTree {
 
         //show per default the MODEL section
         this.iconBox.show(Studio.MODEL);
+
+        this.section.tabNavigation.add({
+            displayName: 'Resources',
+            element: this.container
+        });
     }
 
     createTree(typeId, icon){
@@ -71,7 +78,11 @@ export default class ResourcesTree {
         this.iconBox.add(typeId, icon, container);
 
         this.trees[typeId] = tree;
-        this.section.tabNavigation.content.append(container);
+
+        this.container.append(container);
+
+        // this.section.tabNavigation.content.append(container);
+
     }
 
     showTree(typeId){

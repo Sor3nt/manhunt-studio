@@ -1,3 +1,6 @@
+.nav-tabs {
+    min-height: 25px;
+}
 .nav-tabs li{
     position: relative;
 

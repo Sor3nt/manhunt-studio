@@ -39,6 +39,7 @@ export default class Map extends AbstractComponent{
         }
 
         let mesh = MeshHelper.convertFromNormalized(props.entry.data(), props.entry.gameId);
+        // mesh.rotation.y = 270 * (Math.PI / 180); // convert vertical fov to radians
         this.studioScene.display(mesh);
 
         StudioScene.changeScene(this.studioScene.name);
