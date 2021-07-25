@@ -1,9 +1,14 @@
 .component-info ul li {
     padding: 5px 10px 0 10px;
-    font-size: 12px;
+    font-size: 10px;
 }
 
 .component-info ul li span {
+    font-weight: bold;
+}
+
+
+.component-info ul li div span {
     text-decoration: underline;
 }
 
@@ -18,6 +23,31 @@
     cursor: pointer;
 }
 
-.component-info ul.material li:hover {
+
+
+/*todo it is a clone...*/
+
+.component-glgeditor ul li {
+    padding: 5px 10px 0 10px;
+    font-size: 10px;
+}
+
+.component-glgeditor ul li span {
+    font-weight: bold;
+}
+
+
+.component-glgeditor ul li div span {
     text-decoration: underline;
+}
+
+.component-glgeditor ul li div {
+    float: right;
+    text-align: right;
+    font-size: 10px;
+}
+
+.component-glgeditor ul.material li {
+    padding:0;
+    cursor: pointer;
 }

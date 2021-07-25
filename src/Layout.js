@@ -4,6 +4,7 @@ import Model from "./Layout/Model.js";
 import Components from "./Plugin/Components.js";
 import ResourceInfo from "./Layout/ResourceInfo.js";
 import Map from "./Layout/Map.js";
+import GlgEditor from "./Layout/GlgEditor.js";
 
 export default class Layout{
 
@@ -13,6 +14,7 @@ export default class Layout{
         new Model(Components.getSection('scene'));
         new Map(Components.getSection('scene'));
         new ResourceInfo(Components.getSection('rightUpper'));
+        new GlgEditor(Components.getSection('rightLower'));
 
 
     }

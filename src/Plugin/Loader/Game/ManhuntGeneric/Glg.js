@@ -120,6 +120,7 @@ export default class Glg extends AbstractLoader{
                 }
             );
 
+            result.props.class = result.props.getValue('CLASS');
             result.props.model = result.props.getValue('MODEL');
 
             results.push(result);

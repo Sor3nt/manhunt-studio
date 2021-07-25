@@ -20,6 +20,7 @@ export default class TabNavigation{
 
         let _this = this;
         this.tabs.on('drop', function (event) {
+            jQuery('body').removeClass('drag-tab');
             event.preventDefault();
             let dropped = TabNavigation.tempDropStorage;
 
@@ -29,16 +30,16 @@ export default class TabNavigation{
 
             TabNavigation.tempDropStorage = null;
         });
-
-        if (this.tabs.length === 0){
-            this.tabs = jQuery('<ul class="nav nav-tabs">');
-            componentSection.container.append(this.tabs);
-        }
-
-        if (this.content.length === 0){
-            this.content = jQuery('<div class="nav-tabs-content">');
-            componentSection.container.append(this.content);
-        }
+        //
+        // if (this.tabs.length === 0){
+        //     this.tabs = jQuery('<ul class="nav nav-tabs">');
+        //     componentSection.container.append(this.tabs);
+        // }
+        //
+        // if (this.content.length === 0){
+        //     this.content = jQuery('<div class="nav-tabs-content">');
+        //     componentSection.container.append(this.content);
+        // }
     }
 
     /**
@@ -98,10 +99,15 @@ export default class TabNavigation{
         });
 
         tab.on('dragstart', function (event) {
+            jQuery('body').addClass('drag-tab');
             TabNavigation.tempDropStorage = {
                 component: component,
                 tabHandler: _this
             };
+        });
+
+        tab.on('dragend', function (event) {
+            jQuery('body').removeClass('drag-tab');
         });
 
         tab.append(jQuery('<span class="tab-close">x</span>').click(function () {

@@ -35,7 +35,7 @@ export default class ResourceInfo extends AbstractComponent{
                 let object = normalizedModel.getObjects()[0];
 
                 result.push({
-                    label: 'File',
+                    label: '&nbsp;',
                     value: entry.file
                 });
 
@@ -53,7 +53,7 @@ export default class ResourceInfo extends AbstractComponent{
                 object.material.forEach(function (name) {
                     (function (name) {
 
-                        materialInfo.append(jQuery('<li>').html(name).click(function () {
+                        materialInfo.append(jQuery('<li>').append(jQuery('<span>').html(name).click(function () {
 
                             let texture = Storage.findBy({
                                 type: Studio.TEXTURE,
@@ -63,7 +63,7 @@ export default class ResourceInfo extends AbstractComponent{
 
                             Event.dispatch(Event.OPEN_ENTRY, { entry: texture });
 
-                        }));
+                        })));
                     })(name);
                 });
 
