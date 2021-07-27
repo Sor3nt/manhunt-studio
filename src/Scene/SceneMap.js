@@ -2,8 +2,8 @@ import {SkinnedMesh, SpotLight, SkeletonHelper, GridHelper, Mesh,MeshStandardMat
 import StudioScene from "./StudioScene.js";
 import SceneAbstract from "./Abstract.js";
 import Studio from "../Studio.js";
-import {FlyControls} from "./Controler/FlyControls.js";
 import Storage from "../Storage.js";
+import Fly from "./Controler/Fly.js";
 
 export default class SceneMap extends SceneAbstract{
 
@@ -33,7 +33,7 @@ export default class SceneMap extends SceneAbstract{
             canvas,
             this.name,
             new PerspectiveCamera(Studio.FOV, 1.33, 0.1, 1000),
-            FlyControls,
+            Fly,
             function(){
 
             }

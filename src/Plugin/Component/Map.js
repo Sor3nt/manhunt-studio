@@ -38,9 +38,9 @@ export default class Map extends AbstractComponent{
             this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y, playerInst.position.z);
         }
 
-        let mesh = MeshHelper.convertFromNormalized(props.entry.data(), props.entry.gameId);
-        // mesh.rotation.y = 270 * (Math.PI / 180); // convert vertical fov to radians
-        this.studioScene.display(mesh);
+        // let mesh = MeshHelper.convertFromNormalized(props.entry.data(), props.entry.gameId);
+        //// mesh.rotation.y = 270 * (Math.PI / 180); // convert vertical fov to radians
+        // this.studioScene.display(mesh);
 
         StudioScene.changeScene(this.studioScene.name);
     }

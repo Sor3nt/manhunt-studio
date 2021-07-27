@@ -5,6 +5,7 @@ import Components from "./Plugin/Components.js";
 import Layout from "./Layout.js";
 import WebGL from "./WebGL.js";
 import Status from "./Status.js";
+import RayCast from "./Scene/Controler/RayCast.js";
 
 export default class Studio{
 
@@ -26,6 +27,11 @@ export default class Studio{
     static IMPORTED = 11;
 
     /**
+     * @type {RayCast}
+     */
+    static rayCast;
+
+    /**
      * @type {Config}
      */
     static config;
@@ -40,6 +46,7 @@ export default class Studio{
 
         Status.element = jQuery('#status');
         WebGL.boot();
+        this.rayCast = new RayCast();
         Studio.registerPlugins();
 
         Studio.config = new Config(function () {

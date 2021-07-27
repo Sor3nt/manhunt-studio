@@ -2,20 +2,20 @@ import {
 	EventDispatcher,
 	Quaternion,
 	Vector3
-} from "./../../Vendor/three.module.js";
-import WebGL from "../../WebGL.js";
+} from "./three.module.js";
 
-/**
- *
- * @param sceneInfo {StudioSceneInfo}
- */
-var FlyControls = function ( sceneInfo ) {
+var FlyControls = function ( object, domElement ) {
 
-	let domElement = WebGL.renderer.domElement;
+	if ( domElement === undefined ) {
 
-	this.object = sceneInfo.camera;
+		console.warn( 'THREE.FlyControls: The second parameter "domElement" is now mandatory.' );
+		domElement = document;
+
+	}
+
+	this.object = object;
 	this.domElement = domElement;
-console.log(domElement, this.object);
+
 	if ( domElement ) this.domElement.setAttribute( 'tabindex', - 1 );
 
 	// API
@@ -276,9 +276,9 @@ console.log(domElement, this.object);
 	this.dispose = function () {
 
 		this.domElement.removeEventListener( 'contextmenu', contextmenu, false );
-		this.domElement.removeEventListener( 'mousedown', _mousedown, false );
-		this.domElement.removeEventListener( 'mousemove', _mousemove, false );
-		this.domElement.removeEventListener( 'mouseup', _mouseup, false );
+		// this.domElement.removeEventListener( 'mousedown', _mousedown, false );
+		// this.domElement.removeEventListener( 'mousemove', _mousemove, false );
+		// this.domElement.removeEventListener( 'mouseup', _mouseup, false );
 
 		window.removeEventListener( 'keydown', _keydown, false );
 		window.removeEventListener( 'keyup', _keyup, false );
@@ -293,9 +293,9 @@ console.log(domElement, this.object);
 
 	this.domElement.addEventListener( 'contextmenu', contextmenu, false );
 
-	this.domElement.addEventListener( 'mousemove', _mousemove, false );
-	this.domElement.addEventListener( 'mousedown', _mousedown, false );
-	this.domElement.addEventListener( 'mouseup', _mouseup, false );
+	// this.domElement.addEventListener( 'mousemove', _mousemove, false );
+	// this.domElement.addEventListener( 'mousedown', _mousedown, false );
+	// this.domElement.addEventListener( 'mouseup', _mouseup, false );
 
 	window.addEventListener( 'keydown', _keydown, false );
 	window.addEventListener( 'keyup', _keyup, false );
