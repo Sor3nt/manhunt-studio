@@ -1,12 +1,11 @@
-import {SkinnedMesh, SpotLight, SkeletonHelper, GridHelper, Mesh,MeshStandardMaterial,PerspectiveCamera, HemisphereLight, CubeGeometry} from "../Vendor/three.module.js";
+import {SpotLight, GridHelper, PerspectiveCamera, HemisphereLight} from "../Vendor/three.module.js";
 import StudioScene from "./StudioScene.js";
 import SceneAbstract from "./Abstract.js";
 import Studio from "../Studio.js";
 import Storage from "../Storage.js";
-import Fly from "./Controler/Fly.js";
+import Walk from "./Controler/Walk.js";
 
 export default class SceneMap extends SceneAbstract{
-
 
     /**
      *
@@ -22,7 +21,7 @@ export default class SceneMap extends SceneAbstract{
     /**
      *
      * @param entry {Result}
-     * @param canvas {HTMLElement}
+     * @param canvas {jQuery}
      */
     constructor(entry, canvas) {
         super(entry.name, canvas);
@@ -33,21 +32,22 @@ export default class SceneMap extends SceneAbstract{
             canvas,
             this.name,
             new PerspectiveCamera(Studio.FOV, 1.33, 0.1, 1000),
-            Fly,
+            Walk,
             function(){
 
             }
         );
+        //
+        // this.sceneInfo.control.movementSpeed = 50;
+        // this.sceneInfo.control.rollSpeed = Math.PI / 4;
+        // this.sceneInfo.control.autoForward = false;
+        // this.sceneInfo.control.dragToLook = true;
 
-        this.sceneInfo.control.movementSpeed = 50;
-        this.sceneInfo.control.rollSpeed = Math.PI / 4;
-        this.sceneInfo.control.autoForward = false;
-        this.sceneInfo.control.dragToLook = true;
-
-
-        //todo renderOnlyOnce
         this.#setup();
     }
+
+
+
 
     #setup(){
 
@@ -72,20 +72,15 @@ export default class SceneMap extends SceneAbstract{
             if (mesh !== false)
                 sceneInfo.scene.add(mesh);
         });
+
     }
 
     /**
      *
-     * @param model {Group}
+     * @param map {Group}
      */
-    display( model ){
-// console.log(model);
-        this.sceneInfo.scene.add(model);
-
-        if (model.children[0] instanceof SkinnedMesh){
-            const helper = new SkeletonHelper( model );
-            this.sceneInfo.scene.add( helper );
-        }
+    display( map ){
+        this.sceneInfo.scene.add(map);
     }
 
 }

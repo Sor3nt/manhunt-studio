@@ -27,6 +27,10 @@ export default class Map extends AbstractComponent{
 
         this.studioScene = new SceneMap(props.entry, WebGL.renderer.domElement);
 
+        let mesh = MeshHelper.convertFromNormalized(props.entry.data(), props.entry);
+        // mesh.rotation.y = 270 * (Math.PI / 180); // convert vertical fov to radians
+
+
         //we try to set the original player position
         if (props.entry.gameId > -1){
             let playerInst = Storage.findOneBy({
@@ -35,12 +39,11 @@ export default class Map extends AbstractComponent{
                 name: 'player'
             }).data();
 
-            this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y, playerInst.position.z);
-        }
+            this.studioScene.sceneInfo.control.playerCollider.end.set(playerInst.position.x, playerInst.position.y + 3, playerInst.position.z);
 
-        // let mesh = MeshHelper.convertFromNormalized(props.entry.data(), props.entry.gameId);
-        //// mesh.rotation.y = 270 * (Math.PI / 180); // convert vertical fov to radians
-        // this.studioScene.display(mesh);
+             this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y + 3, playerInst.position.z);
+        }
+        this.studioScene.display(mesh);
 
         StudioScene.changeScene(this.studioScene.name);
     }

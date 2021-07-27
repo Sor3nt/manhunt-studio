@@ -58,7 +58,7 @@ export default class Entity{
 
 
         // console.log(this.model);
-        this.mesh = MeshHelper.convertFromNormalized( new NormalizeModel(this.model.data()), this.model.gameId );
+        this.mesh = MeshHelper.convertFromNormalized( new NormalizeModel(this.model.data()), this.model );
 
         let instData = this.inst.getData();
         this.setPosition(instData.position.x,instData.position.y,instData.position.z);

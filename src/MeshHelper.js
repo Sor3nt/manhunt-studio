@@ -53,15 +53,14 @@ export default class MeshHelper{
 
     /**
      *
-     * @param result {NormalizeModel}
-     * @param gameId {int}
+     * @param generic {NormalizeModel}
+     * @param result {Result}
      * @returns {Group}
      */
-    static convertFromNormalized(result, gameId){
+    static convertFromNormalized(generic, result){
         // Status.set(`Convert ${result.name} to Mesh...`);
 // console.log(result);
 // die;
-        let generic = result;
 
         let group = new Group();
         group.userData.LODIndex = 0;
@@ -71,14 +70,14 @@ export default class MeshHelper{
         let material = [];
 
         if (generic.getMaterial() !== false)
-            material = MeshHelper.generateMaterial(gameId, generic.getMaterial(), objects[0].skinning);
+            material = MeshHelper.generateMaterial(result.gameId, generic.getMaterial(), objects[0].skinning);
 
 
         objects.forEach(function (entry, index) {
 
 
             if (typeof entry.material !== "undefined")
-                material = MeshHelper.generateMaterial(gameId, entry.material, entry.skinning);
+                material = MeshHelper.generateMaterial(result.gameId, entry.material, entry.skinning);
 
 
             let geometry = new Geometry();
@@ -129,6 +128,9 @@ export default class MeshHelper{
         });
 
         // Status.set(`Convert ${result.name} to Mesh done`);
+
+        group.userData.entry = result;
+        group.name = result.name;
 
         return group;
     }
