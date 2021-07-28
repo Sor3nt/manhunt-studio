@@ -69,8 +69,11 @@ export default class SceneMap extends SceneAbstract{
         entities.forEach(function (entity) {
             let mesh = entity.data().getMesh();
 
-            if (mesh !== false)
+            if (mesh !== false){
+                mesh.name = entity.name,
+                mesh.userData.entity = entity;
                 sceneInfo.scene.add(mesh);
+            }
         });
 
     }

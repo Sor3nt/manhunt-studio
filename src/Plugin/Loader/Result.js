@@ -8,6 +8,7 @@ export default class Result{
 
     constructor(type, name, offset, props, getData){
 
+        this.props = {};
         this.type = type;
         this.name = name;
         this.offset = offset;

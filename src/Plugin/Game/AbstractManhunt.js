@@ -45,7 +45,7 @@ export default class AbstractManhunt extends AbstractGame{
 
             let entry = new Result(
                 Studio.ENTITY,
-                entity.name,
+                inst.name,
                 0,
                 {
                     className: inst.data().entityClass
@@ -54,6 +54,8 @@ export default class AbstractManhunt extends AbstractGame{
                     return entity;
                 }
             );
+
+            entry.props.instance = inst;
 
             entry.gameId = gameId;
 

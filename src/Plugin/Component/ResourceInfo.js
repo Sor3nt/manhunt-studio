@@ -3,6 +3,7 @@ import Studio from "../../Studio.js";
 import Event from "../../Event.js";
 import Storage from "../../Storage.js";
 import NormalizeModel from "../Loader/Renderware/Utils/NormalizeModel.js";
+import StudioScene from "../../Scene/StudioScene.js";
 
 export default class ResourceInfo extends AbstractComponent{
 
@@ -17,26 +18,86 @@ export default class ResourceInfo extends AbstractComponent{
     }
 
     /**
+     *
+     * @param entry {Result}
+     */
+    generateModelInfo(entry, result){
+
+
+    }
+
+    /**
      * @param entry {Result}
      */
     setEntry(entry){
 
         let result = [];
-
+        let object;
+        let materialInfo;
+        let normalizedModel;
         switch (entry.type) {
 
+            case Studio.ENTITY:
+
+                let record = Storage.findOneBy({
+                    type: Studio.GLG,
+                    gameId: entry.gameId,
+                    name: entry.props.instance.props.glgRecord
+                });
+
+                let model = Storage.findOneBy({
+                    type: Studio.MODEL,
+                    gameId: entry.gameId,
+                    name: record.props.model,
+                });
+
+
+                /**
+                 * @type {NormalizeModel}
+                 */
+                normalizedModel = new NormalizeModel(model.data());
+
+                object = normalizedModel.getObjects()[0];
+
+                result.push({
+                    label: 'Model',
+                    value: model.name
+                });
+
+                result.push({
+                    label: 'Instance',
+                    value: entry.name
+                });
+
+                result.push({
+                    label: 'Record',
+                    value: record.name
+                });
+
+
+                object = StudioScene.getStudioSceneInfo().scene.getObjectByName(entry.name);
+                result.push({
+                    label: 'Position',
+                    value: `<span class="badge badge-secondary">x</span>:${object.position.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.position.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.position.z.toFixed(2)} `
+                });
+                break;
             case Studio.MODEL:
 
                 /**
                  * @type {NormalizeModel}
                  */
-                let normalizedModel = new NormalizeModel(entry.data());
+                normalizedModel = new NormalizeModel(entry.data());
 
-                let object = normalizedModel.getObjects()[0];
+                object = normalizedModel.getObjects()[0];
 
                 result.push({
                     label: '&nbsp;',
                     value: entry.file
+                });
+
+                result.push({
+                    label: 'Name',
+                    value: entry.name
                 });
 
                 result.push({
@@ -49,7 +110,7 @@ export default class ResourceInfo extends AbstractComponent{
                     value: normalizedModel.data.vertexCount
                 });
 
-                let materialInfo = jQuery('<ul>').addClass('material');
+                materialInfo = jQuery('<ul>').addClass('material');
                 object.material.forEach(function (name) {
                     (function (name) {
 
@@ -71,7 +132,6 @@ export default class ResourceInfo extends AbstractComponent{
                     label: 'Material',
                     value: materialInfo
                 });
-
 
                 // console.log(normalizedModel, object);
 

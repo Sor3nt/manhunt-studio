@@ -129,7 +129,7 @@ export default class MeshHelper{
 
         // Status.set(`Convert ${result.name} to Mesh done`);
 
-        group.userData.entry = result;
+        // group.userData.entry = result;
         group.name = result.name;
 
         return group;

@@ -5,6 +5,7 @@ import WebGL from "../../WebGL.js";
 import {OrbitControls} from "../Controls/OrbitControls.js";
 import StudioScene from "../StudioScene.js";
 import Studio from "../../Studio.js";
+import Event from "../../Event.js";
 
 
 export default class Walk {
@@ -45,6 +46,17 @@ export default class Walk {
         document.addEventListener('keyup', (event) => {
             _this.keyStates[event.code] = false;
 
+
+            if (event.code === 'KeyQ')
+                this.transform.setSpace( this.transform.space === 'local' ? 'world' : 'local' );
+            if (event.code === 'KeyW')
+                this.transform.setMode( 'translate' );
+            if (event.code === 'KeyE')
+                this.transform.setMode( 'rotate' );
+            if (event.code === 'KeyR')
+                this.transform.setMode( 'scale' );
+
+
             if (event.code === 'KeyI') {
                 _this.keyStates.modeSelectObject = !_this.keyStates.modeSelectObject;
                 if (_this.keyStates.modeSelectObject)
@@ -83,6 +95,7 @@ export default class Walk {
         this.orbit.enabled = false;
 
         this.transform = new TransformControls(sceneInfo.camera, WebGL.renderer.domElement);
+        // this.transform.
         this.transform.addEventListener('dragging-changed', function (event) {
             _this.orbit.enabled = !event.value;
         });
@@ -115,7 +128,7 @@ export default class Walk {
         //we want only game object, no helpers
         let childs = [];
         scene.children.forEach(function (child) {
-            if (child.type === "Group" && child.userData.entry.type !== Studio.MAP)
+            if (child.type === "Group" )
                 childs.push(child);
         });
 
@@ -125,12 +138,13 @@ export default class Walk {
         let clickedGroups = [];
         intersects.forEach(function (obj) {
             let parent = obj.object.parent;
-            if (parent.type !== "Group")
+            if (parent.type !== "Group" || parent.userData.entity === undefined)
                 return;
             clickedGroups.push(parent);
         });
 
         if (clickedGroups.length > 0) {
+            console.log("RayCast Object", clickedGroups[0]);
             this.setObject(clickedGroups[0]);
             this.setMode('transform');
         }
@@ -176,7 +190,6 @@ export default class Walk {
         if (this.keyStates['KeyQ'])
             this.playerVelocity.y = -7;
 
-
     }
 
 
@@ -194,6 +207,7 @@ export default class Walk {
         this.transform.detach();
         this.transform.attach(object);
 
+        Event.dispatch(Event.VIEW_ENTRY, { entry: object.userData.entity });
     }
 
     update(delta) {

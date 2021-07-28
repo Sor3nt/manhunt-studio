@@ -11,8 +11,14 @@ canvas {
     outline: none;
 }
 
-[data-component-section="left"] .nav-tabs-content {
+[data-component-section] .nav-tabs-content {
+    overflow: scroll;
+    height: calc(100% - 25px - 15px);
+    display: inline-block;
+}
 
+[data-component-section="left"] .nav-tabs-content {
+    display: inherit;
     height: 95vh;
 }
 

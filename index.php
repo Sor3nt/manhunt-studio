@@ -60,8 +60,8 @@
         <div class="col-8 vh-100">
 
             <!-- Main Content Layout Full -->
-            <div class="col h-75" data-component-section="scene" style="position: relative">
-                <div id="webgl" style="position: absolute; top:23px; width: 100%; height: 100%; background: #3e3e3e;"></div>
+            <div class="col h-100" data-component-section="scene" style="position: relative">
+                <div id="webgl" style="position: absolute; top:25px; width: 100%; height: calc(100% - 25px - 15px); background: #3e3e3e;"></div>
 
                 <ul class="nav nav-tabs"></ul>
                 <div class="nav-tabs-content"></div>
@@ -69,11 +69,11 @@
             </div>
 
             <!-- Bottom Element -->
-            <div class="col h-25" data-component-section="bottom">
-
-                <ul class="nav nav-tabs"></ul>
-                <div class="nav-tabs-content"></div>
-            </div>
+<!--            <div class="col h-25" data-component-section="bottom">-->
+<!---->
+<!--                <ul class="nav nav-tabs"></ul>-->
+<!--                <div class="nav-tabs-content"></div>-->
+<!--            </div>-->
         </div>
 
         <!-- Menu Right -->

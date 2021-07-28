@@ -1,6 +1,8 @@
 .component-info ul li {
     padding: 5px 10px 0 10px;
     font-size: 10px;
+    display: inline-block;
+    width: 100%;
 }
 
 .component-info ul li span {
