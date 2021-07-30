@@ -3,6 +3,15 @@
     margin: 0;
 }
 
+@font-face {
+    font-family: 'GF Ordner Inverted';
+    src: url('../images/OrdnerNormal.woff2') format('woff2'),
+    url('../images/OrdnerNormal.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 ul {
     list-style: none;
 }

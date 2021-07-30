@@ -70,6 +70,7 @@ export default class Storage{
                 criteria.name = criteria.name.substr(0, maxLen);
             }
 
+            if (criteria.hasChanges !== undefined && entry.hasChanges   !== criteria.hasChanges)   return;
             if (criteria.type   !== undefined && entry.type   !== criteria.type)   return;
             if (criteria.name   !== undefined && entry.name   !== criteria.name)   return;
             if (criteria.offset !== undefined && entry.offset !== criteria.offset) return;

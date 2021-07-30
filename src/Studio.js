@@ -5,6 +5,7 @@ import Components from "./Plugin/Components.js";
 import Layout from "./Layout.js";
 import WebGL from "./WebGL.js";
 import Status from "./Status.js";
+import {Save} from "./Save.js";
 
 export default class Studio{
 
@@ -42,6 +43,8 @@ export default class Studio{
         WebGL.boot();
         Studio.registerPlugins();
 
+        new Save();
+
         Studio.config = new Config(function () {
             Layout.createDefaultLayout();
 
@@ -50,12 +53,13 @@ export default class Studio{
             Studio.config.getGame(0).loadLevel("asylum", function () {
                 console.log("loaded");
 
+                Status.hide();
             });
-
-            Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
-                console.log("loaded");
-
-            });
+            //
+            // Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
+            //     console.log("loaded");
+            //
+            // });
 
             // MANHUNT.engine.init();
             // Studio.tabHandler = new Tab(jQuery('#studio-tab-list'), jQuery('#studio-tab-content'));

@@ -2,7 +2,12 @@ import NBinary from "./../../NBinary.js";
 
 export default class AbstractLoader{
     static name = "Unnamed Loader";
-
+    /**
+     * @param entry {Result}
+     */
+    static update(entry){
+        debugger;
+    }
     /**
      * @param binary {NBinary}
      * @param assume {int}

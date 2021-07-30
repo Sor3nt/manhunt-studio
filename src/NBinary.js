@@ -198,6 +198,12 @@ export default class NBinary{
         return name;
     }
 
+    setFloat32( flt ){
+        let view = new DataView(this.data, this._current);
+        view.setFloat32(0, flt);
+        this._current += 4;
+    }
+
     readXYZ() {
         return {
             x: this.consume(4, 'float32'),

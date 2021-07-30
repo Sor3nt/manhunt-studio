@@ -46,6 +46,7 @@ export default class AbstractManhunt extends AbstractGame{
             let entry = new Result(
                 Studio.ENTITY,
                 inst.name,
+                "",
                 0,
                 {
                     className: inst.data().entityClass

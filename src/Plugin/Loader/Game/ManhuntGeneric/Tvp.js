@@ -44,6 +44,7 @@ export default class Tvp extends AbstractLoader{
                 results.push(new Result(
                     Studio.TVP,
                     weapon,
+                    binary,
                     0,
                     {},
                     function(){

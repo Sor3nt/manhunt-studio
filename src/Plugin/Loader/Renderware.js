@@ -51,6 +51,7 @@ export default class RenderwareLoader extends AbstractLoader{
                         results.push(new Result(
                             Studio.MAP,
                             "scene",
+                            binary,
                             offset,
                             {},
                             function(){
@@ -76,6 +77,7 @@ export default class RenderwareLoader extends AbstractLoader{
                         results.push(new Result(
                             Studio.MODEL,
                             info.name,
+                            binary,
                             info.offset,
                             {},
                             function(){
@@ -105,6 +107,7 @@ export default class RenderwareLoader extends AbstractLoader{
                             results.push(new Result(
                                 Studio.TEXTURE,
                                 info.name,
+                                binary,
                                 info.offset,
                                 {},
                                 function(){

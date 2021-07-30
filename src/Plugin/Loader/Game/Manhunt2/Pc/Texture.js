@@ -53,6 +53,7 @@ export default class Texture extends AbstractLoader{
                 results.push(new Result(
                     Studio.TEXTURE,
                     name,
+                    binary,
                     offset,
                     {},
                     function(){

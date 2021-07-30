@@ -54,6 +54,7 @@ export default class Ifp extends AbstractLoader{
                             results.push(new Result(
                                 Studio.ANIMATION,
                                 name,
+                                binary,
                                 ANPK.anpkOffset[index],
                                 {
                                     group: groupName

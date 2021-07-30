@@ -99,8 +99,30 @@ export default class Walk {
         this.transform.addEventListener('dragging-changed', function (event) {
             _this.orbit.enabled = !event.value;
         });
+
+        this.transform.addEventListener( 'mouseUp', function (event) {
+            _this.onObjectChanged(event);
+        } );
+
         sceneInfo.scene.add(this.transform);
 
+    }
+
+    onObjectChanged(event){
+
+        this.object.userData.entity.props.instance.setData({
+            position: {
+                x: this.object.position.x,
+                y: this.object.position.y,
+                z: this.object.position.z,
+            },
+            rotation: {
+                x: this.object.rotation.x,
+                y: this.object.rotation.y,
+                z: this.object.rotation.z,
+                w: this.object.rotation.w
+            },
+        });
     }
 
     doRayCast(event) {

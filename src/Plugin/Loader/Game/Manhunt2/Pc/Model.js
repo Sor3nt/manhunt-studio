@@ -62,6 +62,7 @@ export default class Model extends AbstractLoader{
                 results.push(new Result(
                     Studio.MODEL,
                     name,
+                    binary,
                     offset,
                     {},
                     function(){

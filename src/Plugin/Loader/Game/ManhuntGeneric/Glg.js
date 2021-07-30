@@ -88,6 +88,7 @@ export default class Glg extends AbstractLoader{
             let result = new Result(
                 Studio.GLG,
                 name,
+                binary,
                 0,
                 {
                     getValue: function(attr){

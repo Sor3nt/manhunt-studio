@@ -6,11 +6,15 @@ export default class Result{
      */
     file;
 
-    constructor(type, name, offset, props, getData){
+    hasChanges = false;
+    changes = {};
+
+    constructor(type, name, binary, offset, props, getData){
 
         this.props = {};
         this.type = type;
         this.name = name;
+        this.binary = binary;
         this.offset = offset;
         this.props = props;
         this.getData = getData;
@@ -25,6 +29,11 @@ export default class Result{
         this.fileName = "";
         this.level = "";
         this.gameId = -1;
+    }
+
+    setData( props ){
+        this.changes = Object.assign(this.changes, props);
+        this.hasChanges = true;
     }
 
     data(){

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/studio.css">
 
     <script type="module" src="src/Studio.js"></script>
+    <script type="module" src="src/Vendor/lottie-player.js"></script>
 
 
     <title>Manhunt Studio</title>
@@ -21,25 +22,39 @@
 <body id="drop_zone" style="background: #262626">
 
 <!---->
-<!--<div class="container-fluid vh-100" style="position: absolute; z-index: 1">-->
-<!--    <div class="row">-->
-<!--        <div class="col-2"> </div>-->
-<!--        <div class="col-8">-->
-<!---->
-<!--            <div class="row vh-100">-->
-<!--                <div class="col-3 bg-light" data-component-section="modalLeft"></div>-->
-<!--                <div class="col-9" style="background: transparent">inner</div>-->
-<!--            </div>-->
-<!---->
-<!---->
-<!--        </div>-->
-<!--        <div class="col-2"></div>-->
-<!--    </div>-->
-<!--</div>-->
+<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 1" id="loading">
+    <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
+
+    <div style="
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;" >
+
+        <div style="width: 300px; height: 300px; margin: 0 auto;">
+
+x        <lottie-player src="/images/spinner.json"  background="transparent"  speed="1"  style="
+        width: 300px;
+
+        height: 300px;"  autoplay></lottie-player>
+        </div>
+        <h1 style="font-family: 'GF Ordner Inverted';
+    font-weight: normal;
+    font-style: normal; color: #fff;text-align: center;">Manhunt Studio</h1>
+
+    </div>
+</div>
 
 <div class="container-fluid vh-100">
     <div class="row">
         <div class="col" data-component-section="top">
+
+            <div style="height: 25px; background: #3e3e3e; color: #fff">
+                <i class="fas fa-save" data-save></i>
+
+            </div>
+
 
             <div style="float:right; color: #fff" id="status"></div>
         </div>
@@ -64,7 +79,9 @@
                 <div id="webgl" style="position: absolute; top:25px; width: 100%; height: calc(100% - 25px - 15px); background: #3e3e3e;"></div>
 
                 <ul class="nav nav-tabs"></ul>
-                <div class="nav-tabs-content"></div>
+                <div class="nav-tabs-content">
+
+                </div>
 
             </div>
 

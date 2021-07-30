@@ -26,6 +26,7 @@ export default class DDS extends AbstractLoader{
         results.push(new Result(
             Studio.TEXTURE,
             "unknown",
+            binary,
             0,
             {},
             function(){

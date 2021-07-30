@@ -31,6 +31,7 @@ export default class Mls extends AbstractLoader{
                 results.push(new Result(
                     Studio.MLS,
                     info.name,
+                    binary,
                     info.offset,
                     {},
                     function(){

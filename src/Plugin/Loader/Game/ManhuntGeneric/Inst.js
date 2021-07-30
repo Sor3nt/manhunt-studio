@@ -116,6 +116,28 @@ export default class Inst extends AbstractLoader{
     };
 
     /**
+     * @param entry {Result}
+     */
+    static update(entry){
+
+        /**
+         * @type {NBinary}
+         */
+        let binary = entry.binary;
+
+        if (entry.changes.position !== undefined){
+            binary.setCurrent(entry.offset);
+            binary.getString(0, true); //skip glgRecord
+            binary.getString(0, true); //skip internalName
+
+            binary.setFloat32(entry.changes.position.x);
+            binary.setFloat32(entry.changes.position.z * -1);
+            binary.setFloat32(entry.changes.position.y);
+        }
+
+    }
+
+    /**
      * @param binary {NBinary}
      * @returns {boolean}
      */
@@ -164,6 +186,7 @@ export default class Inst extends AbstractLoader{
             results.push(new Result(
                 Studio.INST,
                 internalName,
+                binary,
                 offset,
                 {
                     glgRecord: glgRecord,
