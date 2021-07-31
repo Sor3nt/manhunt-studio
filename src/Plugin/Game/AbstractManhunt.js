@@ -11,7 +11,7 @@ export default class AbstractManhunt extends AbstractGame{
      * Called once all level resources are available
      */
     processLevel(){
-        this.createEntities();
+        // this.createEntities();
         //
         // let mapEntries = Storage.findBy({
         //     type: Studio.MAP,
@@ -32,36 +32,36 @@ export default class AbstractManhunt extends AbstractGame{
      * Create Game-Entities
      * Each entity represents a object in the 3d world.
      */
-    createEntities(){
-        let gameId = this.gameId;
-
-        let instEntries = Storage.findBy({
-            type: Studio.INST,
-            gameId: gameId
-        });
-
-        instEntries.forEach(function (inst) {
-            let entity = new Entity(gameId, inst);
-            let entry = new Result(
-                Studio.ENTITY,
-                inst.name,
-                "",
-                0,
-                {
-                    className: inst.data().entityClass
-                },
-                function(){
-                    return entity;
-                }
-            );
-
-            entry.props.instance = inst;
-
-            entry.gameId = gameId;
-
-            Storage.add(entry);
-
-        });
-    }
+    // createEntities(){
+    //     let gameId = this.gameId;
+    //
+    //     let instEntries = Storage.findBy({
+    //         type: Studio.INST,
+    //         gameId: gameId
+    //     });
+    //
+    //     instEntries.forEach(function (inst) {
+    //         let entity = new Entity(gameId, inst);
+    //         let entry = new Result(
+    //             Studio.ENTITY,
+    //             inst.name,
+    //             "",
+    //             0,
+    //             {
+    //                 className: inst.data().entityClass
+    //             },
+    //             function(){
+    //                 return entity;
+    //             }
+    //         );
+    //
+    //         entry.props.instance = inst;
+    //
+    //         entry.gameId = gameId;
+    //
+    //         Storage.add(entry);
+    //
+    //     });
+    // }
 
 }

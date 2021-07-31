@@ -22,7 +22,7 @@
 <body id="drop_zone" style="background: #262626">
 
 <!---->
-<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 2; display: none" id="loading">
+<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 10; display: none" id="loading">
     <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
 
     <div style="
@@ -46,7 +46,7 @@
 </div>
 
 <!---->
-<div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 2;" id="welcome">
+<div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 10;" id="welcome">
     <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
 
     <div style="
@@ -141,7 +141,7 @@ underline">Changelog</h5>
 </div>
 
 <!---->
-<div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 2; display: none" id="import">
+<div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 10; display: none" id="import">
     <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
 
     <div style="
@@ -281,6 +281,30 @@ underline">Select Level</h5>
 
             <!-- Main Content Layout Full -->
             <div class="col h-100" data-component-section="scene" style="position: relative">
+
+                <style>
+                    #info {
+                        position: absolute;
+                        z-index: 3;
+                        top: 35px;
+                        width: 100%;
+                        text-align: center;
+                        user-select: none;
+                        pointer-events: none;
+                        color: #eee;
+                    }
+
+
+                    #info b {
+                        color: orange;
+                    }
+                </style>
+
+                <div id="info" style="display: none">
+                    <b>WASD</b> move, <b>Q|E</b> up | down, <b>I</b> Interactive ON|OFF, <b>click</b> select Object
+                </div>
+
+
                 <div id="webgl" style="z-index: 1;position: absolute; top:25px; width: 100%; height: calc(100% - 25px - 15px); background: #3e3e3e;"></div>
 
                 <ul class="nav nav-tabs"></ul>

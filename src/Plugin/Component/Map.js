@@ -54,4 +54,19 @@ export default class Map extends AbstractComponent{
     }
 
 
+    onFocus(){
+
+        jQuery("#info").show();
+
+        if (this.studioScene !== null)
+            StudioScene.changeScene(this.studioScene.name);
+
+
+    }
+
+    onBlur(){
+
+        jQuery("#info").hide();
+
+    }
 }

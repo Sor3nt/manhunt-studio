@@ -5,7 +5,14 @@ import Status from "./Status.js";
 
 export default class MeshHelper{
 
-    static generateMaterial(gameId, material, skinning){
+    /**
+     *
+     * @param entry {Result}
+     * @param material
+     * @param skinning
+     * @returns {[]|Array}
+     */
+    static generateMaterial(entry, material, skinning){
         if (typeof material === "undefined" || material.length === 0) return [];
         if (skinning === undefined)
             debugger;
@@ -26,7 +33,8 @@ export default class MeshHelper{
 
             let texture = Storage.findBy({
                 type: Studio.TEXTURE,
-                gameId: gameId,
+                level: entry.level,
+                gameId: entry.gameId,
                 name: name
             });
 
@@ -70,14 +78,14 @@ export default class MeshHelper{
         let material = [];
 
         if (generic.getMaterial() !== false)
-            material = MeshHelper.generateMaterial(result.gameId, generic.getMaterial(), objects[0].skinning);
+            material = MeshHelper.generateMaterial(result, generic.getMaterial(), objects[0].skinning);
 
 
         objects.forEach(function (entry, index) {
 
 
             if (typeof entry.material !== "undefined")
-                material = MeshHelper.generateMaterial(result.gameId, entry.material, entry.skinning);
+                material = MeshHelper.generateMaterial(result, entry.material, entry.skinning);
 
 
             let geometry = new Geometry();

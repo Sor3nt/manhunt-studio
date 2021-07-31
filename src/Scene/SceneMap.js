@@ -63,6 +63,7 @@ export default class SceneMap extends SceneAbstract{
 
         let entities = Storage.findBy({
             type: Studio.ENTITY,
+            level: this.mapEntry.level,
             gameId: this.mapEntry.gameId
         });
 

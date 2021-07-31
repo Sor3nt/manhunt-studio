@@ -16,7 +16,7 @@ export default class Storage{
 
         Storage.count++;
 
-        let index = `S_${result.type}_${result.gameId}_${result.name}`;
+        let index = `S_${result.type}_${result.level}_${result.gameId}_${result.name}`;
         if (Storage.byTypeGameName[ index ] === undefined)
             Storage.byTypeGameName[ index ] = [];
 
@@ -48,16 +48,16 @@ export default class Storage{
     static findBy( criteria ){
 
         if (
-            (criteria.type !== undefined && criteria.gameId !== undefined && criteria.name !== undefined) &&
-            (criteria.offset === undefined && criteria.file === undefined && criteria.props === undefined)
-        ){
+            (criteria.type !== undefined && criteria.gameId !== undefined && criteria.name !== undefined && criteria.level !== undefined) &&
+            (criteria.offset === undefined && criteria.file === undefined && criteria.props === undefined)){
 
             if (criteria.type === Studio.MODEL){
-                let maxLen = Studio.config.getGame(criteria.gameId).modelNameLengh;
+                let maxLen = 23; //todo
+                // let maxLen = Studio.config.getGame(criteria.gameId).modelNameLengh;
                 criteria.name = criteria.name.substr(0, maxLen);
             }
 
-            let entries = Storage.byTypeGameName[ `S_${criteria.type}_${criteria.gameId}_${criteria.name}` ];
+            let entries = Storage.byTypeGameName[ `S_${criteria.type}_${criteria.level}_${criteria.gameId}_${criteria.name}` ];
             if (entries === undefined)
                 return [];
             return entries;
@@ -69,7 +69,7 @@ export default class Storage{
         Storage.storage.forEach(function ( entry ) {
 
             if (criteria.type === Studio.MODEL && criteria.gameId !== undefined && criteria.name !== undefined){
-                let maxLen = Studio.config.getGame(criteria.gameId).modelNameLengh;
+                let maxLen = 23; //todo: Studio.config.getGame(criteria.gameId).modelNameLengh;
                 criteria.name = criteria.name.substr(0, maxLen);
             }
 
@@ -80,6 +80,7 @@ export default class Storage{
             if (criteria.offset !== undefined && entry.offset !== criteria.offset) return;
             if (criteria.gameId !== undefined && entry.gameId !== criteria.gameId) return;
             if (criteria.file   !== undefined && entry.file   !== criteria.file)   return;
+
 
             if (criteria.props !== undefined){
                 if (entry.props === undefined)

@@ -46,6 +46,8 @@ export default class StudioScene{
     }
 
     static changeScene(name){
+
+
         StudioScene.activeSceneInfo = StudioScene.getStudioSceneInfo(name);
         WebGL.resize();
     }

@@ -26,6 +26,10 @@ export default class AbstractComponent{
 
     }
 
+    onBlur(){
+
+    }
+
     onFocus(){
 
         if (this.studioScene !== null)

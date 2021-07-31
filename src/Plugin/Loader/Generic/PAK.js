@@ -71,6 +71,8 @@ export default class PAK extends AbstractLoader{
                 let list = Glg.list(glg);
                 list.forEach(function (entry) {
                     entry.setFilePath(row.name);
+
+
                     results.push(entry);
                 });
 

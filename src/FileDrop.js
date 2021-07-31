@@ -305,7 +305,9 @@ export default class FileDrop{
         let level = this.wizzardContainer.find('[data-fied="level"]').val();
 
         this.entries.forEach(function (entry) {
-            entry.level = level;
+
+            if (entry.level === "")
+                entry.level = level;
 
             Storage.add(entry);
 

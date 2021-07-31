@@ -166,7 +166,7 @@ export default class Walk {
         });
 
         if (clickedGroups.length > 0) {
-            console.log("RayCast Object", clickedGroups[0]);
+            // console.log("RayCast Object", clickedGroups[0]);
             this.setObject(clickedGroups[0]);
             this.setMode('transform');
         }

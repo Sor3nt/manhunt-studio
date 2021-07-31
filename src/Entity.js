@@ -18,19 +18,20 @@ export default class Entity{
 
     /**
      *
-     * @param gameId {int}
+     * @param entry {Result}
      * @param instResult {Result}
      */
-    constructor(gameId, instResult){
+    constructor(entry, instResult){
 
         this.inst = instResult;
-        this.gameId = gameId;
+        this.entry = entry;
         this.name = instResult.name;
 
         //Each Entity (inst) is related to one GLG entry
         this.glgEntry = Storage.findOneBy({
             type: Studio.GLG,
-            gameId: this.gameId,
+            gameId: entry.gameId,
+            level: entry.level,
             name: this.inst.props.glgRecord
         });
 
@@ -40,7 +41,8 @@ export default class Entity{
 
         this.model = Storage.findOneBy({
             type: Studio.MODEL,
-            gameId: this.gameId,
+            gameId: entry.gameId,
+            level: entry.level,
             name: this.glgEntry.props.getValue('MODEL')
         });
 
@@ -88,16 +90,18 @@ export default class Entity{
         if (modelName === false) return;
 
         if (modelName === "fist_poly_hunter"){
-            if (Studio.config.getGame(this.gameId).game === "mh2"){
-                modelName = 'danny_asylum_bloody';
-            }else{
+            //TODO mh2
+            // if (Studio.config.getGame(this.gameId).game === "mh2"){
+            //     modelName = 'danny_asylum_bloody';
+            // }else{
                 modelName = 'Player_Bod';
-            }
+            // }
         }
 
         let models = Storage.findBy({
             type: Studio.MODEL,
-            gameId: this.gameId,
+            level: this.entry.level,
+            gameId: this.entry.gameId,
             name: modelName
         });
 
