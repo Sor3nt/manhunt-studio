@@ -34,7 +34,7 @@
 
         <div style="width: 300px; height: 300px; margin: 0 auto;">
 
-        <lottie-player src="/images/spinner.json"  background="transparent"  speed="1"  style="
+        <lottie-player src="images/spinner.json"  background="transparent"  speed="1"  style="
         width: 300px;
         height: 300px;" loop autoplay></lottie-player>
         </div>
@@ -67,7 +67,7 @@
 
                     <div style="">
 
-                        <lottie-player src="/images/spinner.json"  background="transparent"  speed="1"  style="
+                        <lottie-player src="images/spinner.json"  background="transparent"  speed="1"  style="
                             width: 100px;
                             top: 0;
                             position: absolute;
@@ -192,7 +192,7 @@ underline">Tutorials</h6>
 
                     <div style="">
 
-                        <lottie-player src="/images/spinner.json"  background="transparent"  speed="1"  style="
+                        <lottie-player src="images/spinner.json"  background="transparent"  speed="1"  style="
                             width: 100px;
                             top: 0;
                             position: absolute;
