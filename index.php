@@ -22,7 +22,7 @@
 <body id="drop_zone" style="background: #262626">
 
 <!---->
-<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 1; display: none" id="loading">
+<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 2; display: none" id="loading">
     <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
 
     <div style="
@@ -36,17 +36,17 @@
 
         <lottie-player src="/images/spinner.json"  background="transparent"  speed="1"  style="
         width: 300px;
-        height: 300px;"  autoplay></lottie-player>
+        height: 300px;" loop autoplay></lottie-player>
         </div>
         <h1 style="font-family: 'GF Ordner Inverted';
     font-weight: normal;
-    font-style: normal; color: #fff;text-align: center;">Manhunt Studio</h1>
+    font-style: normal; color: #fff;text-align: center;">Loading</h1>
 
     </div>
 </div>
 
 <!---->
-<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 1;" id="welcome">
+<div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 2;" id="welcome">
     <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
 
     <div style="
@@ -141,7 +141,7 @@ underline">Changelog</h5>
 </div>
 
 <!---->
-<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 1; display: none" id="import">
+<div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 2; display: none" id="import">
     <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
 
     <div style="
@@ -281,7 +281,7 @@ underline">Select Level</h5>
 
             <!-- Main Content Layout Full -->
             <div class="col h-100" data-component-section="scene" style="position: relative">
-                <div id="webgl" style="position: absolute; top:25px; width: 100%; height: calc(100% - 25px - 15px); background: #3e3e3e;"></div>
+                <div id="webgl" style="z-index: 1;position: absolute; top:25px; width: 100%; height: calc(100% - 25px - 15px); background: #3e3e3e;"></div>
 
                 <ul class="nav nav-tabs"></ul>
                 <div class="nav-tabs-content">

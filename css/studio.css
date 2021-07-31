@@ -20,10 +20,23 @@ canvas {
     outline: none;
 }
 
+.no-content {
+    display: table;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+.no-content div {
+    display: table-cell;
+    vertical-align: middle;
+
+}
+
 [data-component-section] .nav-tabs-content {
     overflow: scroll;
     height: calc(100% - 25px - 15px);
     display: inline-block;
+    width: 100%;
 }
 
 [data-component-section="left"] .nav-tabs-content {

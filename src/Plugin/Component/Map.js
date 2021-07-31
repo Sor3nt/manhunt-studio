@@ -42,9 +42,9 @@ export default class Map extends AbstractComponent{
 
             if (playerInst !== null){
                 playerInst = playerInst.data();
-                this.studioScene.sceneInfo.control.playerCollider.end.set(playerInst.position.x, playerInst.position.y + 3, playerInst.position.z);
+                this.studioScene.sceneInfo.control.playerCollider.end.set(playerInst.position.x, playerInst.position.y + 2, playerInst.position.z);
 
-                this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y + 3, playerInst.position.z);
+                this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y + 2, playerInst.position.z);
             }
 
         // }

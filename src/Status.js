@@ -33,6 +33,7 @@ export default class Status{
         if ( Status.loadingContainer === null)
             Status.loadingContainer = jQuery('#loading');
 
+        Status.loadingContainer.show();
     }
     static set(msg){
 

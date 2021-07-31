@@ -32,14 +32,14 @@ body.drag-tab [data-component-section] .nav-tabs {
     position: relative;
 
     padding: 3px 20px 3px 5px;
-    background: #606060;
+    background: #262626;
     font-size: 11px;
     color: #fff;
     border-radius: 5px 5px 0 0;
 }
 
 .nav-tabs li.active{
-    background: #262626;
+    background: #606060;
 }
 
 

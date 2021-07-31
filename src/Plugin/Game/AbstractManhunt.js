@@ -42,7 +42,6 @@ export default class AbstractManhunt extends AbstractGame{
 
         instEntries.forEach(function (inst) {
             let entity = new Entity(gameId, inst);
-
             let entry = new Result(
                 Studio.ENTITY,
                 inst.name,

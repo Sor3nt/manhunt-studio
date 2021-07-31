@@ -22,6 +22,8 @@ export default class AbstractComponent{
      */
     constructor(props){
         this.props = props;
+        this.element.html('<div class="no-content"><div>Nothing to display</div></div>');
+
     }
 
     onFocus(){

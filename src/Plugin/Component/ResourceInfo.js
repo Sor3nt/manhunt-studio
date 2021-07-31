@@ -15,6 +15,7 @@ export default class ResourceInfo extends AbstractComponent{
      */
     constructor(props) {
         super(props);
+
     }
 
     /**

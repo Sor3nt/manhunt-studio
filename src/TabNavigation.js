@@ -122,6 +122,8 @@ export default class TabNavigation{
             tab: tab,
             component: component
         };
+
+        this.show(component.displayName);
     }
 
     /**
@@ -138,9 +140,10 @@ export default class TabNavigation{
         this.activeRelation.tab.addClass('active');
         this.activeRelation.component.element.show();
 
-        this.activeRelation.component.onFocus();
+        if (this.activeRelation.component.onFocus !== undefined)
+            this.activeRelation.component.onFocus();
 
-        if(this.activeRelation.component.props.entry !== undefined)
+        if(this.activeRelation.component.props !== undefined && this.activeRelation.component.props.entry !== undefined)
             Event.dispatch(Event.VIEW_ENTRY, { entry: this.activeRelation.component.props.entry });
     }
 }

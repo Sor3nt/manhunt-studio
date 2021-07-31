@@ -7,11 +7,14 @@ export default class Storage{
      */
     static storage = [];
     static byTypeGameName = {};
+    static count = 0;
 
     /**
      * @param result {Result}
      */
     static add(result){
+
+        Storage.count++;
 
         let index = `S_${result.type}_${result.gameId}_${result.name}`;
         if (Storage.byTypeGameName[ index ] === undefined)

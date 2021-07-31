@@ -9,6 +9,10 @@
     font-weight: bold;
 }
 
+.component-glgeditor,
+.component-info {
+    height: 100%;
+}
 
 .component-info ul li div span {
     text-decoration: underline;
