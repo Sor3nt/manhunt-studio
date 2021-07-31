@@ -104,33 +104,34 @@ export default class FileTree extends AbstractComponent{
         let usedParentNode;
 
         //entry was imported
-        if (gameId === -1){
-            usedParentNode = this.nodes[Studio.IMPORTED];
-
-            if (usedParentNode === undefined){
-                usedParentNode = new TreeNode({
-                    value: 'Imported',
-                    onClick: function () {
-                        _this.onParentClick(entry);
-                    }
-                });
-                this.addNode(usedParentNode);
-                this.nodes[Studio.IMPORTED] = usedParentNode;
-            }
-
-        }else{
-            let game = Studio.config.getGame(gameId);
-            let indexId = game.game + '_' + entry.file;
+        // if (gameId === -1){
+        //     usedParentNode = this.nodes[Studio.IMPORTED];
+        //
+        //     if (usedParentNode === undefined){
+        //         usedParentNode = new TreeNode({
+        //             value: 'Imported',
+        //             onClick: function () {
+        //                 _this.onParentClick(entry);
+        //             }
+        //         });
+        //         this.addNode(usedParentNode);
+        //         this.nodes[Studio.IMPORTED] = usedParentNode;
+        //     }
+        //
+        // }else{
+        //     let game = Studio.config.getGame(gameId);
+            let indexId = entry.level + '_' + entry.file;
             usedParentNode = this.nodes[indexId];
 
             //Gamefolder name
             if (usedParentNode === undefined){
-
+//<i class="icon-game-${game.game}" />
+//<span class="badge badge-warning">${game.platform}</span>
                 usedParentNode = new TreeNode({
                     value: jQuery(`<div>
-                            <i class="icon-game-${game.game}" />
+                            
                             <div class="badges">
-                                <span class="badge badge-warning">${game.platform}</span>
+                                
                                 <span class="badge badge-secondary">${entry.level}</span>
                             </div>
                             ${entry.fileName}
@@ -143,7 +144,7 @@ export default class FileTree extends AbstractComponent{
                 this.nodes[indexId] = usedParentNode;
             }
 
-        }
+        // }
 
         return usedParentNode;
     }

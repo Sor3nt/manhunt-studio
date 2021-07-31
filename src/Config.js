@@ -14,7 +14,7 @@ export default class Config{
                 _this.config.games.push(Game.create(gameInfo));
             });
 
-            onLoadCallback();
+            onLoadCallback(_this.config);
         });
     }
 

@@ -61,6 +61,12 @@ export default class Glg extends AbstractLoader{
         return options;
     }
 
+    /**
+     *
+     * @param binary {NBinary}
+     * @param options {{}}
+     * @returns {Result[]}
+     */
     static list(binary, options){
 
         let results = [];

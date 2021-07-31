@@ -17,9 +17,9 @@ export default class ResourcesTree {
     constructor(section){
         this.section = section;
         let _this = this;
-        Event.on(Event.DROP_FILE, function (file) {
-            _this.fileDropped(file);
-        });
+        // Event.on(Event.DROP_FILE, function (file) {
+        //     _this.fileDropped(file);
+        // });
 
         Event.on(Event.ENTRY_LOADED, function (props) {
             _this.addEntry(props.entry);
@@ -119,19 +119,21 @@ export default class ResourcesTree {
         tree.addEntry(entry);
     }
 
-    /**
-     * @param file {{binary:NBinary, name: string}}
-     */
-    fileDropped(file){
-        let parsed = Loader.parse(file.binary, {});
-        parsed.forEach(function (entry) {
-            Storage.add(entry);
-
-            Event.dispatch(Event.ENTRY_LOADED, {
-                entry: entry
-            });
-        });
-
-    }
+    // /**
+    //  * todo: should not be here, it is a part of DropFile.js
+    //  * @param file {{binary:NBinary, name: string}}
+    //  */
+    // fileDropped(file){
+    //     console.log(file);
+    //     let parsed = Loader.parse(file.binary, {});
+    //     parsed.forEach(function (entry) {
+    //         Storage.add(entry);
+    //
+    //         Event.dispatch(Event.ENTRY_LOADED, {
+    //             entry: entry
+    //         });
+    //     });
+    //
+    // }
 
 }

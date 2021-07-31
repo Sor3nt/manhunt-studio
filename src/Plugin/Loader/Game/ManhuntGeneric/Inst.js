@@ -163,10 +163,6 @@ export default class Inst extends AbstractLoader{
      */
     static list(binary, options){
 
-        if(options.gameId === undefined)
-            console.error('The INST Loader require the gameId');
-
-        let game = Studio.config.getGame(options.gameId);
         let results = [];
 
         let count = binary.consume(4, 'int32');
@@ -176,12 +172,35 @@ export default class Inst extends AbstractLoader{
             entityDataSize.push(binary.consume(4, 'int32'));
         }
 
+        let game = false;
+
         entityDataSize.forEach(function (size, index) {
             let offset = binary.current();
             let endOffset = offset + size;
             
             let glgRecord = binary.getString(0, true);
             let internalName = binary.getString(0, true);
+
+            //we need to detect the game (mh1 or mh2)
+            if (game === false){
+                binary.seek(7 * 4);
+                let className = binary.getString(0, true);
+
+                if (binary.remain() >= 12){
+                    binary.seek(4);
+                    let maybeType  = binary.getString(0, true);
+
+                    if ([ 'flo', 'boo', 'str', 'int' ].indexOf(maybeType) !== -1){
+                        game = "mh2";
+                    }else{
+                        game = "mh1";
+                    }
+                }else{
+                    game = "mh1";
+                }
+
+
+            }
 
             results.push(new Result(
                 Studio.INST,
@@ -207,7 +226,7 @@ export default class Inst extends AbstractLoader{
      *
      * @param binary {NBinary}
      * @param offset {int}
-     * @param game {AbstractGame}
+     * @param game {string}
      * @returns {{settings: Object, entityClass: string, rotation: Object, position: Object}}
      */
     static parse(binary, offset, game){
@@ -232,7 +251,7 @@ export default class Inst extends AbstractLoader{
             let field = 0;
             while(binary.remain() > 0){
                 let setting = {};
-                    if (game.game === "mh1"){
+                    if (game === "mh1"){
                     settings['unk_' + field] = binary.consume(4, 'int32');
 
                 }else{

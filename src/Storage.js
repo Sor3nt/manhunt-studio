@@ -71,6 +71,7 @@ export default class Storage{
             }
 
             if (criteria.hasChanges !== undefined && entry.hasChanges   !== criteria.hasChanges)   return;
+            if (criteria.level   !== undefined && entry.level   !== criteria.level)   return;
             if (criteria.type   !== undefined && entry.type   !== criteria.type)   return;
             if (criteria.name   !== undefined && entry.name   !== criteria.name)   return;
             if (criteria.offset !== undefined && entry.offset !== criteria.offset) return;

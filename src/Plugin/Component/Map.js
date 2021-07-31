@@ -32,17 +32,22 @@ export default class Map extends AbstractComponent{
 
 
         //we try to set the original player position
-        if (props.entry.gameId > -1){
+        // if (props.entry.gameId > -1){
             let playerInst = Storage.findOneBy({
                 gameId: props.entry.gameId,
+                level: props.entry.level,
                 type: Studio.INST,
                 name: 'player'
-            }).data();
+            });
 
-            this.studioScene.sceneInfo.control.playerCollider.end.set(playerInst.position.x, playerInst.position.y + 3, playerInst.position.z);
+            if (playerInst !== null){
+                playerInst = playerInst.data();
+                this.studioScene.sceneInfo.control.playerCollider.end.set(playerInst.position.x, playerInst.position.y + 3, playerInst.position.z);
 
-             this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y + 3, playerInst.position.z);
-        }
+                this.studioScene.sceneInfo.camera.position.set(playerInst.position.x, playerInst.position.y + 3, playerInst.position.z);
+            }
+
+        // }
         this.studioScene.display(mesh);
 
         StudioScene.changeScene(this.studioScene.name);

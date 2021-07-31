@@ -7,6 +7,7 @@ import { default as TextureManhuntGenericInst } from "./Loader/Game/ManhuntGener
 import { default as TextureManhuntGenericMls } from "./Loader/Game/ManhuntGeneric/Mls.js";
 import { default as TextureManhuntGenericTvp } from "./Loader/Game/ManhuntGeneric/Tvp.js";
 import { default as ModelManhunt2Pc } from "./Loader/Game/Manhunt2/Pc/Model.js";
+import { default as PakManhunt } from "./Loader/Generic/PAK.js";
 import RenderwareLoader from "./Loader/Renderware.js";
 import Api from "./../Api.js";
 import Storage from "./../Storage.js";
@@ -40,9 +41,8 @@ export default class Loader{
             }
 
             results.forEach(function (result) {
-                result.file = file;
-                result.fileName = file.split("/").slice(-1)[0].split(".")[0];
-                result.level = file.split("/")[1];
+                result.setFilePath(file);
+
                 result.gameId = gameId;
                 Storage.add(result);
 
@@ -62,6 +62,9 @@ export default class Loader{
          */
         Loader.registerPlugin(RenderwareLoader);
         Loader.registerPlugin(DDS);
+
+        Loader.registerPlugin(PakManhunt);
+
 
         /**
          * Manhunt parser which works for Manhunt 1 and 2

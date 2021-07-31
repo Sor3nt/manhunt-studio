@@ -36,12 +36,12 @@
 }
 
 .fileTree .badges {
-    position: absolute;
-    top: -14px;
+    /*position: absolute;*/
+    /*top: -14px;*/
     font-size: 10px;
-    left: 34px;
-    width: 100%;
-    display: flex;
+    /*left: 34px;*/
+    /*width: 100%;*/
+    /*display: flex;*/
 }
 
 .fileTree li.active{

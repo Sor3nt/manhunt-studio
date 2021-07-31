@@ -10,6 +10,12 @@ export default class Status{
 
     static loadingContainer = null;
 
+    static hideWelcome(){
+        jQuery('#welcome').animate({opacity: 0}, function () {
+            jQuery('#welcome').hide()
+        })
+    }
+
     static hide(){
         if ( Status.loadingContainer === null)
             Status.loadingContainer = jQuery('#loading');

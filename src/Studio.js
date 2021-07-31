@@ -25,6 +25,7 @@ export default class Studio{
     static MLS = 9;
     static WORLD = 10;
     static IMPORTED = 11;
+    static FILE = 12;
 
     /**
      * @type {Config}
@@ -45,16 +46,23 @@ export default class Studio{
 
         new Save();
 
-        Studio.config = new Config(function () {
+        Studio.config = new Config(function (config) {
             Layout.createDefaultLayout();
 
             WebGL.render();
-            //
-            Studio.config.getGame(0).loadLevel("asylum", function () {
-                console.log("loaded");
 
-                Status.hide();
-            });
+
+            if (config.games.length > 0){
+                Studio.config.getGame(0).loadLevel("asylum", function () {
+                    console.log("loaded");
+
+                    Status.hide();
+                });
+            }else{
+
+
+            }
+
             //
             // Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
             //     console.log("loaded");
