@@ -35,6 +35,9 @@ export default class Entity{
             name: this.inst.props.glgRecord
         });
 
+        if (this.glgEntry === null)
+            return;
+
         let modelName = this.glgEntry.props.getValue('MODEL');
         if (modelName === false)
             return;
@@ -57,6 +60,7 @@ export default class Entity{
 
         if (this.mesh !== undefined)
             return this.mesh;
+
 
         if (this.model.name === "fist_poly_hunter")
             return false;
@@ -85,6 +89,9 @@ export default class Entity{
     }
 
     #loadModel(){
+
+        if (this.glgEntry === null)
+            return;
 
         //Load the model if required
         let modelName = this.glgEntry.props.getValue("MODEL");
