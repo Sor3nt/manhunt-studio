@@ -1,6 +1,7 @@
 import Storage from "./Storage.js";
 import Studio from "./Studio.js";
 import Inst from "./Plugin/Loader/Game/ManhuntGeneric/Inst.js";
+import NBinary from "./NBinary.js";
 
 export class Save{
 
@@ -62,10 +63,10 @@ export class Save{
         document.body.appendChild( link );
 
 
-        const blob = new Blob( [ file.data ], { type: 'text/plain' } );
-        const objectURL = URL.createObjectURL( blob );
+        file.data.setCurrent(0);
+        let dataAsBin = new Uint8Array(file.data.data);
+        const blob = new Blob( [ dataAsBin ], { type: 'application/octet-stream' } );
 
-        link.href = objectURL;
         link.href = URL.createObjectURL( blob );
         link.download =  file.filename;
         link.click();

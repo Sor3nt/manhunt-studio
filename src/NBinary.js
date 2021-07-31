@@ -4,8 +4,17 @@ import * as fflate from './Vendor/fflate.js';
 
 export default class NBinary{
 
+    /**
+     *
+     * @param data {ArrayBuffer}
+     * @param options
+     */
     constructor(data, options){
         this._current = 0;
+
+        /**
+         * @type {ArrayBuffer}
+         */
         this.data = data;
         this.options = options || {};
         if (this.remain() <= 4) return;
@@ -199,8 +208,9 @@ export default class NBinary{
     }
 
     setFloat32( flt ){
-        let view = new DataView(this.data, this._current);
-        view.setFloat32(0, flt);
+        let view = new DataView(this.data, this._current, 4);
+        view.setFloat32(0, flt, true);
+        // console.log(view);
         this._current += 4;
     }
 
