@@ -115,7 +115,7 @@ export default class Loader{
             return plugin.list(binary, options);
         }
 
-        return false;
+        return [];
     }
 
 }
