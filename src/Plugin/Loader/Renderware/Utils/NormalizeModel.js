@@ -97,7 +97,7 @@ export default class NormalizeModel{
 
             if (this.data.skins.length > 0){
                 let chunkSkin = this.data.skins[i];
-                if (chunkSkin !== false){
+                if (chunkSkin !== false && chunkSkin !== undefined){
                     skinFlag = true;
                     skinPLG = chunkSkin.skinPLG;
                 }
