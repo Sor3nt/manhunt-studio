@@ -55,7 +55,10 @@ export default class Map extends AbstractComponent{
 
 
     onFocus(){
-        document.body.requestPointerLock();
+
+        window.setTimeout(function () {
+            document.body.requestPointerLock();
+        }, 100);
 
         jQuery("#info").show();
 
