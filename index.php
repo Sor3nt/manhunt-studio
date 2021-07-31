@@ -57,13 +57,13 @@
     right: 0;" >
 
 
-        <div class="container-fluid vh-100" >
+        <div class="container-fluid vh-100" style="overflow: scroll;">
             <div class="row">
                 <div class="col-2">
 
                 </div>
 
-                <div class="col-8" style="margin-top: 50px;height: 285px;">
+                <div class="col-8" style="margin-top: 50px;height: 340px;">
 
                     <div style="">
 
@@ -82,7 +82,7 @@
                         <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; margin-top: -15px;font-size: 10px;text-align: center">A free and open source toolkit to quickly modify Rockstar`s game Manhunt.</h5>
                     </div>
 
-                    <div class="container" style="margin-top: 30px">
+                    <div class="container" style="margin-top: 50px">
 
                         <div class="row" style="height: 140px">
                             <div class="col-6" style="text-align: right; border-right: 1px solid #750202; padding-right: 15px">
@@ -154,11 +154,47 @@ underline">Changelog</h5>
                 <div class="col-12" style="text-align: center;">
 
                     <h6 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
+underline">Credits</h6>
+
+
+                    <ul style="color: #fff; font-size: 10px">
+                        <li><b style="color: orange">Sor3nt</b> (Developer of MHS)</li>
+                        <li>Special thanks to <b style="color: orange">MAJEST1C_R3</b> and <b style="color: orange">Leeao</b> for countless problem solutions and much more!</li>
+                        <li>Also big thanks to <b style="color: orange">errmaccer</b>, <b style="color: orange">ZT</b> and <b style="color: orange">Miauz</b>! The support from you is great!</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12" style="text-align: center;">
+
+                    <h6 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
 underline">Tutorials</h6>
 
 
                     <ul style="color: #fff; font-size: 10px">
                         <li><a style="color: orange" href="" target="_blank">Release Video</a></li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12" style="text-align: center;">
+
+                    <h6 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
+underline">Support and more</h6>
+
+
+                    <ul style="color: #fff; font-size: 10px">
+                        <li>Join our <a style="color: orange" href="https://discord.gg/EfDh5Vv3Ga" target="_blank">Discord</a> for support</li>
+                        <li>Add a <a style="color: orange" href="https://github.com/Sor3nt/manhunt-studio/issues/new" target="_blank">Ticket</a></li>
+                        <li>Help <a style="color: orange" href="https://github.com/Sor3nt/manhunt-studio/" target="_blank">Development</a></li>
                     </ul>
 
                 </div>
