@@ -42,12 +42,14 @@ export default class ResourceInfo extends AbstractComponent{
 
                 let record = Storage.findOneBy({
                     type: Studio.GLG,
+                    level: entry.level,
                     gameId: entry.gameId,
                     name: entry.props.instance.props.glgRecord
                 });
 
                 let model = Storage.findOneBy({
                     type: Studio.MODEL,
+                    level: entry.level,
                     gameId: entry.gameId,
                     name: record.props.model,
                 });
@@ -119,6 +121,7 @@ export default class ResourceInfo extends AbstractComponent{
 
                             let texture = Storage.findBy({
                                 type: Studio.TEXTURE,
+                                level: entry.level,
                                 gameId: entry.gameId,
                                 name: name
                             })[0];

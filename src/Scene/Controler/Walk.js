@@ -66,7 +66,7 @@ export default class Walk {
             }
         });
 
-        document.addEventListener('mousedown', () => {
+        WebGL.renderer.domElement.addEventListener('mousedown', () => {
             if (this.mode === "fly")
                 document.body.requestPointerLock();
         });
@@ -206,10 +206,10 @@ export default class Walk {
         if (this.keyStates['KeyD'])
             this.playerVelocity.add(this.getSideVector().multiplyScalar(speed * deltaTime));
 
-        if (this.keyStates['KeyE'])
+        if (this.keyStates['KeyQ'])
             this.playerVelocity.y = 7;
 
-        if (this.keyStates['KeyQ'])
+        if (this.keyStates['KeyE'])
             this.playerVelocity.y = -7;
 
     }

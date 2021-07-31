@@ -32,4 +32,19 @@ export default class Model extends AbstractComponent{
     }
 
 
+    onFocus(){
+
+        jQuery("#info2").show();
+
+        if (this.studioScene !== null)
+            StudioScene.changeScene(this.studioScene.name);
+
+
+    }
+
+    onBlur(){
+
+        jQuery("#info2").hide();
+
+    }
 }

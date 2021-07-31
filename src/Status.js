@@ -16,6 +16,12 @@ export default class Status{
         })
     }
 
+    static showWelcome(){
+        jQuery('#welcome').css('opacity', 0).show().animate({
+            opacity: 1
+        });
+    }
+
     static hide(){
         if ( Status.loadingContainer === null)
             Status.loadingContainer = jQuery('#loading');

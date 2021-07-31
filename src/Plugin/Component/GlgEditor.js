@@ -22,6 +22,7 @@ export default class GglEditor extends AbstractComponent{
 
         let record = Storage.findOneBy({
             type: Studio.GLG,
+            level: entry.level,
             gameId: entry.gameId,
             props: {
                 model: entry.name
@@ -58,6 +59,7 @@ export default class GglEditor extends AbstractComponent{
 
                     let headModel = Storage.findOneBy({
                         type: Studio.MODEL,
+                        level: entry.level,
                         gameId: entry.gameId,
                         name: head
                     });

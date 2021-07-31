@@ -59,6 +59,8 @@ export default class Studio{
                     Status.hide();
                 });
             }else{
+                Status.hide();
+                Status.showWelcome();
 
 
             }

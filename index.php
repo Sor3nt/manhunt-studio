@@ -22,7 +22,7 @@
 <body id="drop_zone" style="background: #262626">
 
 <!---->
-<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 10; display: none" id="loading">
+<div class="container-fluid vh-100" style="position: absolute; top: 0px; z-index: 10;" id="loading">
     <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
 
     <div style="
@@ -46,7 +46,7 @@
 </div>
 
 <!---->
-<div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 10;" id="welcome">
+<div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 10;display: none" id="welcome">
     <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
 
     <div style="
@@ -57,13 +57,13 @@
     right: 0;" >
 
 
-        <div class="container-fluid vh-100">
+        <div class="container-fluid vh-100" >
             <div class="row">
                 <div class="col-2">
 
                 </div>
 
-                <div class="col-8" style="border: 1px solid red; margin-top: 50px;height: 285px;">
+                <div class="col-8" style="margin-top: 50px;height: 285px;">
 
                     <div style="">
 
@@ -71,7 +71,7 @@
                             width: 100px;
                             top: 0;
                             position: absolute;
-                            height: 100px;"  autoplay></lottie-player>
+                            height: 100px;" loop autoplay></lottie-player>
 
                         <h1 style="font-family: 'GF Ordner Inverted';
                             font-weight: normal;
@@ -79,23 +79,38 @@
                             font-style: normal; color: #fff;text-align: center;">
                             Manhunt Studio
                         </h1>
-                        <h5 style="font-family: 'GF Ordner Inverted'; color:#fff;text-decoration:
-underline; margin-top: -15px;font-size: 10px;text-align: center">A free and open source toolkit to quickly modify Rockstar`s game Manhunt.</h5>
+                        <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; margin-top: -15px;font-size: 10px;text-align: center">A free and open source toolkit to quickly modify Rockstar`s game Manhunt.</h5>
                     </div>
 
                     <div class="container" style="margin-top: 30px">
 
                         <div class="row" style="height: 140px">
-                            <div class="col-6" style="text-align: right; border-right: 1px solid red; padding-right: 15px">
+                            <div class="col-6" style="text-align: right; border-right: 1px solid #750202; padding-right: 15px">
+                                <div style="display: inline-block">
+                                    <h5 style="font-family: 'GF Ordner Inverted'; color:#fff;text-decoration:
+    underline">Instructions</h5>
+
+                                    <ul style="color: #fff; font-size: 12px;float: right;">
+                                        <li style="font-size: 14px">
+                                            Simply <b style="color: orange">drag</b> a file into this window to start the wizard 🤷‍♂️
+                                        </li>
+                                        <li>&nbsp;</li>
+                                        <li>&nbsp;</li>
+                                    </ul>
+
+                                </div>
+
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff;text-decoration:
-underline">Instructions</h5>
-
-                                <ul style="color: #fff; font-size: 12px;float: right;">
+underline">Current Features</h5>
+                                <ul style="color: #fff; font-size: 10px;float: right;">
                                     <li>
-                                        Just drag a  file into this Window, so start the wizzard 🤷‍♂️
+                                        View textures, models and maps <i class="fas fa-check"></i>️
                                     </li>
-                                </ul>
+                                    <li>
+                                        <b>Move</b> and save game objects <i class="fas fa-check"></i>️
+                                    </li>
 
+                                </ul>
                             </div>
                             <div class="col-6" style="padding-left:15px">
 
@@ -134,6 +149,21 @@ underline">Changelog</h5>
 
 
             </div>
+
+            <div class="row">
+                <div class="col-12" style="text-align: center;">
+
+                    <h6 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
+underline">Tutorials</h6>
+
+
+                    <ul style="color: #fff; font-size: 10px">
+                        <li><a style="color: orange" href="" target="_blank">Release Video</a></li>
+                    </ul>
+
+                </div>
+            </div>
+
         </div>
 
 
@@ -158,7 +188,7 @@ underline">Changelog</h5>
 
                 </div>
 
-                <div class="col-8" style="border: 1px solid red; margin-top: 50px;height: 285px;">
+                <div class="col-8" style="margin-top: 50px;height: 285px;">
 
                     <div style="">
 
@@ -166,20 +196,20 @@ underline">Changelog</h5>
                             width: 100px;
                             top: 0;
                             position: absolute;
-                            height: 100px;"  autoplay></lottie-player>
+                            height: 100px;" loop autoplay></lottie-player>
 
                         <h1 style="font-family: 'GF Ordner Inverted';
                             font-weight: normal;
                             margin-top: 15px;
                             font-style: normal; color: #fff;text-align: center;">
-                            Import wizzard
+                            Import wizard
                         </h1>
                     </div>
 
                     <div class="container" style="margin-top: 30px">
 
                         <div class="row" style="height: 140px">
-                            <div class="col-6" style="text-align: right; border-right: 1px solid red; padding-right: 15px">
+                            <div class="col-6" style="text-align: right; border-right: 1px solid #750202; padding-right: 15px">
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff;text-decoration:
 underline">Select Level</h5>
 
@@ -283,7 +313,7 @@ underline">Select Level</h5>
             <div class="col h-100" data-component-section="scene" style="position: relative">
 
                 <style>
-                    #info {
+                    .info {
                         position: absolute;
                         z-index: 3;
                         top: 35px;
@@ -295,13 +325,18 @@ underline">Select Level</h5>
                     }
 
 
-                    #info b {
+                    .info b {
                         color: orange;
                     }
                 </style>
 
-                <div id="info" style="display: none">
-                    <b>WASD</b> move, <b>Q|E</b> up | down, <b>I</b> Interactive ON|OFF, <b>click</b> select Object
+                <div class="info" id="info" style="display: none">
+                    <b>WASD</b> move, <b>Q|E</b> up | down, <b>I</b> object selection on | off, <b>click</b> select object<br/>
+                    <b>ESC</b> leave pointerlock
+                </div>
+
+                <div class="info" id="info2" style="display: none">
+                    mouse <b>MOVE</b> look around, mouse <b>SCROLL</b> zoom in | out
                 </div>
 
 
