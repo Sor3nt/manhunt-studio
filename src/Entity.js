@@ -58,8 +58,9 @@ export default class Entity{
         if (this.mesh !== undefined)
             return this.mesh;
 
+        if (this.model.name === "fist_poly_hunter")
+            return false;
 
-        // console.log(this.model);
         this.mesh = MeshHelper.convertFromNormalized( new NormalizeModel(this.model.data()), this.model );
 
         let instData = this.inst.getData();

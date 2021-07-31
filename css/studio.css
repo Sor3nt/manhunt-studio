@@ -32,7 +32,13 @@ canvas {
 
 }
 
+[data-component-section] .nav-tabs-content ::-webkit-scrollbar {
+    display: none;
+}
+
 [data-component-section] .nav-tabs-content {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
     overflow: scroll;
     height: calc(100% - 25px - 15px);
     display: inline-block;

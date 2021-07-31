@@ -55,7 +55,17 @@
     font-weight: bold;
 }
 
+.fileTree ul.children::-webkit-scrollbar {
+    display: none;
+}
+
+
 .fileTree ul.children{
+
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+
     z-index: 1;
     position: absolute;
     top: 61px;

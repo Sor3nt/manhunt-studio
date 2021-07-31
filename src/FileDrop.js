@@ -163,7 +163,7 @@ export default class FileDrop{
                         if (file.name.indexOf('scene') !== -1 ){
                             _this.loadedMap.mapTexture = true;
 
-                        }else if (file.name.indexOf('models') !== -1){
+                        }else{
                             _this.loadedMap.modelTexture = true;
                         }
 

@@ -249,6 +249,8 @@ underline">Support and more</h6>
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff;text-decoration:
 underline">Select Level</h5>
 
+                                <p style="color: #fff; font-size: 10px">Selection of the <b style="color: orange">correct</b> level is only required for <b>map view</b></p>
+
                                 <select data-fied="level" name="level">
                                     <option value="none" selected>Please select</option>
                                     <option value="asylum">asylum</option>
@@ -286,13 +288,13 @@ underline">Select Level</h5>
                                 <h6 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration: underline">Files</h6>
 
                                 <ul style="color: #fff;font-size: 10px" data-id="file-list">
-                                    <li><span class="badge badge-danger" data-file-id="model">x</span>Model</li>
-                                    <li><span class="badge badge-danger" data-file-id="map">x</span>Map</li>
-                                    <li><span class="badge badge-danger" data-file-id="modelTexture">x</span>Textures for Model </li>
-                                    <li><span class="badge badge-danger" data-file-id="mapTexture">x</span>Textures for Map </li>
-                                    <li><span class="badge badge-danger" data-file-id="instances1">x</span>Instances 1</li>
-                                    <li><span class="badge badge-danger" data-file-id="instances2">x</span>Instances 2</li>
-                                    <li><span class="badge badge-danger" data-file-id="glg">x</span>Records </li>
+                                    <li><span class="badge badge-danger" data-file-id="model">x</span>Model (modelspc.dff)</li>
+                                    <li><span class="badge badge-danger" data-file-id="map">x</span>Map (scene1.bsp)</li>
+                                    <li><span class="badge badge-danger" data-file-id="modelTexture">x</span>Textures for Model (modelspc.txd)</li>
+                                    <li><span class="badge badge-danger" data-file-id="mapTexture">x</span>Textures for Map (scene1pc.txd)</li>
+                                    <li><span class="badge badge-danger" data-file-id="instances1">x</span>Instances 1 (entity.inst)</li>
+                                    <li><span class="badge badge-danger" data-file-id="instances2">x</span>Instances 2 (entity2.inst)</li>
+                                    <li><span class="badge badge-danger" data-file-id="glg">x</span>Records (ManHunt.pak)</li>
                                 </ul>
 
 
