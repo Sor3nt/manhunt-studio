@@ -47,7 +47,7 @@
 
 <!---->
 <div class="container-fluid vh-100" style="position: absolute; top: 0; z-index: 10;display: none" id="welcome">
-    <div class="row" style="opacity: 0.8;background: #212529;width: 100vw; height: 100vh;"></div>
+    <div class="row" style="opacity: 0.8;background: #212529; height: 100vh;"></div>
 
     <div style="
     position: absolute;
