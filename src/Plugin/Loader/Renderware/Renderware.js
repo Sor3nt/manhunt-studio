@@ -508,6 +508,15 @@ export default class Renderware{
             atomics: []
         };
 
+        if (binary.remain() < 12){
+            let size = binary.remain();
+            return new Renderware.handler[Renderware.CHUNK_NAOBJECT](binary.consume(size, 'nbinary'),{
+                id: 0,
+                size: size,
+                version: 0
+            })
+        }
+
         let header = Renderware.parseHeader(binary);
 
         assert(typeof Renderware.handler[header.id], "function", "Chunk function not found for ID " + header.id);

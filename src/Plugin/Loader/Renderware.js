@@ -5,6 +5,7 @@ import Studio from "./../../Studio.js";
 import Helper from "./../../Helper.js";
 import TexDictionary from "./Renderware/Chunk/TexDictionary.js";
 import TextureNative from "./Renderware/Chunk/TextureNative.js";
+import Scan from "./Renderware/Utils/Scan.js";
 
 import NormalizeMap from "./../../Normalize/map.js";
 // import NormalizeTexture from "./../../Normalize/texture.js";
@@ -56,11 +57,19 @@ export default class RenderwareLoader extends AbstractLoader{
                             {},
                             function(){
                                 // Status.set(`Parse Map Data`);
-                                binary.setCurrent(offset);
-                                let tree = Renderware.parse(binary);
+                                try{
+                                    binary.setCurrent(offset);
+                                    let tree = Renderware.parse(binary);
 
-                                // Status.set(`Normalize Map Data`);
-                                return new NormalizeMap(tree);
+                                    // Status.set(`Normalize Map Data`);
+                                    return new NormalizeMap(tree);
+                                }catch(e){
+                                    console.error(e);
+                                    binary.setCurrent(offset);
+                                    let scanner = new Scan(binary);
+                                    console.log("Scan", scanner.scan());
+                                }
+
                             }
                         ));
 

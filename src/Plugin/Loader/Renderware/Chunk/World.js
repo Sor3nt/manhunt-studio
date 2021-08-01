@@ -58,7 +58,6 @@ export default class World extends Chunk{
         }
 
         this.validateParsing(struct);
-
         while(this.binary.remain() > 0){
             this.result.chunks.push(this.processChunk(this.binary));
         }
