@@ -32,7 +32,7 @@ canvas {
 
 }
 
-[data-component-section] .nav-tabs-content ::-webkit-scrollbar {
+[data-component-section] .nav-tabs-content::-webkit-scrollbar {
     display: none;
 }
 
@@ -99,6 +99,5 @@ dl, ol, ul {
 
 
 .nav-tabs-content {
-    overflow-y: hidden;
     position: relative;
 }
