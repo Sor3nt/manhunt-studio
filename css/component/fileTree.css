@@ -73,7 +73,7 @@
     font-size: 10px;
     /*WTF why is this not correct in each viewport ?!*/
     height: calc(100vh - 75px);
-    overflow: scroll;
+    overflow-y: scroll;
     background: #171717;
     width: 50%;
     padding: 5px;
