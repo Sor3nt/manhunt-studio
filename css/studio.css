@@ -32,6 +32,15 @@ canvas {
 
 }
 
+.overScroll::-webkit-scrollbar {
+    display: none;
+}
+.overScroll {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    overflow-y: scroll;
+}
+
 [data-component-section] .nav-tabs-content::-webkit-scrollbar {
     display: none;
 }

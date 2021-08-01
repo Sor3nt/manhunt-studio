@@ -57,7 +57,7 @@
     right: 0;" >
 
 
-        <div class="container-fluid vh-100" style="overflow: scroll;">
+        <div class="container-fluid vh-100 overScroll" >
             <div class="row">
                 <div class="col-2">
 
