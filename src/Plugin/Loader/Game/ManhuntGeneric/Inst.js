@@ -125,15 +125,27 @@ export default class Inst extends AbstractLoader{
          */
         let binary = entry.binary;
 
-        if (entry.changes.position !== undefined){
+        if (entry.changes.position !== undefined || entry.changes.rotation !== undefined){
             binary.setCurrent(entry.offset);
             binary.getString(0, true); //skip glgRecord
             binary.getString(0, true); //skip internalName
 
-            binary.setFloat32(entry.changes.position.x);
-            binary.setFloat32(entry.changes.position.z * -1);
-            binary.setFloat32(entry.changes.position.y);
+            if (entry.changes.position !== undefined){
+                binary.setFloat32(entry.changes.position.x);
+                binary.setFloat32(entry.changes.position.z * -1);
+                binary.setFloat32(entry.changes.position.y);
+            }else{
+                binary.seek(12);
+            }
+
+            if (entry.changes.rotation !== undefined){
+                binary.setFloat32(entry.changes.rotation.x);
+                binary.setFloat32(entry.changes.rotation.z);
+                binary.setFloat32(entry.changes.rotation.y * - 1);
+                binary.setFloat32(entry.changes.rotation.w );
+            }
         }
+
 
     }
 

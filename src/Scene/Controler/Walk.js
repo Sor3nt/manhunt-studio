@@ -117,10 +117,10 @@ export default class Walk {
                 z: this.object.position.z,
             },
             rotation: {
-                x: this.object.rotation.x,
-                y: this.object.rotation.y,
-                z: this.object.rotation.z,
-                w: this.object.rotation.w
+                x: this.object.quaternion.x,
+                y: this.object.quaternion.y,
+                z: this.object.quaternion.z,
+                w: this.object.quaternion.w
             },
         });
     }
