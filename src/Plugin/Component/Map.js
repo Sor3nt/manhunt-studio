@@ -60,7 +60,7 @@ export default class Map extends AbstractComponent{
             document.body.requestPointerLock();
         }, 100);
 
-        jQuery("#info").show();
+        Status.showInfo('world');
 
         if (this.studioScene !== null)
             StudioScene.changeScene(this.studioScene.name);
@@ -70,7 +70,7 @@ export default class Map extends AbstractComponent{
 
     onBlur(){
 
-        jQuery("#info").hide();
+        Status.hideInfo();
 
     }
 }

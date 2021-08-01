@@ -10,6 +10,16 @@ export default class Status{
 
     static loadingContainer = null;
 
+
+    static hideInfo(){
+        jQuery('[data-info-id]').hide();
+    }
+
+    static showInfo(id){
+        jQuery('[data-info-id]').hide();
+        jQuery(`[data-info-id="${id}"]`).show();
+    }
+
     static hideWelcome(){
         jQuery('#welcome').animate({opacity: 0}, function () {
             jQuery('#welcome').hide()

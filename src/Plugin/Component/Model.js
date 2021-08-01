@@ -4,6 +4,7 @@ import StudioScene from "../../Scene/StudioScene.js";
 import WebGL from "../../WebGL.js";
 import MeshHelper from "../../MeshHelper.js";
 import NormalizeModel from "../Loader/Renderware/Utils/NormalizeModel.js";
+import Status from "../../Status.js";
 
 export default class Model extends AbstractComponent{
     name = "model";
@@ -34,7 +35,7 @@ export default class Model extends AbstractComponent{
 
     onFocus(){
 
-        jQuery("#info2").show();
+        Status.showInfo('model');
 
         if (this.studioScene !== null)
             StudioScene.changeScene(this.studioScene.name);
@@ -44,7 +45,7 @@ export default class Model extends AbstractComponent{
 
     onBlur(){
 
-        jQuery("#info2").hide();
+        Status.hideInfo();
 
     }
 }

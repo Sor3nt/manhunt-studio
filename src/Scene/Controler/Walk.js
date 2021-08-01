@@ -6,6 +6,7 @@ import {OrbitControls} from "../Controls/OrbitControls.js";
 import StudioScene from "../StudioScene.js";
 import Studio from "../../Studio.js";
 import Event from "../../Event.js";
+import Status from "../../Status.js";
 
 
 export default class Walk {
@@ -121,7 +122,7 @@ export default class Walk {
                 y: this.object.quaternion.y,
                 z: this.object.quaternion.z,
                 w: this.object.quaternion.w
-            },
+            }
         });
     }
 
@@ -263,6 +264,13 @@ export default class Walk {
             this.orbit.enabled = true;
         }
 
+        if (mode === "fly"){
+            Status.showInfo('world');
+        }else if (mode === "select"){
+            Status.showInfo('select');
+        }else if (mode === "transform"){
+            Status.showInfo('transform');
+        }
 
         this.mode = mode;
     }

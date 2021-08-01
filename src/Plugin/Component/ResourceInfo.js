@@ -83,6 +83,11 @@ export default class ResourceInfo extends AbstractComponent{
                     label: 'Position',
                     value: `<span class="badge badge-secondary">x</span>:${object.position.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.position.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.position.z.toFixed(2)} `
                 });
+
+                result.push({
+                    label: 'Rotation',
+                    value: `<span class="badge badge-secondary">x</span>:${object.rotation.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.rotation.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.rotation.z.toFixed(2)} `
+                });
                 break;
             case Studio.MODEL:
 

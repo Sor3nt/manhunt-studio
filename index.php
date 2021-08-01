@@ -368,14 +368,24 @@ underline">Select Level</h5>
                     }
                 </style>
 
-                <div class="info" id="info" style="display: none">
-                    <b>WASD</b> move, <b>Q|E</b> up | down, <b>I</b> object selection on | off, <b>click</b> select object<br/>
+                <div class="info" data-info-id="world" style="display: none">
+                    <b>WASD</b> move, <b>Q|E</b> up | down, <b>I</b> object selection on, <b>click</b> select object<br/>
                     <b>ESC</b> leave pointerlock
                 </div>
 
-                <div class="info" id="info2" style="display: none">
+                <div class="info" data-info-id="object" style="display: none">
                     mouse <b>MOVE</b> look around, mouse <b>SCROLL</b> zoom in | out
                 </div>
+
+
+                <div class="info" data-info-id="select" style="display: none">
+                    mouse <b>CLICK</b> on object, <b>I</b> object selection off
+                </div>
+
+                <div class="info" data-info-id="transform" style="display: none">
+                    <b>W</b> position, <b>E</b> rotation, <b>I</b> object selection off
+                </div>
+
 
 
                 <div id="webgl" style="z-index: 1;position: absolute; top:25px; width: 100%; height: calc(100% - 25px - 15px); background: #3e3e3e;"></div>
