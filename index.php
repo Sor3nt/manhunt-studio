@@ -108,7 +108,7 @@ underline">Current Features</h5>
                                         View textures, models and maps <i class="fas fa-check"></i>️
                                     </li>
                                     <li>
-                                        <b>Move</b> and save game objects <i class="fas fa-check"></i>️
+                                        <b>Move</b>, <b>Rotate</b> and save game objects <i class="fas fa-check"></i>️
                                     </li>
 
                                 </ul>
@@ -135,6 +135,7 @@ underline">Supported Formats</h6>
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
 underline">Changelog</h5>
                                 <ul style="color: #fff; font-size: 10px">
+                                    <li><b>07-08-2021</b>: Search feature & Bugfixes</li>
                                     <li><b>30-07-2021</b>: Initial release 🎉</li>
                                 </ul>
                             </div>
@@ -161,7 +162,7 @@ underline">Credits</h6>
                     <ul style="color: #fff; font-size: 10px">
                         <li><b style="color: orange">Sor3nt</b> (Developer of MHS)</li>
                         <li>Special thanks to <b style="color: orange">MAJEST1C_R3</b> and <b style="color: orange">Leeao</b> for countless problem solutions and much more!</li>
-                        <li>Also big thanks to <b style="color: orange">errmaccer</b>, <b style="color: orange">ZT</b> and <b style="color: orange">Miauz</b>! The support from you is great!</li>
+                        <li>Also big thanks to <b style="color: orange">errmaccer</b>, <b style="color: orange">ZT</b>, <b style="color: orange">DerWaschbärKönig</b> and <b style="color: orange">Miauz</b>! The support from you is great!</li>
                         <li>&nbsp;</li>
                         <li>&nbsp;</li>
                     </ul>
@@ -177,7 +178,8 @@ underline">Tutorials</h6>
 
 
                     <ul style="color: #fff; font-size: 10px">
-                        <li><a style="color: orange" href="" target="_blank">Release Video</a></li>
+                        <li><a style="color: orange" href="https://www.youtube.com/watch?v=ORxvxcWNby8" target="_blank">Release Video</a></li>
+                        <li><a style="color: orange" href="https://youtu.be/Fu2JxqhYD2U?t=356" target="_blank">Release Video (español. thx "Der Ritter")</a></li>
                         <li>&nbsp;</li>
                         <li>&nbsp;</li>
                     </ul>
