@@ -5,6 +5,7 @@ export default class IconBoxes extends AbstractComponent{
     displayName = "IconBoxes";
     element = jQuery('<ul>').addClass('icon-boxes');
 
+    treeByTypeId = {};
     contentByTypeId = {};
     iconByTypeId = {};
 
@@ -14,16 +15,20 @@ export default class IconBoxes extends AbstractComponent{
     active = undefined;
 
     /**
-     * @param props {{onClick: function}}
+     *
+     * @type {FileTree}
      */
-    constructor(props) {
-        super(props);
+    activeTree = undefined;
+
+    constructor() {
+        super({});
     }
 
     show(typeId){
         if (this.active !== undefined)
             this.active.hide().removeClass('active');
 
+        this.activeTree = this.treeByTypeId[typeId];
         this.active = this.contentByTypeId[typeId];
         this.active.show().addClass('active');
 
@@ -36,7 +41,14 @@ export default class IconBoxes extends AbstractComponent{
         this.show(typeId);
     }
 
-    add(typeId, iconName, content){
+    /**
+     *
+     * @param typeId {string}
+     * @param iconName {string}
+     * @param content {jQuery}
+     * @param tree {FileTree}
+     */
+    add(typeId, iconName, content, tree){
         let _this = this;
 
         let li = jQuery('<li>');
@@ -50,6 +62,7 @@ export default class IconBoxes extends AbstractComponent{
 
         li.append(icon);
         this.element.append(li);
+        this.treeByTypeId[typeId] = tree;
         this.contentByTypeId[typeId] = content;
         this.iconByTypeId[typeId] = li;
     }

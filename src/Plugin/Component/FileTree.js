@@ -66,6 +66,15 @@ export default class FileTree extends AbstractComponent{
         this.element.append(node.element);
     }
 
+    filter(val){
+
+        for(let name in this.nodes){
+            if (!this.nodes.hasOwnProperty(name)) continue;
+
+            this.nodes[name].children.find('li').show();
+            this.nodes[name].children.find(':not(:icontains('+ val +'))').hide();
+        }
+    }
 
     /**
      * @param entry {Result}
@@ -95,7 +104,6 @@ export default class FileTree extends AbstractComponent{
      * @return {TreeNode}
      */
     getParentNode( entry ){
-        let gameId = entry.gameId;
         let _this = this;
 
         /**
@@ -103,48 +111,30 @@ export default class FileTree extends AbstractComponent{
          */
         let usedParentNode;
 
-        //entry was imported
-        // if (gameId === -1){
-        //     usedParentNode = this.nodes[Studio.IMPORTED];
-        //
-        //     if (usedParentNode === undefined){
-        //         usedParentNode = new TreeNode({
-        //             value: 'Imported',
-        //             onClick: function () {
-        //                 _this.onParentClick(entry);
-        //             }
-        //         });
-        //         this.addNode(usedParentNode);
-        //         this.nodes[Studio.IMPORTED] = usedParentNode;
-        //     }
-        //
-        // }else{
-        //     let game = Studio.config.getGame(gameId);
-            let indexId = entry.level + '_' + entry.file;
-            usedParentNode = this.nodes[indexId];
+        let indexId = entry.level + '_' + entry.file;
+        usedParentNode = this.nodes[indexId];
 
-            //Gamefolder name
-            if (usedParentNode === undefined){
+        //Gamefolder name
+        if (usedParentNode === undefined){
 //<i class="icon-game-${game.game}" />
 //<span class="badge badge-warning">${game.platform}</span>
-                usedParentNode = new TreeNode({
-                    value: jQuery(`<div>
+            usedParentNode = new TreeNode({
+                value: jQuery(`<div>
+                        
+                        <div class="badges">
                             
-                            <div class="badges">
-                                
-                                <span class="badge badge-secondary">${entry.level}</span>
-                            </div>
-                            ${entry.fileName}
-                        </div>`),
-                    onClick: function (props, event) {
-                        _this.onParentClick(entry);
-                    }
-                });
-                this.addNode(usedParentNode);
-                this.nodes[indexId] = usedParentNode;
-            }
+                            <span class="badge badge-secondary">${entry.level}</span>
+                        </div>
+                        ${entry.fileName}
+                    </div>`),
+                onClick: function (props, event) {
+                    _this.onParentClick(entry);
+                }
+            });
+            this.addNode(usedParentNode);
+            this.nodes[indexId] = usedParentNode;
+        }
 
-        // }
 
         return usedParentNode;
     }

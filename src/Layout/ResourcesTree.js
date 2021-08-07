@@ -11,6 +11,18 @@ export default class ResourcesTree {
 
     container = jQuery('<div>');
 
+    templates = {
+        search: `
+                <div class="filter input-group input-group-sm">
+                  <input type="text" class="form-control">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                  </div>
+                </div>
+        `
+
+    };
+
     /**
      * @param section {ComponentSection}
      */
@@ -31,9 +43,8 @@ export default class ResourcesTree {
          */
         this.trees = {};
 
-        this.iconBox = new IconBoxes({
-            onClick: this.showTree
-        });
+
+        this.iconBox = new IconBoxes();
 
         section.tabNavigation.content.append(this.iconBox.element);
 
@@ -47,12 +58,21 @@ export default class ResourcesTree {
         });
 
         //show per default the MODEL section
-        this.iconBox.show(Studio.MODEL);
+        this.iconBox.onClick(Studio.MODEL);
 
         this.section.tabNavigation.add({
             displayName: 'Resources',
             element: this.container
         });
+    }
+
+
+    onFilter(val){
+        if (this.iconBox.activeTree === undefined)
+            return;
+
+        this.iconBox.activeTree.filter(val);
+
     }
 
     createTree(typeId, icon){
@@ -63,19 +83,17 @@ export default class ResourcesTree {
         });
 
         let container = jQuery('<div>');
-        let searchField = jQuery('<div>').html(
-            `<div class="filter input-group input-group-sm">
-                      <input type="text" class="form-control">
-                      <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                      </div>
-                    </div>`
-        );
+        let searchField = jQuery('<div>').html(this.templates.search);
+
+        let _this = this;
+        searchField.find('input').keyup(function () {
+            _this.onFilter($(this).val());
+        });
         container.append(searchField);
         container.append(tree.element);
-
         container.hide();
-        this.iconBox.add(typeId, icon, container);
+
+        this.iconBox.add(typeId, icon, container, tree);
 
         this.trees[typeId] = tree;
 
@@ -83,17 +101,6 @@ export default class ResourcesTree {
 
         // this.section.tabNavigation.content.append(container);
 
-    }
-
-    showTree(typeId){
-        /**
-         * @type {FileTree}
-         */
-        let tree = this.trees[typeId];
-        if (tree === undefined)
-            return;
-
-        tree.element.show();
     }
 
 

@@ -92,6 +92,7 @@
 
                                     <ul style="color: #fff; font-size: 12px;float: right;">
                                         <li style="font-size: 14px">
+                                            Please use <b style="color: orange">Chrome</b> Browser!<br/>
                                             Simply <b style="color: orange">drag</b> a file into this window to start the wizard 🤷‍♂️
                                         </li>
                                         <li>&nbsp;</li>
@@ -192,9 +193,9 @@ underline">Support and more</h6>
 
 
                     <ul style="color: #fff; font-size: 10px">
-                        <li>Join our <a style="color: orange" href="https://discord.gg/EfDh5Vv3Ga" target="_blank">Discord</a> for support</li>
-                        <li>Add a <a style="color: orange" href="https://github.com/Sor3nt/manhunt-studio/issues/new" target="_blank">Ticket</a></li>
-                        <li>Help <a style="color: orange" href="https://github.com/Sor3nt/manhunt-studio/" target="_blank">Development</a></li>
+                        <li>Join our <a style="color: orange" href="https://discord.gg/EfDh5Vv3Ga" target="_blank">discord</a></li>
+                        <li>Add a <a style="color: orange" href="https://github.com/Sor3nt/manhunt-studio/issues/new" target="_blank">ticket</a></li>
+                        <li>Help <a style="color: orange" href="https://github.com/Sor3nt/manhunt-studio/" target="_blank">development</a></li>
                     </ul>
 
                 </div>
@@ -431,6 +432,11 @@ underline">Select Level</h5>
     import Studio from './src/Studio.js';
     import './node_modules/jquery/dist/jquery.js';
     import FileDrop from "./src/FileDrop.js";
+
+    jQuery.expr[':'].icontains = function(a, i, m) {
+        return jQuery(a).text().toUpperCase()
+            .indexOf(m[3].toUpperCase()) >= 0;
+    };
 
     Studio.boot();
 
