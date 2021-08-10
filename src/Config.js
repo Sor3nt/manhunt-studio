@@ -7,15 +7,15 @@ export default class Config{
         let _this = this;
         this.config = { games: [] };
 
-        // Api.getConfig(function (config) {
+        Api.getConfig(function (config) {
         //     console.log('[MANHUNT.config] Config received', config.data);
         //
-        //     config.data.games.forEach(function (gameInfo) {
-        //         _this.config.games.push(Game.create(gameInfo));
-        //     });
+            config.data.games.forEach(function (gameInfo) {
+                _this.config.games.push(Game.create(gameInfo));
+            });
 
             onLoadCallback(_this.config);
-        // });
+        });
     }
 
     addGame (folder, callback) {

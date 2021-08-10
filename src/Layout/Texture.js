@@ -9,6 +9,7 @@ export default class Texture {
      * @param section {ComponentSection}
      */
     constructor(section){
+        this.textures = {};
         this.section = section;
         // this.textureInfo = new TextureInfo({});
 
@@ -26,10 +27,15 @@ export default class Texture {
      * @param entry {Result}
      */
     displayEntry(entry){
-        this.texture = new TextureComponent({ entry: entry });
-        this.texture.displayName = entry.name;
-        this.section.add(this.texture);
-        this.section.tabNavigation.show(this.texture.displayName);
+
+        if (this.textures[entry.name] === undefined){
+            this.textures[entry.name] = new TextureComponent({ entry: entry });
+            this.textures[entry.name].displayName = entry.name;
+
+            this.section.add(this.textures[entry.name]);
+        }
+
+        this.section.tabNavigation.show(entry.name);
     }
 
 }

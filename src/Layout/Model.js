@@ -9,6 +9,7 @@ export default class Model {
      */
     constructor(section){
         this.section = section;
+        this.models = {};
 
         let _this = this;
         Event.on(Event.OPEN_ENTRY, function (props) {
@@ -23,9 +24,12 @@ export default class Model {
      * @param entry {Result}
      */
     displayEntry(entry){
-        this.model = new ModelComponent({ entry: entry });
-        this.model.displayName = entry.name;
-        this.section.add(this.model);
-        this.section.tabNavigation.show(this.model.displayName);
+        if (this.models[entry.name] === undefined){
+            this.models[entry.name] = new ModelComponent({ entry: entry });
+            this.models[entry.name].displayName = entry.name;
+            this.section.add(this.models[entry.name]);
+        }
+
+        this.section.tabNavigation.show(entry.name);
     }
 }

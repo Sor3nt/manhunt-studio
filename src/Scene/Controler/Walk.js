@@ -253,14 +253,24 @@ export default class Walk {
     }
 
     setMode(mode) {
+
+        console.log("current mode", this.mode, "new mode", mode);
+
         if (this.mode === "transform" && mode !== "transform") {
             this.transform.detach();
             this.orbit.enabled = false;
 
+            if (mode === "fly"){
+                console.log("ehh", this.playerCollider );
+                this.playerCollider.end.copy( this.orbit.object.position );
+            }
+
             document.body.requestPointerLock();
         } else if (this.mode === "fly" && mode !== "fly") {
             document.exitPointerLock();
-        } else if (mode === "transform") {
+        }
+
+        if (mode === "transform") {
             this.orbit.enabled = true;
         }
 

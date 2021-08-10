@@ -1,15 +1,11 @@
 import Event from "./../Event.js";
-import NBinary from "./../NBinary.js";
-import Loader from "../Plugin/Loader.js";
-import FileTree from "../Plugin/Component/FileTree.js";
 import Studio from "./../Studio.js";
 import Storage from "./../Storage.js";
 import {ComponentSection} from "../Plugin/Components.js";
 import IconBoxes from "../Plugin/Component/IconBoxes.js";
-import SemanticallyTree from "./SemanticallyTree.js";
-import Components from "../Plugin/Components.js";
+import EntityTree from "../Plugin/Component/EntityTree.js";
 
-export default class ResourcesTree {
+export default class SemanticallyTree {
 
     container = jQuery('<div>');
 
@@ -26,18 +22,15 @@ export default class ResourcesTree {
 
     /**
      * @param section {ComponentSection}
+     * @param mapEntry {Result}
      */
-    constructor(section){
+    constructor(section, mapEntry){
         this.section = section;
+        this.mapEntry = mapEntry;
         let _this = this;
+        //
 
-        Event.on(Event.ENTRY_LOADED, function (props) {
-            _this.addEntry(props.entry);
-        });
 
-        Event.on(Event.MAP_ENTITIES_LOADED, function (props) {
-            new SemanticallyTree(Components.getSection('left'), props.entry);
-        });
 
         /**
          * @type {{[Studio.WORLD]: FileTree,[Studio.MODEL]: FileTree,[Studio.TEXTURE]: FileTree,[Studio.ANIMATION]: FileTree }}
@@ -48,20 +41,34 @@ export default class ResourcesTree {
 
         this.container.append(this.iconBox.element);
 
-        jQuery.each({
-            [Studio.MAP]: 'globe-americas',
-            [Studio.MODEL]: 'male',
-            [Studio.TEXTURE]: 'images',
-            [Studio.ANIMATION]: 'running',
-        }, function (typeId, icon) {
-            _this.createTree(typeId, icon);
+
+        this.createTree(Studio.ENTITY, 'globe-americas');
+
+        //show per default the MAP section
+        this.iconBox.onClick(Studio.ENTITY);
+
+        let entities = Storage.findBy({
+            gameId: this.mapEntry.gameId,
+            type: Studio.ENTITY
         });
 
-        //show per default the MODEL section
-        this.iconBox.onClick(Studio.MODEL);
+        entities.forEach(function (entity) {
+            // switch (entity.props.className) {
+            //     case 'Base_Inst':
+                    /**
+                     * @type {EntityTree}
+                     */
+                    let tree = _this.trees[Studio.ENTITY];
+                    tree.addEntry(entity);
+                    // break;
+            // }
+
+            // console.log(entity);
+        });
+
 
         this.section.tabNavigation.add({
-            displayName: 'Resources',
+            displayName: 'Semantic ' + mapEntry.level,
             element: this.container
         });
     }
@@ -76,9 +83,9 @@ export default class ResourcesTree {
 
     createTree(typeId, icon){
 
-        let tree = new FileTree({
+        let tree = new EntityTree({
             processType: parseInt(typeId),
-            onEntryClick: this.onFileTreeNodeClick
+            onEntryClick: this.onTreeNodeClick
         });
 
         let container = jQuery('<div>');
@@ -99,25 +106,12 @@ export default class ResourcesTree {
     }
 
 
-    onFileTreeNodeClick(entry, event){
+    onTreeNodeClick(entry, event){
 
-        Event.dispatch(Event.OPEN_ENTRY, { entry: entry });
+        Event.dispatch(Event.MAP_FOCUS_ENTITY, { entry: entry });
 
         event.preventDefault();
         return false;
     }
 
-    /**
-     * @type {Result}
-     */
-    addEntry(entry){
-        /**
-         * @type {FileTree}
-         */
-        let tree = this.trees[entry.type];
-        if (tree === undefined)
-            return;
-
-        tree.addEntry(entry);
-    }
 }

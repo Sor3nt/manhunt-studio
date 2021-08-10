@@ -10,6 +10,9 @@ export default class StudioSceneInfo{
      */
     constructor(props) {
         this.name = props.name;
+        /**
+         * @type {Scene}
+         */
         this.scene = new ThreeScene();
         let _this = this;
 

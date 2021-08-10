@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/select2.min.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/component/fileTree.css">
+    <link rel="stylesheet" href="css/component/entityTree.css">
     <link rel="stylesheet" href="css/component/iconBoxes.css">
     <link rel="stylesheet" href="css/component/info.css">
     <link rel="stylesheet" href="css/fontawesome/css/all.css">

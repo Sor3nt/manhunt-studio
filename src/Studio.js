@@ -51,7 +51,6 @@ export default class Studio{
 
             WebGL.render();
 
-
             if (config.games.length > 0){
                 Studio.config.getGame(0).loadLevel("asylum", function () {
                     console.log("loaded");
@@ -64,7 +63,7 @@ export default class Studio{
 
 
             }
-
+            //
             //
             // Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
             //     console.log("loaded");

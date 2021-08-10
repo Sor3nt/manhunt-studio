@@ -4,6 +4,8 @@ export default class Event{
     static ENTRY_LOADED = 1;
     static OPEN_ENTRY = 2;
     static VIEW_ENTRY = 3;
+    static MAP_ENTITIES_LOADED = 4;
+    static MAP_FOCUS_ENTITY = 5;
 
     static events = {};
 

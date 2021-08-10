@@ -1,0 +1,81 @@
+/*.component-entityTree{*/
+/*    height: calc(100vh - 100px);*/
+/*    overflow: scroll;*/
+/*}*/
+
+/*.component-entityTree, .component-entityTree ul{*/
+/*    padding: 5px 0 0 5px;*/
+/*    font-size: 12px;*/
+/*    font-weight: bold;*/
+
+/*}*/
+
+/*.component-entityTree li{*/
+/*    font-size: 11px;*/
+/*    list-style: none;*/
+
+/*}*/
+
+.entityTree {
+    font-size: 12px;
+}
+
+.entityTree li{
+    cursor: pointer;
+}
+
+
+.entityTree > li{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.entityTree > li:hover{
+    background: #171717;
+
+}
+
+.entityTree .badges {
+    /*position: absolute;*/
+    /*top: -14px;*/
+    font-size: 10px;
+    /*left: 34px;*/
+    /*width: 100%;*/
+    /*display: flex;*/
+}
+
+.entityTree li.active{
+    background: #171717;
+}
+.entityTree ul.children li:hover,
+.entityTree ul.children li.active{
+    background: #3e3e3e;
+    margin-left: -5px;
+    padding-left: 5px;
+    font-weight: bold;
+}
+
+.entityTree ul.children::-webkit-scrollbar {
+    display: none;
+}
+
+
+.entityTree ul.children{
+
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+
+    z-index: 1;
+    position: absolute;
+    top: 61px;
+    left: 50%;
+    font-size: 10px;
+    /*WTF why is this not correct in each viewport ?!*/
+    height: calc(100vh - 75px);
+    overflow-y: scroll;
+    background: #171717;
+    width: 50%;
+    padding: 5px;
+
+}
