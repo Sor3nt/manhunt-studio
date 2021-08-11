@@ -197,6 +197,7 @@ export default class TextureNative extends Chunk{
         this.texture.height = header.height;
         this.texture.name = header.name;
 
+
         switch ( header.rasterFormat & Renderware.RASTER_MASK ) {
 
             case Renderware.RASTER_565:

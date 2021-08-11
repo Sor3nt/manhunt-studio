@@ -1,4 +1,4 @@
-import {Group, Geometry, BufferGeometry, Mesh, MeshBasicMaterial, SkinnedMesh, Vector3, VertexColors} from "./Vendor/three.module.js";
+import {RGBAFormat, Group, Geometry, BufferGeometry, Mesh, MeshBasicMaterial, SkinnedMesh, Vector3, VertexColors} from "./Vendor/three.module.js";
 import Studio from "./Studio.js";
 import Storage from "./Storage.js";
 import Status from "./Status.js";
@@ -46,11 +46,20 @@ export default class MeshHelper{
                 return;
             }
 
+            /**
+             * @type {Texture}
+             */
+            let threeTexture = texture[0].data().createThreeTexture();
+
+            let transparent = false;
+            if (threeTexture.format === RGBAFormat)
+                transparent = true;
+
             result.push(new MeshBasicMaterial({
                 // wireframe: true,
-                map: texture[0].data().createThreeTexture(), //todo: actual we need to select the correct txd (model.dff use his model.txd)
+                map: threeTexture, //todo: actual we need to select the correct txd (model.dff use his model.txd)
                 skinning: skinning,
-                transparent: false, //todo
+                transparent: transparent,
                 vertexColors: VertexColors
             }));
         });

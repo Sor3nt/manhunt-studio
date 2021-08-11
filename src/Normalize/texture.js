@@ -56,8 +56,10 @@ export class NormalizedTexture{
     }
 
     createThreeTexture(){
+
         if (this.texture.format === null)
             this.#decode();
+
 
         let realTexture;
         if (
@@ -74,6 +76,7 @@ export class NormalizedTexture{
             );
 
         }else{
+
             realTexture = new DataTexture(
                 this.texture.mipmaps[0].data,
                 this.texture.width,
@@ -132,8 +135,8 @@ export class NormalizedTexture{
                     _this.texture.format = RGBAFormat;
                     break;
                 case NormalizedTexture.FORMAT_BC1_RGB:
-                    data = DXT.decodeBC1(mipmap.data, mipmap.width, mipmap.height, true);
-                    _this.texture.format = RGBFormat;
+                    data = DXT.decodeBC1(mipmap.data, mipmap.width, mipmap.height, false);
+                    _this.texture.format = RGBAFormat;
                     break;
                 case NormalizedTexture.FORMAT_BC2_RGBA:
                     data = DXT.decodeBC2(mipmap.data, mipmap.width, mipmap.height, false);
@@ -145,6 +148,7 @@ export class NormalizedTexture{
                     data = new Uint8Array(Nintendo.flipBlocks(_data));
                     _this.texture.format = RGBAFormat;
                     break;
+
                 default:
                     debugger;
             }
