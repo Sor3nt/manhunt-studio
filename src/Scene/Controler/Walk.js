@@ -65,6 +65,10 @@ export default class Walk {
                 else
                     _this.setMode("fly");
             }
+            if (event.code === 'KeyO') {
+
+                console.log("cilds",sceneInfo.scene);
+            }
         });
 
         WebGL.renderer.domElement.addEventListener('mousedown', () => {
@@ -106,6 +110,8 @@ export default class Walk {
         } );
 
         sceneInfo.scene.add(this.transform);
+
+        this.setMode('fly');
 
     }
 

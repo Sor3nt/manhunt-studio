@@ -43,7 +43,7 @@ export default class Model{
 
             if (typeof name === "undefined" || name === null){
                 result.push(new MeshBasicMaterial({
-                    transparent: false, //todo
+                    wireframe: true,
                     vertexColors: VertexColors
                 }));
                 return;

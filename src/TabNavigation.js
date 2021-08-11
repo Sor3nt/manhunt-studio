@@ -131,11 +131,14 @@ export default class TabNavigation{
      */
     show(name){
 
-        if (this.activeRelation !== null){
+        if (this.activeRelation !== null && (this.activeRelation !== this.relation[name])){
             this.activeRelation.tab.removeClass('active');
             this.activeRelation.component.element.hide();
             if (this.activeRelation.component.onBlur !== undefined)
                 this.activeRelation.component.onBlur();
+
+        }else if (this.activeRelation === this.relation[name]){
+            return;
         }
 
         this.activeRelation = this.relation[name];

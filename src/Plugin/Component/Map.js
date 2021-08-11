@@ -55,12 +55,12 @@ export default class Map extends AbstractComponent{
 
 
     onFocus(){
+        //
+        // window.setTimeout(function () {
+        //     document.body.requestPointerLock();
+        // }, 100);
 
-        window.setTimeout(function () {
-            document.body.requestPointerLock();
-        }, 100);
-
-        Status.showInfo('world');
+        // Status.showInfo('world');
 
         if (this.studioScene !== null)
             StudioScene.changeScene(this.studioScene.name);

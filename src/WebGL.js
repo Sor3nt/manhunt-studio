@@ -33,7 +33,12 @@ export default class WebGL{
     }
 
     static render() {
-        requestAnimationFrame(WebGL.render);
+
+        //limit fps to 60fps for performance increase
+        setTimeout( function() {
+            requestAnimationFrame( WebGL.render );
+        }, 1000 / 60 );
+
         /**  @type {StudioSceneInfo} */
         let sceneInfo = StudioScene.activeSceneInfo;
         if (sceneInfo === null) return;

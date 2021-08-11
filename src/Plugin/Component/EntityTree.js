@@ -111,18 +111,17 @@ export default class EntityTree extends AbstractComponent{
          */
         let usedParentNode;
 
-        let instance = entry.props.instance.getData();
-// console.log("GLG ???", entry.props.glgEntry.props.getValue('CLASS'));
         let indexId = entry.props.glgEntry.props.getValue('CLASS');
         usedParentNode = this.nodes[indexId];
 
         //Gamefolder name
         if (usedParentNode === undefined){
-//<i class="icon-game-${game.game}" />
-//<span class="badge badge-warning">${game.platform}</span>
+
             usedParentNode = new TreeNode({
                 value: jQuery(`<div>
-                        ${indexId.replace("EC_", '')}
+                        ${indexId.replace("EC_", '').toLowerCase().replace(/(?:^|\s)\w/g, function(match) {
+                                                        return match.toUpperCase();
+                                                    })}
                     </div>`),
                 onClick: function (props, event) {
                     _this.onParentClick(entry);

@@ -25,12 +25,10 @@ export default class SemanticallyTree {
      * @param mapEntry {Result}
      */
     constructor(section, mapEntry){
+
         this.section = section;
         this.mapEntry = mapEntry;
         let _this = this;
-        //
-
-
 
         /**
          * @type {{[Studio.WORLD]: FileTree,[Studio.MODEL]: FileTree,[Studio.TEXTURE]: FileTree,[Studio.ANIMATION]: FileTree }}
@@ -40,7 +38,6 @@ export default class SemanticallyTree {
         this.iconBox = new IconBoxes();
 
         this.container.append(this.iconBox.element);
-
 
         this.createTree(Studio.ENTITY, 'globe-americas');
 
@@ -53,22 +50,12 @@ export default class SemanticallyTree {
         });
 
         entities.forEach(function (entity) {
-            // switch (entity.props.className) {
-            //     case 'Base_Inst':
-                    /**
-                     * @type {EntityTree}
-                     */
-                    let tree = _this.trees[Studio.ENTITY];
-                    tree.addEntry(entity);
-                    // break;
-            // }
-
-            // console.log(entity);
+            let tree = _this.trees[Studio.ENTITY];
+            tree.addEntry(entity);
         });
 
-
         this.section.tabNavigation.add({
-            displayName: 'Semantic ' + mapEntry.level,
+            displayName: mapEntry.level,
             element: this.container
         });
     }
@@ -83,15 +70,18 @@ export default class SemanticallyTree {
 
     createTree(typeId, icon){
 
+        let _this = this;
+
         let tree = new EntityTree({
             processType: parseInt(typeId),
-            onEntryClick: this.onTreeNodeClick
+            onEntryClick: function (entry, event) {
+                _this.onTreeNodeClick(entry, event);
+            }
         });
 
         let container = jQuery('<div>');
         let searchField = jQuery('<div>').html(this.templates.search);
 
-        let _this = this;
         searchField.find('input').keyup(function () {
             _this.onFilter($(this).val());
         });
@@ -107,8 +97,7 @@ export default class SemanticallyTree {
 
 
     onTreeNodeClick(entry, event){
-console.log("click ", entry);
-        Event.dispatch(Event.MAP_FOCUS_ENTITY, { entry: entry });
+        Event.dispatch(Event.MAP_FOCUS_ENTITY, { entry: entry, mapEntry: this.mapEntry });
 
         event.preventDefault();
         return false;

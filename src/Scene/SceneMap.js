@@ -54,13 +54,13 @@ export default class SceneMap extends SceneAbstract{
         let sceneInfo = this.sceneInfo;
         sceneInfo.camera.position.set(-140.83501492578623, 119.29015658522931, -73.34957947924103);
 
-        let spotLight = new SpotLight(0xffffff);
-        spotLight.position.set(1, 1, 1);
-        sceneInfo.scene.add(spotLight);
-
-        sceneInfo.scene.add(new HemisphereLight(0xffffff, 0x444444));
-        sceneInfo.scene.add(new GridHelper(1000, 10, 0x888888, 0x444444));
-
+        // let spotLight = new SpotLight(0xffffff);
+        // spotLight.position.set(1, 1, 1);
+        // sceneInfo.scene.add(spotLight);
+        //
+        // sceneInfo.scene.add(new HemisphereLight(0xabababab, 0x444444));
+        // sceneInfo.scene.add(new GridHelper(1000, 10, 0x888888, 0x444444));
+        //
         let entities = Storage.findBy({
             type: Studio.ENTITY,
             level: this.mapEntry.level,

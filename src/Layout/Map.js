@@ -27,12 +27,23 @@ export default class Map {
             _this.displayEntry(entry);
         });
 
-        Event.on(Event.MAP_FOCUS_ENTITY, function (props) {
-            /** @type {Result}  */
-            let entry = props.entry;
-            if (entry.type !== Studio.ENTITY) return;
-            _this.focusEntry(entry);
-        });
+        Event.on(Event.MAP_FOCUS_ENTITY,
+
+            /**
+             * @param props { {entry: Result, mapEntry: Result} }
+             */
+
+            function (props) {
+                /** @type {Result}  */
+                let entry = props.entry;
+                if (entry.type !== Studio.ENTITY) return;
+
+                // let StudioScene.getStudioSceneInfo(props.mapEntry.name)
+                _this.section.tabNavigation.show(props.mapEntry.name);
+
+                _this.focusEntry(entry);
+            }
+        );
     }
 
     /**
@@ -46,8 +57,6 @@ export default class Map {
         let studioScene = this.model.studioScene;
         // studioScene.
         let sceneEntity = studioScene.sceneInfo.scene.getObjectByName(entry.name);
-
-        console.log("sceneEntity", sceneEntity);
         studioScene.sceneInfo.control.setObject(sceneEntity);
         studioScene.sceneInfo.control.setMode('transform');
         studioScene.sceneInfo.control.keyStates.modeSelectObject = true; //note: inverted...
