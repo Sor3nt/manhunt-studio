@@ -111,7 +111,9 @@ export default class EntityTree extends AbstractComponent{
          */
         let usedParentNode;
 
-        let indexId = entry.props.className;
+        let instance = entry.props.instance.getData();
+// console.log("GLG ???", entry.props.glgEntry.props.getValue('CLASS'));
+        let indexId = entry.props.glgEntry.props.getValue('CLASS');
         usedParentNode = this.nodes[indexId];
 
         //Gamefolder name
@@ -120,8 +122,7 @@ export default class EntityTree extends AbstractComponent{
 //<span class="badge badge-warning">${game.platform}</span>
             usedParentNode = new TreeNode({
                 value: jQuery(`<div>
-                       
-                        ${entry.props.className}
+                        ${indexId.replace("EC_", '')}
                     </div>`),
                 onClick: function (props, event) {
                     _this.onParentClick(entry);
@@ -143,6 +144,11 @@ export default class EntityTree extends AbstractComponent{
         if (this.props.processType !== entry.type)
             return;
 
+        if (entry.props.glgEntry.props.getValue('CLASS') === false){
+            console.log("no class ", entry.props.glgEntry);
+
+            return;
+        }
 
         let usedParentNode = this.getParentNode(entry);
 

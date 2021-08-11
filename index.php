@@ -106,7 +106,10 @@
 underline">Current Features</h5>
                                 <ul style="color: #fff; font-size: 10px;float: right;">
                                     <li>
-                                        View textures, models and maps <i class="fas fa-check"></i>️
+                                        Level Entity Handler <i class="fas fa-check"></i>️
+                                    </li>
+                                    <li>
+                                        View textures, models and maps (MH1)<i class="fas fa-check"></i>️
                                     </li>
                                     <li>
                                         <b>Move</b>, <b>Rotate</b> and save game objects <i class="fas fa-check"></i>️
@@ -136,6 +139,7 @@ underline">Supported Formats</h6>
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
 underline">Changelog</h5>
                                 <ul style="color: #fff; font-size: 10px">
+                                    <li><b>XX-08-2021</b>: Semantic Entity View & Speed modifier (Shift)</li>
                                     <li><b>07-08-2021</b>: Search feature & Bugfixes</li>
                                     <li><b>30-07-2021</b>: Initial release 🎉</li>
                                 </ul>

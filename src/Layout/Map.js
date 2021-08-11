@@ -115,7 +115,8 @@ export default class Map {
                 }
             );
 
-            result.props.instance = inst;
+            result.props.instance = entity.inst;
+            result.props.glgEntry = entity.glgEntry;
 
             result.level = mapEntry.level;
             result.gameId = mapEntry.gameId;

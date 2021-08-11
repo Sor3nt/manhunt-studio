@@ -13,7 +13,8 @@ export default class Walk {
 
     mode = "fly";
     keyStates = {
-        modeSelectObject: false
+        modeSelectObject: false,
+        ShiftLeft: false
     };
 
 
@@ -46,7 +47,6 @@ export default class Walk {
 
         document.addEventListener('keyup', (event) => {
             _this.keyStates[event.code] = false;
-
 
             if (event.code === 'KeyQ')
                 this.transform.setSpace( this.transform.space === 'local' ? 'world' : 'local' );
@@ -193,7 +193,7 @@ export default class Walk {
 
     flyControls(deltaTime) {
 
-        const speed = 25;
+        const speed = 25 + (this.keyStates['ShiftLeft'] ? 75 : 0);
 
         if (this.keyStates['KeyW'])
             this.playerVelocity.add(this.getForwardVector().multiplyScalar(speed * deltaTime));
@@ -219,11 +219,11 @@ export default class Walk {
     setObject(object) {
         this.object = object;
 
-        let relativeCameraOffset = new Vector3(0, 2, -3);
-        object.updateMatrixWorld();
-        let cameraOffset = relativeCameraOffset.applyMatrix4(object.matrixWorld);
-
-        this.sceneInfo.camera.position.lerp(cameraOffset, 0.1);
+        // let relativeCameraOffset = new Vector3(0, 2, -3);
+        // object.updateMatrixWorld();
+        // let cameraOffset = relativeCameraOffset.applyMatrix4(object.matrixWorld);
+        //
+        // this.sceneInfo.camera.position.lerp(cameraOffset, 0.1);
         this.sceneInfo.camera.lookAt(object.position);
         this.orbit.target.copy(object.position);
 

@@ -20,7 +20,7 @@ export default class Glg extends AbstractLoader{
         return matches !== null && matches.length !== 0;
     }
 
-    static parseRecord( data ){
+    static parseRecord( data, name){
         let options = [];
         data.forEach(function (singleOption) {
 
@@ -29,9 +29,11 @@ export default class Glg extends AbstractLoader{
             if (singleOption === "") return;
             if (singleOption.indexOf('#') === 0) return;
 
+
             if (singleOption.indexOf(' ') !== -1 || singleOption.indexOf("\t") !== -1){
 
-                singleOption = singleOption.replace("\t", ' ');
+                singleOption = singleOption.replace(/\t/g, ' ');
+                singleOption = singleOption.replace(/\s+/g, ' ');
                 var attrValue = singleOption.split(' ');
 
                 var attr = attrValue[0].trim();
@@ -84,11 +86,10 @@ export default class Glg extends AbstractLoader{
             var name = optionsRaw[0];
 
             if (name === "dummy") return;
-
             delete optionsRaw[0];
             delete optionsRaw[optionsRaw.length - 1];
 
-            let options = Glg.parseRecord(optionsRaw);
+            let options = Glg.parseRecord(optionsRaw, name);
 
 
             let result = new Result(

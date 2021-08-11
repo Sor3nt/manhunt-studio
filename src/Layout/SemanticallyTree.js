@@ -107,7 +107,7 @@ export default class SemanticallyTree {
 
 
     onTreeNodeClick(entry, event){
-
+console.log("click ", entry);
         Event.dispatch(Event.MAP_FOCUS_ENTITY, { entry: entry });
 
         event.preventDefault();
