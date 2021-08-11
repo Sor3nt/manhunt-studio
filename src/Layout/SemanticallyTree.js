@@ -39,6 +39,8 @@ export default class SemanticallyTree {
 
         this.container.append(this.iconBox.element);
 
+        this.iconBox.element.hide(); //no usage right now
+
         this.createTree(Studio.ENTITY, 'globe-americas');
 
         //show per default the MAP section

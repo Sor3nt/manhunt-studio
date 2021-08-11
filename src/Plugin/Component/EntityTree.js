@@ -92,7 +92,7 @@ export default class EntityTree extends AbstractComponent{
         }
 
         this.activeParent = usedParentNode;
-        usedParentNode.children.css('left', "100%").show().animate({
+        usedParentNode.children.css({ left: '100%', top: "25px"}).show().animate({
             left: "50%"
         });
         usedParentNode.element.addClass('active');
