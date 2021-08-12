@@ -3,7 +3,6 @@ import Studio from "./Studio.js";
 import Helper from "./Helper.js";
 import MeshHelper from "./MeshHelper.js";
 import {Euler, Quaternion} from "./Vendor/three.module.js";
-import NormalizeModel from "./Plugin/Loader/Renderware/Utils/NormalizeModel.js";
 
 export default class Entity{
     /**
@@ -65,7 +64,7 @@ export default class Entity{
         if (this.model.name === "fist_poly_hunter")
             return false;
 
-        this.mesh = MeshHelper.convertFromNormalized( new NormalizeModel(this.model.data()), this.model );
+        this.mesh = MeshHelper.convertFromNormalized( this.model.props.normalize(), this.model );
 
         let instData = this.inst.getData();
         this.setPosition(instData.position.x,instData.position.y,instData.position.z);

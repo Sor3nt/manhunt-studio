@@ -21,6 +21,8 @@ export default class Texture extends AbstractLoader{
             return false;
 
         binary.seek(192);
+        console.log("cur", binary.current());
+        die;
         //not DDS
         return binary.consume(4, 'uint32') !== 542327876;
     }

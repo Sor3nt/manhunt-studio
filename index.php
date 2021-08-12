@@ -377,7 +377,7 @@ underline">Select Level</h5>
                 </style>
 
                 <div class="info" data-info-id="world" style="display: none">
-                    <b>WASD</b> move, <b>Q|E</b> up | down, <b>I</b> object selection on, <b>click</b> select object<br/>
+                    <b>WASD</b> move, <b>Q|E</b> up | down, <b>I</b> object selection on, <b>left shift</b> move multiplier<br/>
                     <b>ESC</b> leave pointerlock
                 </div>
 

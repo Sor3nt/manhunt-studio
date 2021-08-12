@@ -1,7 +1,5 @@
 
 import {Bone, Face3, Matrix4, Skeleton, Vector2, Vector3, Vector4} from "./../../../../Vendor/three.module.js";
-import Model from "./../../../../Normalize/model.js";
-// import MeshHelper from "../MeshHelper.js";
 
 
 
@@ -17,10 +15,7 @@ export default class NormalizeModel{
         this.allBonesMesh = [];
         this.#normalize();
     }
-    //
-    // createThreeModel(){
-    //     return MeshHelper.convertFromNormalized(this);
-    // }
+
 
     #getFrameBones(){
 

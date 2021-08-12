@@ -3,6 +3,7 @@ import Result from "./../../../Result.js";
 import { VertexColors, Face3, Color, Vector2, Vector3, Vector4, Bone, Matrix4, Skeleton, MeshStandardMaterial } from "./../../../../../Vendor/three.module.js";
 import NBinary from "../../../../../NBinary.js";
 import Studio from "../../../../../Studio.js";
+import NormalizeModel from "./NormalizeModel.js";
 
 export default class Model extends AbstractLoader{
     static name = "Model (Manhunt 2 PC)";
@@ -64,13 +65,23 @@ export default class Model extends AbstractLoader{
                     name,
                     binary,
                     offset,
-                    {},
+                    {
+                        normalize: function () {
+                            binary.setCurrent(offset);
+
+                            let data = Model.readClump(binary);
+                            console.log("MODEL DEBUG", "MH2", data);
+                            data.name = name;
+
+                            return new NormalizeModel(data);
+                        }
+                    },
                     function(){
                         binary.setCurrent(offset);
 
-                        let mesh = Model.readClump(binary);
-                        mesh.name = name;
-                        return mesh;
+                        let data = Model.readClump(binary);
+                        data.name = name;
+                        return data;
                     }
                 ));
             })(entryOffset, name);
@@ -684,11 +695,11 @@ export default class Model extends AbstractLoader{
             bone.updateWorldMatrix();
         });
 
-        parsedObjects.forEach(function (parsedObject) {
+        parsedObjects.forEach(function (parsedObject, index) {
 
             let genericObject = {
                 material: [],
-                skinning: parsedObject.object.skinDataFlag,
+                skinning: index === 0 ? parsedObject.object.skinDataFlag : false,
                 meshBone: Model.meshBone,
 
                 faces: [],
@@ -700,12 +711,13 @@ export default class Model extends AbstractLoader{
             };
 
             parsedObject.materials.forEach(function (parsedMaterial) {
-                let material = new MeshStandardMaterial();
-                material.name = parsedMaterial.TexName;
-                material.skinning = genericObject.skinning;
-                material.vertexColors = VertexColors;
-
-                genericObject.material.push(material);
+                // let material = new MeshStandardMaterial();
+                // material.name = parsedMaterial.TexName;
+                // material.skinning = genericObject.skinning;
+                // material.vertexColors = VertexColors;
+                //
+                // genericObject.material.push(material);
+                genericObject.material.push(parsedMaterial.TexName);
             });
 
 

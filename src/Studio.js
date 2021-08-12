@@ -57,6 +57,11 @@ export default class Studio{
 
                     Status.hide();
                 });
+
+                Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
+                    console.log("loaded");
+
+                });
             }else{
                 Status.hide();
                 Status.showWelcome();
