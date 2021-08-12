@@ -167,7 +167,7 @@ export default class Walk {
         let clickedGroups = [];
         intersects.forEach(function (obj) {
             let parent = obj.object.parent;
-            if (parent.type !== "Group" || parent.userData.entity === undefined)
+            if (parent === null || parent.type !== "Group" || parent.userData.entity === undefined)
                 return;
             clickedGroups.push(parent);
         });

@@ -1,4 +1,4 @@
-import {RGBAFormat, Group, Geometry, BufferGeometry, Mesh, MeshBasicMaterial, SkinnedMesh, Vector3, VertexColors} from "./Vendor/three.module.js";
+import {RGBAFormat, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT3_Format, RGBA_S3TC_DXT5_Format, Group, Geometry, BufferGeometry, Mesh, MeshBasicMaterial, SkinnedMesh, Vector3, VertexColors} from "./Vendor/three.module.js";
 import Studio from "./Studio.js";
 import Storage from "./Storage.js";
 import Status from "./Status.js";
@@ -52,7 +52,11 @@ export default class MeshHelper{
             let threeTexture = texture[0].data().createThreeTexture();
 
             let transparent = false;
-            if (threeTexture.format === RGBAFormat)
+            if (threeTexture.format === RGBAFormat ||
+                threeTexture.format === RGBA_S3TC_DXT1_Format ||
+                threeTexture.format === RGBA_S3TC_DXT5_Format ||
+                threeTexture.format === RGBA_S3TC_DXT3_Format
+            )
                 transparent = true;
 
             result.push(new MeshBasicMaterial({
