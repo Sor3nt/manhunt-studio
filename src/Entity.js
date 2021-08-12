@@ -36,17 +36,18 @@ export default class Entity{
 
         if (this.glgEntry === null)
             return;
+        //
+        // let modelName = this.glgEntry.props.getValue('MODEL');
+        // if (modelName === false)
+        //     return;
+        //
+        // this.model = Storage.findOneBy({
+        //     type: Studio.MODEL,
+        //     gameId: entry.gameId,
+        //     level: entry.level,
+        //     name: this.glgEntry.props.getValue('MODEL')
+        // });
 
-        let modelName = this.glgEntry.props.getValue('MODEL');
-        if (modelName === false)
-            return;
-
-        this.model = Storage.findOneBy({
-            type: Studio.MODEL,
-            gameId: entry.gameId,
-            level: entry.level,
-            name: this.glgEntry.props.getValue('MODEL')
-        });
 
         this.#loadModel();
 

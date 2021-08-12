@@ -70,7 +70,6 @@ export default class Model extends AbstractLoader{
                             binary.setCurrent(offset);
 
                             let data = Model.readClump(binary);
-                            console.log("MODEL DEBUG", "MH2", data);
                             data.name = name;
 
                             return new NormalizeModel(data);

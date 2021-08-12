@@ -31,13 +31,15 @@ export default class Map extends AbstractComponent{
         // mesh.rotation.y = 270 * (Math.PI / 180); // convert vertical fov to radians
 
 
+        let gameInfo = Studio.config.getGame(props.entry.gameId);
+
         //we try to set the original player position
         // if (props.entry.gameId > -1){
             let playerInst = Storage.findOneBy({
                 gameId: props.entry.gameId,
                 level: props.entry.level,
                 type: Studio.INST,
-                name: 'player'
+                name: gameInfo.game === "mh2" ? 'player(player)' : 'player'
             });
 
             if (playerInst !== null){

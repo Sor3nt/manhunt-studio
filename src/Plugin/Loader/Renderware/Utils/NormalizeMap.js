@@ -1,8 +1,7 @@
 
-import Renderware from "./../Plugin/Loader/Renderware/Renderware.js";
-import Helper from './../Helper.js'
-import AbstractNormalize from "./Abstract.js";
-import Status from "../Status.js";
+import Renderware from "./../../../../Plugin/Loader/Renderware/Renderware.js";
+import Helper from './../../../../Helper.js'
+import AbstractNormalize from "../../../../Normalize/Abstract.js";
 const assert = Helper.assert;
 
 

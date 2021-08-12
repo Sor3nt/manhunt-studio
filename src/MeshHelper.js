@@ -79,9 +79,19 @@ export default class MeshHelper{
 // console.log(result);
 // die;
 
+
         let group = new Group();
         group.userData.LODIndex = 0;
-        // group.name = result.name;
+        group.name = result.name;
+
+        if (generic instanceof Mesh){
+            generic.children.forEach(function (child) {
+                child.material = MeshHelper.generateMaterial(result, child.material, false);
+            });
+            group.add(generic);
+            console.log(generic);
+            return group;
+        }
 
         let objects = generic.getObjects();
         let material = [];
@@ -147,7 +157,6 @@ export default class MeshHelper{
         // Status.set(`Convert ${result.name} to Mesh done`);
 
         // group.userData.entry = result;
-        group.name = result.name;
 
         return group;
     }

@@ -143,6 +143,11 @@ export default class EntityTree extends AbstractComponent{
         if (this.props.processType !== entry.type)
             return;
 
+        if (entry.props.glgEntry === null){
+            console.log("no glg reccord ", entry);
+            return;
+        }
+
         if (entry.props.glgEntry.props.getValue('CLASS') === false){
             console.log("no class ", entry.props.glgEntry);
 

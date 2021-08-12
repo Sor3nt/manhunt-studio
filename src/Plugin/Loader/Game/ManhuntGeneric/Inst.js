@@ -267,10 +267,13 @@ export default class Inst extends AbstractLoader{
                     settings['unk_' + field] = binary.consume(4, 'int32');
 
                 }else{
-                    setting.hash = Inst.buf2hex(binary.consume(4, 'arraybuffer'));
 
-                    if (typeof map['m_' + setting.hash] !== "undefined"){
-                        setting.name = Inst.camelName(map['m_' + setting.hash]);
+                        //TODO....
+                    setting.hash = (binary.consume(4, 'int32'));
+                    // setting.hash = Inst.buf2hex(binary.consume(4, 'arraybuffer'));
+
+                    if (typeof Inst.map['m_' + setting.hash] !== "undefined"){
+                        setting.name = Inst.camelName(Inst.map['m_' + setting.hash]);
                     }else{
                         setting.name = "unk_" + setting.hash;
                     }

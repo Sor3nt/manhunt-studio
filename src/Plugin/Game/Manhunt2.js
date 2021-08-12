@@ -1,7 +1,7 @@
 import AbstractManhunt from "./AbstractManhunt.js";
 
 export default class Manhunt2 extends AbstractManhunt{
-    modelNameLengh = 23;
+    modelNameLengh = 32;
 
     static handlerName = "Manhunt 2 (PC;1.00)";
     name = "Manhunt 2";

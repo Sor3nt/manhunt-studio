@@ -129,7 +129,7 @@ export default class Map {
 
             result.level = mapEntry.level;
             result.gameId = mapEntry.gameId;
-// debugger;
+
             Storage.add(result);
 
         });

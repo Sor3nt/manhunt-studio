@@ -6,14 +6,9 @@ import Helper from "./../../Helper.js";
 import TexDictionary from "./Renderware/Chunk/TexDictionary.js";
 import TextureNative from "./Renderware/Chunk/TextureNative.js";
 import Scan from "./Renderware/Utils/Scan.js";
-
-import NormalizeMap from "./../../Normalize/map.js";
-// import NormalizeTexture from "./../../Normalize/texture.js";
-import Status from "../../Status.js";
-import {RGBAFormat, RGBFormat} from "../../Vendor/three.module.js";
 import NormalizeModel from "./Renderware/Utils/NormalizeModel.js";
-import DXT from "../../Helper/Texture/DXT.js";
 import {NormalizedTexture} from "./../../Normalize/texture.js";
+import NormalizeMap from "./Renderware/Utils/NormalizeMap.js";
 
 
 export default class RenderwareLoader extends AbstractLoader{

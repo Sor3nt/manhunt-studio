@@ -52,8 +52,8 @@ export default class Storage{
             (criteria.offset === undefined && criteria.file === undefined && criteria.props === undefined)){
 
             if (criteria.type === Studio.MODEL){
-                let maxLen = 23; //todo
-                // let maxLen = Studio.config.getGame(criteria.gameId).modelNameLengh;
+                // let maxLen = 23; //todo
+                let maxLen = Studio.config.getGame(criteria.gameId).modelNameLengh;
                 criteria.name = criteria.name.substr(0, maxLen);
             }
 
@@ -69,7 +69,8 @@ export default class Storage{
         Storage.storage.forEach(function ( entry ) {
 
             if (criteria.type === Studio.MODEL && criteria.gameId !== undefined && criteria.name !== undefined){
-                let maxLen = 23; //todo: Studio.config.getGame(criteria.gameId).modelNameLengh;
+                // let maxLen = 23; //todo: Studio.config.getGame(criteria.gameId).modelNameLengh;
+                let maxLen = Studio.config.getGame(criteria.gameId).modelNameLengh;
                 criteria.name = criteria.name.substr(0, maxLen);
             }
 
