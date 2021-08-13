@@ -67,7 +67,7 @@ export default class Entity{
 
         this.mesh = MeshHelper.convertFromNormalized( this.model.props.normalize(), this.model );
 
-        let instData = this.inst.getData();
+        let instData = this.inst.data();
         this.setPosition(instData.position.x,instData.position.y,instData.position.z);
         this.setRotation(instData.rotation.x,instData.rotation.y,instData.rotation.z,instData.rotation.w);
 

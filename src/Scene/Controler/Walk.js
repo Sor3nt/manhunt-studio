@@ -54,8 +54,13 @@ export default class Walk {
                 this.transform.setMode( 'translate' );
             if (event.code === 'KeyE')
                 this.transform.setMode( 'rotate' );
+
+
             if (event.code === 'KeyR')
                 this.transform.setMode( 'scale' );
+
+            // if (event.code === 'KeyH')
+            //     this.highlightModelsInRange(10);
 
             if (event.code === 'Escape') {
                 _this.keyStates.modeSelectObject = false;
@@ -254,12 +259,39 @@ export default class Walk {
             const deltaPosition = this.playerVelocity.clone().multiplyScalar(delta);
             this.playerCollider.translate(deltaPosition);
 
-
             this.sceneInfo.camera.position.copy(this.playerCollider.end);
 
         } else if (this.mode === "transform") {
             this.orbit.update(delta);
         }
+    }
+
+    //todo https://threejs.org/examples/?q=out#webgl_postprocessing_outline
+    highlightModelsInRange(range){
+        let studioSceneInfo = StudioScene.getStudioSceneInfo();
+
+        let scene = studioSceneInfo.scene;
+
+        let _this = this;
+        scene.children.forEach(
+            /**
+             *
+             * @param child {Mesh}
+             */
+            function (child) {
+                let dist = child.position.distanceTo(_this.playerCollider.end);
+                if (dist <= range){
+
+                    child.children[0].material.forEach(function (material) {
+                        material.wireframe = true;
+                        material.needsUpdate = true;
+                    })
+
+                }
+                // console.log(child.name, dist);
+            }
+        );
+
     }
 
     setMode(mode) {
@@ -271,7 +303,6 @@ export default class Walk {
             this.orbit.enabled = false;
 
             if (mode === "fly"){
-                console.log("ehh", this.playerCollider );
                 this.playerCollider.end.copy( this.orbit.object.position );
             }
 

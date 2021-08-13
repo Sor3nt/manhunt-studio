@@ -1,10 +1,11 @@
-import {SpotLight, GridHelper, PerspectiveCamera, HemisphereLight} from "../Vendor/three.module.js";
+import {Vector3, SpotLight, GridHelper, PerspectiveCamera, HemisphereLight} from "../Vendor/three.module.js";
 import StudioScene from "./StudioScene.js";
 import SceneAbstract from "./Abstract.js";
 import Studio from "../Studio.js";
 import Storage from "../Storage.js";
 import Walk from "./Controler/Walk.js";
 import Event from "../Event.js";
+import Status from "../Status.js";
 
 export default class SceneMap extends SceneAbstract{
 
@@ -23,12 +24,16 @@ export default class SceneMap extends SceneAbstract{
      *
      * @param entry {Result}
      * @param canvas {jQuery}
+     * @param mapComponent {Map}
      */
-    constructor(entry, canvas) {
+    constructor(entry, canvas, mapComponent) {
         super(entry.name, canvas);
 
         let _this = this;
         this.mapEntry = entry;
+        this.mapComponent = mapComponent;
+        this.entitiesToProcess = [];
+        this.entitiesProcess = 0;
 
         this.sceneInfo = StudioScene.createSceneInfo(
             canvas,
@@ -48,31 +53,52 @@ export default class SceneMap extends SceneAbstract{
     }
 
 
+    loadNearByEntities(){
 
 
-    #setup(){
+        let len = this.entitiesToProcess.length;
+        if (len === 0) return false;
 
-        let sceneInfo = this.sceneInfo;
-        // sceneInfo.camera.position.set(-140.83501492578623, 119.29015658522931, -73.34957947924103);
-
-
-        let entities = Storage.findBy({
-            type: Studio.ENTITY,
-            level: this.mapEntry.level,
-            gameId: this.mapEntry.gameId
-        });
-
-        entities.forEach(function (entity) {
+        let processEntries = 15;
+        for(let i = 0; i < processEntries; i++){
+            let entity = this.entitiesToProcess.shift();
             let mesh = entity.data().getMesh();
 
             if (mesh !== false){
                 mesh.name = entity.name;
                 mesh.userData.entity = entity;
                 entity.mesh = mesh;
-                sceneInfo.scene.add(mesh);
+                this.sceneInfo.scene.add(mesh);
+                this.entitiesProcess++;
             }
+
+            if (len - i - 1 === 0){
+
+                StudioScene.changeScene(this.mapComponent.studioScene.name);
+
+                Status.hide();
+
+                return;
+            }
+        }
+
+        let _this = this;
+        requestAnimationFrame(function () {
+            _this.loadNearByEntities();
         });
 
+    }
+
+
+    #setup(){
+
+        this.entitiesToProcess = Storage.findBy({
+            type: Studio.ENTITY,
+            level: this.mapEntry.level,
+            gameId: this.mapEntry.gameId
+        });
+
+        this.loadNearByEntities();
     }
 
     /**

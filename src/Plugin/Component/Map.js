@@ -25,7 +25,7 @@ export default class Map extends AbstractComponent{
 
         this.name = props.entry.name;
 
-        this.studioScene = new SceneMap(props.entry, WebGL.renderer.domElement);
+        this.studioScene = new SceneMap(props.entry, WebGL.renderer.domElement, this);
 
         let mesh = MeshHelper.convertFromNormalized(props.entry.data(), props.entry);
         // mesh.rotation.y = 270 * (Math.PI / 180); // convert vertical fov to radians
@@ -52,7 +52,6 @@ export default class Map extends AbstractComponent{
         // }
         this.studioScene.display(mesh);
 
-        StudioScene.changeScene(this.studioScene.name);
     }
 
 
@@ -64,8 +63,18 @@ export default class Map extends AbstractComponent{
 
         // Status.showInfo('world');
 
-        if (this.studioScene !== null)
+        if (
+            this.studioScene !== null &&
+
+            //Note: The initial loading process should not render stuff
+            //      changeScene would force the rendering but we want that trigger right after anything is loaded (SceneMap.js)
+            (
+                this.studioScene.entitiesToProcess.length === 0 &&
+                this.studioScene.entitiesProcess > 0
+            )
+        ){
             StudioScene.changeScene(this.studioScene.name);
+        }
 
 
     }

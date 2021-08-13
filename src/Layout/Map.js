@@ -79,11 +79,12 @@ export default class Map {
 
     #_displayEntry(entry){
 
-        this.createEntities(entry);
 
         //todo: das stimmt hier nicht, wir laden ja immer neu auch wenn der tab bereits offen ist...
 
         if (this.mapComponents[entry.name] === undefined){
+            this.createEntities(entry);
+
             this.mapComponent = new MapComponent({ entry: entry });
             this.mapComponent.displayName = entry.name;
             this.section.add(this.mapComponent);
@@ -113,32 +114,6 @@ export default class Map {
 
         this.loadNextEntryBatch(mapEntry);
 
-        // instEntries.forEach(function (inst) {
-        //     let entity = new Entity(mapEntry, inst);
-        //     let result = new Result(
-        //         Studio.ENTITY,
-        //         inst.name,
-        //         "",
-        //         0,
-        //         {
-        //             className: inst.data().entityClass
-        //         },
-        //         function(){
-        //             return entity;
-        //         }
-        //     );
-        //
-        //     result.props.instance = entity.inst;
-        //     result.props.glgEntry = entity.glgEntry;
-        //
-        //     result.level = mapEntry.level;
-        //     result.gameId = mapEntry.gameId;
-        //
-        //     Storage.add(result);
-        //
-        // });
-        //
-        // Event.dispatch(Event.MAP_ENTITIES_LOADED, { entry: mapEntry })
     }
 
     loadNextEntryBatch(mapEntry){
@@ -146,7 +121,7 @@ export default class Map {
         let len = this.partialLoad.length;
         if (len === 0) return false;
 
-        let processEntries = 3;
+        let processEntries = 15;
 
         for(let i = 0; i < processEntries; i++){
             let inst = this.partialLoad.shift();
@@ -175,7 +150,6 @@ export default class Map {
 
 
             if (len - i - 1 === 0){
-                Status.hide();
                 Event.dispatch(Event.MAP_ENTITIES_LOADED, { entry: mapEntry });
                 return true;
             }
