@@ -57,7 +57,7 @@ export default class Map {
         let studioScene = this.mapComponent.studioScene;
         studioScene.sceneInfo.control.setObject(entry.mesh);
         studioScene.sceneInfo.control.setMode('transform');
-        studioScene.sceneInfo.control.keyStates.modeSelectObject = true; //note: inverted...
+        // studioScene.sceneInfo.control.keyStates.modeSelectObject = true; //note: inverted...
 
     }
 

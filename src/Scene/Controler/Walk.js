@@ -84,7 +84,7 @@ export default class Walk {
         });
 
         WebGL.renderer.domElement.addEventListener('click', function (event) {
-            if (_this.keyStates.modeSelectObject)
+            if (_this.keyStates.modeSelectObject && _this.mode === "select")
                 _this.doRayCast(event);
         }, true);
 
@@ -278,6 +278,7 @@ export default class Walk {
 
         if (mode === "transform") {
             this.orbit.enabled = true;
+            this.keyStates.modeSelectObject = true;
         }
 
         if (mode === "fly"){
