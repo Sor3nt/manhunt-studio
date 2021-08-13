@@ -4,6 +4,7 @@ import SceneAbstract from "./Abstract.js";
 import Studio from "../Studio.js";
 import Storage from "../Storage.js";
 import Walk from "./Controler/Walk.js";
+import Event from "../Event.js";
 
 export default class SceneMap extends SceneAbstract{
 
@@ -26,6 +27,7 @@ export default class SceneMap extends SceneAbstract{
     constructor(entry, canvas) {
         super(entry.name, canvas);
 
+        let _this = this;
         this.mapEntry = entry;
 
         this.sceneInfo = StudioScene.createSceneInfo(
@@ -37,13 +39,12 @@ export default class SceneMap extends SceneAbstract{
 
             }
         );
-        //
-        // this.sceneInfo.control.movementSpeed = 50;
-        // this.sceneInfo.control.rollSpeed = Math.PI / 4;
-        // this.sceneInfo.control.autoForward = false;
-        // this.sceneInfo.control.dragToLook = true;
 
-        this.#setup();
+        Event.on(Event.MAP_ENTITIES_LOADED, function (props) {
+            if (_this.mapEntry !== props.entry) return;
+            _this.#setup();
+        });
+
     }
 
 
@@ -52,15 +53,9 @@ export default class SceneMap extends SceneAbstract{
     #setup(){
 
         let sceneInfo = this.sceneInfo;
-        sceneInfo.camera.position.set(-140.83501492578623, 119.29015658522931, -73.34957947924103);
+        // sceneInfo.camera.position.set(-140.83501492578623, 119.29015658522931, -73.34957947924103);
 
-        // let spotLight = new SpotLight(0xffffff);
-        // spotLight.position.set(1, 1, 1);
-        // sceneInfo.scene.add(spotLight);
-        //
-        // sceneInfo.scene.add(new HemisphereLight(0xabababab, 0x444444));
-        // sceneInfo.scene.add(new GridHelper(1000, 10, 0x888888, 0x444444));
-        //
+
         let entities = Storage.findBy({
             type: Studio.ENTITY,
             level: this.mapEntry.level,

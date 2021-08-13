@@ -17,6 +17,7 @@ export default class Map {
      * @param section {ComponentSection}
      */
     constructor(section){
+        this.partialLoad = [];
         this.section = section;
         this.mapComponents = {};
 
@@ -71,7 +72,6 @@ export default class Map {
             Status.show();
             requestAnimationFrame(async function () {
                 _this.#_displayEntry(entry);
-                Status.hide();
             });
         });
 
@@ -105,13 +105,52 @@ export default class Map {
     createEntities(mapEntry){
         // let gameId = this.gameId;
 
-        let instEntries = Storage.findBy({
+        this.partialLoad  = Storage.findBy({
             type: Studio.INST,
             level: mapEntry.level,
             gameId: mapEntry.gameId
         });
 
-        instEntries.forEach(function (inst) {
+        this.loadNextEntryBatch(mapEntry);
+
+        // instEntries.forEach(function (inst) {
+        //     let entity = new Entity(mapEntry, inst);
+        //     let result = new Result(
+        //         Studio.ENTITY,
+        //         inst.name,
+        //         "",
+        //         0,
+        //         {
+        //             className: inst.data().entityClass
+        //         },
+        //         function(){
+        //             return entity;
+        //         }
+        //     );
+        //
+        //     result.props.instance = entity.inst;
+        //     result.props.glgEntry = entity.glgEntry;
+        //
+        //     result.level = mapEntry.level;
+        //     result.gameId = mapEntry.gameId;
+        //
+        //     Storage.add(result);
+        //
+        // });
+        //
+        // Event.dispatch(Event.MAP_ENTITIES_LOADED, { entry: mapEntry })
+    }
+
+    loadNextEntryBatch(mapEntry){
+        let _this = this;
+        let len = this.partialLoad.length;
+        if (len === 0) return false;
+
+        let processEntries = 3;
+
+        for(let i = 0; i < processEntries; i++){
+            let inst = this.partialLoad.shift();
+
             let entity = new Entity(mapEntry, inst);
             let result = new Result(
                 Studio.ENTITY,
@@ -134,9 +173,20 @@ export default class Map {
 
             Storage.add(result);
 
+
+            if (len - i - 1 === 0){
+                Status.hide();
+                Event.dispatch(Event.MAP_ENTITIES_LOADED, { entry: mapEntry });
+                return true;
+            }
+        }
+
+
+        requestAnimationFrame(function () {
+            _this.loadNextEntryBatch(mapEntry);
         });
 
-        Event.dispatch(Event.MAP_ENTITIES_LOADED, { entry: mapEntry })
+        return len - processEntries;
     }
 
 }
