@@ -14,6 +14,10 @@ export default class Texture {
         // this.textureInfo = new TextureInfo({});
 
         let _this = this;
+        Event.on(Event.CLOSE_COMPONENT, function (props) {
+            delete _this.textures[props.component.props.entry.name]
+        });
+
         Event.on(Event.OPEN_ENTRY, function (props) {
             /** @type {Result}  */
             let entry = props.entry;

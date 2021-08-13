@@ -6,6 +6,7 @@ export default class Event{
     static VIEW_ENTRY = 3;
     static MAP_ENTITIES_LOADED = 4;
     static MAP_FOCUS_ENTITY = 5;
+    static CLOSE_COMPONENT = 6;
 
     static events = {};
 

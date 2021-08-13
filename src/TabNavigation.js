@@ -47,6 +47,8 @@ export default class TabNavigation{
      */
     delete(component){
         this.remove(component); //todo tmp...
+
+        Event.dispatch(Event.CLOSE_COMPONENT, {  component: component })
     }
 
     /**
