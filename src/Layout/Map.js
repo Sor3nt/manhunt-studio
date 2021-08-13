@@ -18,6 +18,7 @@ export default class Map {
      */
     constructor(section){
         this.section = section;
+        this.mapComponents = {};
 
         let _this = this;
         Event.on(Event.OPEN_ENTRY, function (props) {
@@ -53,11 +54,8 @@ export default class Map {
         /**
          * @type {SceneMap}
          */
-
-        let studioScene = this.model.studioScene;
-        // studioScene.
-        let sceneEntity = studioScene.sceneInfo.scene.getObjectByName(entry.name);
-        studioScene.sceneInfo.control.setObject(sceneEntity);
+        let studioScene = this.mapComponent.studioScene;
+        studioScene.sceneInfo.control.setObject(entry.mesh);
         studioScene.sceneInfo.control.setMode('transform');
         studioScene.sceneInfo.control.keyStates.modeSelectObject = true; //note: inverted...
 
@@ -85,10 +83,14 @@ export default class Map {
 
         //todo: das stimmt hier nicht, wir laden ja immer neu auch wenn der tab bereits offen ist...
 
-        this.model = new MapComponent({ entry: entry });
-        this.model.displayName = entry.name;
-        this.section.add(this.model);
-        this.section.tabNavigation.show(this.model.displayName);
+        if (this.mapComponents[entry.name] === undefined){
+            this.mapComponent = new MapComponent({ entry: entry });
+            this.mapComponent.displayName = entry.name;
+            this.section.add(this.mapComponent);
+        }
+
+
+        this.section.tabNavigation.show(entry.name);
     }
 
 

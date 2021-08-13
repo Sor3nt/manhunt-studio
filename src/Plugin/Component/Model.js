@@ -25,7 +25,6 @@ export default class Model extends AbstractComponent{
 
         this.studioScene = new SceneModel(props.entry.name, WebGL.renderer.domElement);
         let mesh = MeshHelper.convertFromNormalized(props.entry.props.normalize(), props.entry );
-
         this.studioScene.display(mesh);
 
         StudioScene.changeScene(this.studioScene.name);

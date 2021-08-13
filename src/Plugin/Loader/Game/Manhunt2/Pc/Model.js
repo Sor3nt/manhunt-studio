@@ -71,7 +71,7 @@ export default class Model extends AbstractLoader{
 
                             let data = Model.readClump(binary);
                             data.name = name;
-
+                            //
                             return new NormalizeModel(data);
                         }
                     },

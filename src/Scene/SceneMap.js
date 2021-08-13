@@ -73,6 +73,7 @@ export default class SceneMap extends SceneAbstract{
             if (mesh !== false){
                 mesh.name = entity.name;
                 mesh.userData.entity = entity;
+                entity.mesh = mesh;
                 sceneInfo.scene.add(mesh);
             }
         });

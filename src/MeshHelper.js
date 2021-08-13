@@ -93,7 +93,6 @@ export default class MeshHelper{
                 child.material = MeshHelper.generateMaterial(result, child.material, false);
             });
             group.add(generic);
-            console.log(generic);
             return group;
         }
 

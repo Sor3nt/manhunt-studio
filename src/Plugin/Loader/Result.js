@@ -27,6 +27,7 @@ export default class Result{
          * Note: file and gameId are written in class "Loader.load" AFTER parsing the file
          * but before adding them into the storage.
          */
+        this.mesh = null;
         this.filePath = "";
         this.file = "";
         this.fileName = "";
