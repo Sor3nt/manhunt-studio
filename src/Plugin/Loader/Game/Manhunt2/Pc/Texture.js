@@ -83,31 +83,31 @@ export default class Texture extends AbstractLoader{
 
         return results;
     }
-
-    static parseTexture( binary ){
-
-        let texture = {
-            'nextOffset'        : binary.consume(4, 'int32'),
-            'prevOffset'        : binary.consume(4, 'int32'),
-            'name'              : binary.consume(32, 'nbinary').getString(0, false),
-            'alphaFlags'        : binary.consume(32, 'dataview'),
-            'width'             : binary.consume(4, 'int32'),
-            'height'            : binary.consume(4, 'int32'),
-            'bitPerPixel'       : binary.consume(4, 'int32'),
-            'pitchOrLinearSize' : binary.consume(4, 'int32'),
-            'flags'             : binary.consume(4,  'dataview'),
-            'mipMapCount'       : binary.consume(1,  'int8'),
-            'unknown'           : binary.consume(3,  'dataview'),
-            'dataOffset'        : binary.consume(4, 'int32'),
-            'paletteOffset'     : binary.consume(4, 'int32'),
-            'size'              : binary.consume(4, 'int32'),
-            'unknown2'          : binary.consume(4, 'dataview')
-        };
-
-        binary.setCurrent(texture.dataOffset);
-
-        texture.data = binary.consume(texture['size'], 'arraybuffer');
-        return texture;
-    }
+    //
+    // static parseTexture( binary ){
+    //
+    //     let texture = {
+    //         'nextOffset'        : binary.consume(4, 'int32'),
+    //         'prevOffset'        : binary.consume(4, 'int32'),
+    //         'name'              : binary.consume(32, 'nbinary').getString(0, false),
+    //         'alphaFlags'        : binary.consume(32, 'dataview'),
+    //         'width'             : binary.consume(4, 'int32'),
+    //         'height'            : binary.consume(4, 'int32'),
+    //         'bitPerPixel'       : binary.consume(4, 'int32'),
+    //         'pitchOrLinearSize' : binary.consume(4, 'int32'),
+    //         'flags'             : binary.consume(4,  'dataview'),
+    //         'mipMapCount'       : binary.consume(1,  'int8'),
+    //         'unknown'           : binary.consume(3,  'dataview'),
+    //         'dataOffset'        : binary.consume(4, 'int32'),
+    //         'paletteOffset'     : binary.consume(4, 'int32'),
+    //         'size'              : binary.consume(4, 'int32'),
+    //         'unknown2'          : binary.consume(4, 'dataview')
+    //     };
+    //
+    //     binary.setCurrent(texture.dataOffset);
+    //
+    //     texture.data = binary.consume(texture['size'], 'arraybuffer');
+    //     return texture;
+    // }
 
 }

@@ -9,6 +9,12 @@ import {Save} from "./Save.js";
 
 export default class Studio{
 
+    static settings = {
+
+        //it is disabled because of perforamcen issue in the current three version
+        outlineActiveObject: false
+    };
+
     static FOV = 57.29578; //Default MH2 FOV
 
     /**

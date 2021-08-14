@@ -1,12 +1,15 @@
 import {Capsule} from "../../Vendor/Capsule.js";
-import {Vector3, Raycaster, Vector2} from "../../Vendor/three.module.js";
+import {Group, Vector3, Raycaster, Vector2, TextureLoader, RepeatWrapping} from "../../Vendor/three.module.js";
 import {TransformControls} from "../Controls/TransformControls.js";
 import WebGL from "../../WebGL.js";
 import {OrbitControls} from "../Controls/OrbitControls.js";
 import StudioScene from "../StudioScene.js";
-import Studio from "../../Studio.js";
 import Event from "../../Event.js";
 import Status from "../../Status.js";
+import {RenderPass} from "../../Vendor/RenderPass.js";
+import {OutlinePass} from "../../Vendor/OutlinePass.js";
+import Studio from "../../Studio.js";
+
 
 
 export default class Walk {
@@ -38,6 +41,18 @@ export default class Walk {
     constructor(sceneInfo) {
         this.sceneInfo = sceneInfo;
         this.sceneInfo.camera.rotation.order = 'YXZ';
+
+
+        if (Studio.settings.outlineActiveObject){
+            const renderPass = new RenderPass( sceneInfo.scene, sceneInfo.camera );
+            WebGL.composer.addPass( renderPass );
+            WebGL.composer.addPass( WebGL.effectFXAA );
+
+            let bbox = sceneInfo.element.parentNode.getBoundingClientRect();
+            this.outlinePass = new OutlinePass( new Vector2( bbox.width, bbox.height ), sceneInfo.scene, sceneInfo.camera );
+            WebGL.composer.addPass( this.outlinePass );
+        }
+
 
         let _this = this;
 
@@ -109,7 +124,10 @@ export default class Walk {
         this.orbit.enabled = false;
 
         this.transform = new TransformControls(sceneInfo.camera, WebGL.renderer.domElement);
-        // this.transform.
+        this.transform.traverse((obj) => { // To be detected correctly by OutlinePass.
+            obj.isTransformControls = true;
+        });
+
         this.transform.addEventListener('dragging-changed', function (event) {
             _this.orbit.enabled = !event.value;
         });
@@ -122,9 +140,54 @@ export default class Walk {
 
         this.setMode('fly');
 
+
+        //
+        //
+        // const loader = new OBJLoader( );
+        // loader.load( 'tree.obj', function ( object ) {
+        //     console.log("ADDD", object);
+        //     let group = new Group();
+        //     group.add(object);
+        //     group.position.set(133.62, 0.32, -111.90);
+        //     // group.position.set(-45.43, 0.56,6.61);
+        //     sceneInfo.scene.add( group );
+        //
+        //
+        //
+        //     _this.composer = new EffectComposer( WebGL.renderer );
+        //
+        //     const renderPass = new RenderPass( sceneInfo.scene, sceneInfo.camera );
+        //     _this.composer.addPass( renderPass );
+        //
+        //     let effectFXAA = new ShaderPass( FXAAShader );
+        //     effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
+        //     _this.composer.addPass( effectFXAA );
+        //
+        //     let outlinePass = new OutlinePass( new Vector2( window.innerWidth, window.innerHeight ), sceneInfo.scene, sceneInfo.camera );
+        //     _this.composer.addPass( outlinePass );
+        //
+        //     outlinePass.selectedObjects = [group];
+        //
+        //
+        //     //
+        //     //
+        //     //             //outline stuff
+        //     // const renderPass = new RenderPass( sceneInfo.scene, sceneInfo.camera );
+        //     // WebGL.composer.addPass( renderPass );
+        //     //
+        //     // WebGL.composer.addPass( WebGL.effectFXAA );
+        //     //
+        //     // let bbox = sceneInfo.element.parentNode.getBoundingClientRect();
+        //     // _this.outlinePass = new OutlinePass( new Vector2( bbox.width, bbox.height ), sceneInfo.scene, sceneInfo.camera );
+        //     // WebGL.composer.addPass( _this.outlinePass );
+        //     //
+        //     // _this.outlinePass.selectedObjects = [group];
+        //
+        // } );
+
     }
 
-    onObjectChanged(event){
+    onObjectChanged(){
 
         this.object.userData.entity.props.instance.setData({
             position: {
@@ -143,7 +206,7 @@ export default class Walk {
 
     doRayCast(event) {
 
-        let studioSceneInfo = StudioScene.getStudioSceneInfo();
+        let studioSceneInfo = StudioScene.getStudioSceneInfo(undefined);
         let camera = studioSceneInfo.camera;
         let domElement = WebGL.renderer.domElement;
         let scene = studioSceneInfo.scene;
@@ -161,7 +224,6 @@ export default class Walk {
 
         //TODO
         //refactor required ! Remove the "group" shit and add regular meshes ... then we can remove the recursive intersection
-
 
         //we want only game object, no helpers
         let childs = [];
@@ -182,9 +244,14 @@ export default class Walk {
         });
 
         if (clickedGroups.length > 0) {
-            // console.log("RayCast Object", clickedGroups[0]);
+            console.log("RayCast Object", clickedGroups[0]);
+
+            if (Studio.settings.outlineActiveObject)
+                this.outlinePass.selectedObjects = [clickedGroups[0].children[0]];
+
             this.setObject(clickedGroups[0]);
             this.setMode('transform');
+
         }
     }
 
@@ -264,6 +331,8 @@ export default class Walk {
         } else if (this.mode === "transform") {
             this.orbit.update(delta);
         }
+
+
     }
 
     //todo https://threejs.org/examples/?q=out#webgl_postprocessing_outline
@@ -311,7 +380,12 @@ export default class Walk {
             document.exitPointerLock();
         }
 
-        if (mode === "transform") {
+        if (mode === "fly") {
+
+            if (Studio.settings.outlineActiveObject)
+                this.outlinePass.selectedObjects = [];
+
+        }else if (mode === "transform") {
             this.orbit.enabled = true;
             this.keyStates.modeSelectObject = true;
         }

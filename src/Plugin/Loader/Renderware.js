@@ -87,7 +87,6 @@ export default class RenderwareLoader extends AbstractLoader{
                                 normalize: function () {
                                     binary.setCurrent(info.offset);
                                     let tree = Renderware.parse(binary);
-                                    console.log("MODEL DEBUG", "MH1", tree.rootData);
                                     return new NormalizeModel(tree.rootData);
 
                                 }

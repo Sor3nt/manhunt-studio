@@ -66,7 +66,7 @@ export default class Map extends AbstractComponent{
         if (
             this.studioScene !== null &&
 
-            //Note: The initial loading process should not render stuff
+            //Note: The initial loading process should not render stuff (we need to save the resources for parsing the data)
             //      changeScene would force the rendering but we want that trigger right after anything is loaded (SceneMap.js)
             (
                 this.studioScene.entitiesToProcess.length === 0 &&

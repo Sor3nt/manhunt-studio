@@ -14,14 +14,14 @@ export default class Manhunt extends AbstractManhunt{
 
     loadLevel( levelName, callback ){
         let files = [
-            // 'levels/GLOBAL/DATA/ManHunt.pak#./levels/' + levelName + '/entityTypeData.ini',
-            // 'levels/' + levelName + '/allanims.ifp',
-            // 'levels/' + levelName + '/pak/modelspc.txd',
-            // 'levels/' + levelName + '/pak/modelspc.dff',
-            // 'levels/' + levelName + '/entity.inst',
-            // 'levels/' + levelName + '/entity2.inst',
-            // 'levels/' + levelName + '/pak/scene1pc.txd',
-            // 'levels/' + levelName + '/scene1.bsp',
+            'levels/GLOBAL/DATA/ManHunt.pak#./levels/' + levelName + '/entityTypeData.ini',
+            'levels/' + levelName + '/allanims.ifp',
+            'levels/' + levelName + '/pak/modelspc.txd',
+            'levels/' + levelName + '/pak/modelspc.dff',
+            'levels/' + levelName + '/entity.inst',
+            'levels/' + levelName + '/entity2.inst',
+            'levels/' + levelName + '/pak/scene1pc.txd',
+            'levels/' + levelName + '/scene1.bsp',
             'levels/GLOBAL/CHARPAK/cash_pc.txd',
             'levels/GLOBAL/CHARPAK/cash_pc.dff',
         ];
