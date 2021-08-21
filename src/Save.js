@@ -2,6 +2,7 @@ import Storage from "./Storage.js";
 import Studio from "./Studio.js";
 import Inst from "./Plugin/Loader/Game/ManhuntGeneric/Inst.js";
 import NBinary from "./NBinary.js";
+import {downloadZip} from "./Vendor/Zip.js";
 
 export class Save{
 
@@ -16,7 +17,7 @@ export class Save{
         this.save();
     }
 
-    save(){
+    async save(){
 
         let changedEntries = Storage.findBy({
             hasChanges: true
@@ -44,32 +45,29 @@ export class Save{
                 filesTouched.push(filename);
 
                 files.push({
-                    filename: filename,
-                    data: entry.binary
+                    name: filename,
+                    lastModified: new Date(),
+                    input: new Uint8Array(entry.binary.data)
                 });
             }
 
         });
 
+        let blob, name;
+
         if (files.length > 1){
-            console.error("Multi files not supported yet.");
-            return;
+            blob = await downloadZip(files).blob();
+            name = "Modifications.zip";
+        }else{
+            blob = new Blob( [ files[0].input ], { type: 'application/octet-stream' } );
+            name = files[0].name;
         }
 
-        let file = files[0];
-
-        const link = document.createElement( 'a' );
-        link.style.display = 'none';
-        document.body.appendChild( link );
-
-
-        file.data.setCurrent(0);
-        let dataAsBin = new Uint8Array(file.data.data);
-        const blob = new Blob( [ dataAsBin ], { type: 'application/octet-stream' } );
-
-        link.href = URL.createObjectURL( blob );
-        link.download =  file.filename;
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = name;
         link.click();
+        link.remove();
 
     }
 

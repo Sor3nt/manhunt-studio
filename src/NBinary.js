@@ -1,6 +1,5 @@
 import { Face3, Vector2, Vector3, Vector4, Color } from './Vendor/three.module.js';
 
-import * as fflate from './Vendor/fflate.js';
 
 export default class NBinary{
 
@@ -23,8 +22,7 @@ export default class NBinary{
             this._current = 8;
             let deflated = this.consume(this.remain(), 'arraybuffer');
 
-            let inflated = new fflate.Inflate( new Uint8Array(deflated) );
-            this.data = inflated.ondata.buffer;
+            this.data = pako.inflate( new Uint8Array(deflated) ).buffer;
         }
 
         this._current = 0;

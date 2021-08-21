@@ -16,6 +16,7 @@
 
     <script type="module" src="src/Studio.js"></script>
     <script type="module" src="src/Vendor/lottie-player.js"></script>
+    <script type="module" src="/src/Vendor/pako_inflate.min.js"></script>
 
 
     <title>Manhunt Studio</title>
@@ -64,7 +65,7 @@
 
                 </div>
 
-                <div class="col-8" style="margin-top: 50px;height: 340px;">
+                <div class="col-8" style="margin-top: 50px;height: 360px;">
 
                     <div style="">
 
@@ -109,10 +110,13 @@ underline">Current Features</h5>
                                         Level Entity Handler <i class="fas fa-check"></i>️
                                     </li>
                                     <li>
-                                        View textures, models and maps (MH1)<i class="fas fa-check"></i>️
+                                        Semantic Entity View <i class="fas fa-check"></i>️
                                     </li>
                                     <li>
-                                        <b>Move</b>, <b>Rotate</b> and save game objects <i class="fas fa-check"></i>️
+                                        View textures, models and maps from Manhunt 1 and 2<i class="fas fa-check"></i>️
+                                    </li>
+                                    <li>
+                                        <b>Move</b>, <b>Rotate</b> and save any game objects <i class="fas fa-check"></i>️
                                     </li>
 
                                 </ul>
@@ -126,10 +130,11 @@ underline">Supported Formats</h6>
                                 <li>
 
                                     <ul style="color: #fff;font-size: 10px">
-                                        <li>Manhunt 1 Map (scene1.bsp)</li>
-                                        <li>Manhunt 1 & 2 Texture (*.txd/*.tex) (PC,PSP,PS2,XBOX,WII)</li>
-                                        <li>Manhunt 1 & 2 Instances (*.inst)</li>
-                                        <li>Manhunt 1 Models (*.dff)</li>
+                                        <li>Manhunt 1 & 2 Map (scene1.bsp)</li>
+                                        <li>Manhunt 1 & 2 Texture (.txd/.tex) (PC,PSP,PS2,XBOX,WII)</li>
+                                        <li>Manhunt 1 & 2 Instances (.inst)</li>
+                                        <li>Manhunt 1 & 2 Models (.dff/.mdl)</li>
+                                        <li>Manhunt Container Format (.pak)</li>
                                     </ul>
                                 </li>
                                 </ul>
@@ -139,7 +144,7 @@ underline">Supported Formats</h6>
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
 underline">Changelog</h5>
                                 <ul style="color: #fff; font-size: 10px">
-                                    <li><b>XX-08-2021</b>: Semantic Entity View & Speed modifier (Shift) & Transparence fixes</li>
+                                    <li><b>XX-08-2021</b>: Manhunt 2 Support, Semantic Entity View, Speed modifier,<br/> Transparence fixes, navigation fixes and more</li>
                                     <li><b>07-08-2021</b>: Search feature & Bugfixes</li>
                                     <li><b>30-07-2021</b>: Initial release 🎉</li>
                                 </ul>

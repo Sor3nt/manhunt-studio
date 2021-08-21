@@ -11,7 +11,7 @@ export default class Game{
     static plugins = [];
 
     /**
-     * @param gameInfo
+     * @param gameInfo { { game: string, platform: string, version: string, id: int, path: string}  }
      * @returns {AbstractGame|null}
      */
     static create(gameInfo){

@@ -152,8 +152,8 @@ echo "TODO";
             $realFile = file_get_contents($game['path'] . "/" . $file);
 
             //just to take sure zlib was applied
-            $realFile = new NBinary($realFile);
-            $realFile = $realFile->binary;
+//            $realFile = new NBinary($realFile);
+//            $realFile = $realFile->binary;
         }
 
         $this->send($realFile);

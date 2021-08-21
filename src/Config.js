@@ -18,17 +18,25 @@ export default class Config{
         });
     }
 
-    addGame (folder, callback) {
-        let _this = this;
-        console.log('[MANHUNT.config] Add folder ', folder);
-        Api.addGame(folder, function (result) {
-            if (result.status === false) return callback(result);
-
-            console.log('[MANHUNT.config] Add game ', result);
-            _this.config.games.push(result);
-            callback(result);
-        });
+    /**
+     *
+     * @param game {AbstractGame}
+     */
+    addGame (game) {
+        this.config.games.push(game);
     }
+
+    // /**
+    //  * @param gameInfo { { game: string, platform: string, version: string, path: string}  }
+    //  * @returns {AbstractGame}
+    //  */
+    // addGameWithConfig(gameInfo){
+    //     gameInfo.id = this.config.games.length;
+    //     let game = Game.create(gameInfo);
+    //     this.config.games.push(game);
+    //     return game;
+    // }
+    //
 
     /**
      *

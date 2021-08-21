@@ -9,7 +9,20 @@ import {Save} from "./Save.js";
 
 export default class Studio{
 
+    static fileFormats = [
+        'inst',     // Instances from Manhunt 1/2
+        'mdl',      // Manhunt 2 Model
+        'dff',      // Manhunt 1 Model
+        'tex',      // Manhunt 2 Texture
+        'txd',      // Manhunt 1 Texture
+        'bsp',      // Manhunt 1/2 Level/Map
+        'glg',      // Manhunt 2 INI Files
+
+    ];
+
     static settings = {
+
+        isLocalInstallation: false, //document.location.hostname === "localhost",
 
         //it is disabled because of perforamcen issue in the current three version
         outlineActiveObject: false
@@ -52,45 +65,41 @@ export default class Studio{
 
         new Save();
 
-        Studio.config = new Config(function (config) {
-            Layout.createDefaultLayout();
 
-            WebGL.render();
+        if (Studio.settings.isLocalInstallation){
 
-            if (config.games.length > 0){
-                Studio.config.getGame(0).loadLevel("asylum", function () {
-                    console.log("loaded");
+            Studio.config = new Config(function (config) {
+                Layout.createDefaultLayout();
 
+                WebGL.render();
+
+                if (config.games.length > 0){
+                    Studio.config.getGame(0).loadLevel("asylum", function () {
+                        console.log("loaded");
+
+                        Status.hide();
+                    });
+
+                    Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
+                        console.log("loaded");
+
+                    });
+                }else{
                     Status.hide();
-                });
-
-                Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
-                    console.log("loaded");
-
-                });
-            }else{
-                Status.hide();
-                Status.showWelcome();
+                    Status.showWelcome();
 
 
-            }
-            //
-            //
-            // Studio.config.getGame(1).loadLevel("A01_Escape_Asylum", function () {
-            //     console.log("loaded");
-            //
-            // });
+                }
 
-            // MANHUNT.engine.init();
-            // Studio.tabHandler = new Tab(jQuery('#studio-tab-list'), jQuery('#studio-tab-content'));
-            //
-            // if (Studio.config.getGames().length === 0){
-            //     return MANHUNT.frontend.modal.handler.show('setup', Studio.onGamePathsKnown);
-            // }
-            //
-            // Studio.onGamePathsKnown();
 
-        });
+            });
+        }else{
+            Layout.createDefaultLayout();
+            WebGL.render();
+            Status.hide();
+            Status.showWelcome();
+        }
+
     }
 
     //
