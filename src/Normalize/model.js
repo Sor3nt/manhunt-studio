@@ -2,6 +2,7 @@ import {BufferGeometry, Mesh, SkinnedMesh, Vector3, Geometry, Group, MeshBasicMa
 import Status from "../Status.js";
 import Storage from "../Storage.js";
 import Studio from "../Studio.js";
+import Games from "../Plugin/Games";
 
 export default class Model{
     /** @type {string[]} */
@@ -49,9 +50,9 @@ export default class Model{
                 return;
             }
 
-            let texture = Storage.findBy({
+            let game = Games.getGame(gameId);
+            let texture = game.findBy({
                 type: Studio.TEXTURE,
-                gameId: gameId,
                 name: name
             });
 

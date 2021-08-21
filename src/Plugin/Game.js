@@ -1,41 +1,67 @@
-import Manhunt from './Game/Manhunt.js';
-import Manhunt2 from './Game/Manhunt2.js';
-import AbstractGame from './Game/Abstract.js';
+import Games from './Games.js';
+import Storage from "../Storage.js";
 
 export default class Game{
 
     /**
-     *
-     * @type plugins {Array.<AbstractGame>|{[]}}
+     * Used for the Storage search, Manhunt 1 as example can only handle 23 chars
+     * @type {number}
      */
-    static plugins = [];
+    modelNameLengh = 128;
 
     /**
-     * @param gameInfo { { game: string, platform: string, version: string, id: int, path: string}  }
-     * @returns {AbstractGame|null}
+     * @enum {Games.GAMES}
      */
-    static create(gameInfo){
-        let game = null;
-        Game.plugins.forEach(function (Handler) {
-            if (Handler.canHandle(gameInfo.game, gameInfo.platform, gameInfo.version)){
-                game = new Handler(gameInfo.id, gameInfo.game, gameInfo.platform, gameInfo.version, gameInfo.path);
-                console.log("New Game Handler created", game, game.name);
-            }
-        });
+    game;
 
-        if (game === null)
-            console.error("No Game handler found for", gameInfo);
+    /**
+     *
+     * @param gameFourCC {Games.GAMES}
+     * @param platformFourCC {string}
+     * @param version {double}
+     */
+    constructor(gameFourCC, platformFourCC, version){
+        this.gameId = Games.createGameId();
 
-        return game;
+        this.game = gameFourCC;             // mh1, mh2
+        this.platform = platformFourCC;     // pc, ps2, psp, xbox
+        this.version = version;             // 0.1, 1.0, 1.3
+
+        this.name = `${this.game} ${this.platform} (${this.version})`;
+
+        switch (this.game) {
+            case Games.GAMES.MANHUNT:
+                this.modelNameLengh = 23;
+        }
     }
 
-    static registerGames(){
-        this.registerGame(Manhunt);
-        this.registerGame(Manhunt2);
+    findBy( criteria ){
+        criteria.gameId = this.gameId;
+
+        if(criteria.name !== undefined)
+            criteria.name = criteria.name.substr(0, this.modelNameLengh);
+
+        return Storage.findBy(criteria);
+
     }
 
-    static registerGame( game ){
-        console.info("Register Game: ", game.handlerName);
-        Game.plugins.push(game);
+    findOneBy( criteria ){
+        criteria.gameId = this.gameId;
+
+        if(criteria.name !== undefined)
+            criteria.name = criteria.name.substr(0, this.modelNameLengh);
+
+        return Storage.findOneBy(criteria);
+
     }
+
+    /**
+     *
+     * @param result {Result}
+     */
+    addToStorage(result){
+        result.gameId = this.gameId;
+        Storage.add(result);
+    }
+
 }

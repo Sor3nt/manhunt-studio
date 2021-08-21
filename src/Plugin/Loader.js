@@ -20,42 +20,6 @@ export default class Loader{
 
     static plugins = [];
 
-    /**
-     *
-     * @param gameId {int}
-     * @param file {string}
-     * @param options {{}}
-     * @param callback {function}
-     */
-    static load( gameId, file, options, callback ){
-        // Status.set(`Load File ${file}`);
-        Api.load(gameId, file, function (binary) {
-            let results = Loader.parse(binary, options);
-            if (results === false){
-                console.error("No handler found for ", file);
-                debugger;
-            }
-
-            if (results.length === 0){
-                console.error("Unable to parse ", file);
-                debugger;
-            }
-
-            results.forEach(function (result) {
-                result.setFilePath(file);
-
-                result.gameId = gameId;
-                Storage.add(result);
-
-                Event.dispatch(Event.ENTRY_LOADED, {
-                    entry: result
-                });
-
-            });
-
-            callback();
-        });
-    }
 
     static registerPlugins(){
         /**
@@ -111,9 +75,10 @@ export default class Loader{
                 binary.setCurrent(current);
                 continue;
             }
+
+
             binary.setCurrent(current);
 
-            // Status.set(`Create List from binary (Size: ${binary.length()})`);
             return plugin.list(binary, options);
         }
 

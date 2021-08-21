@@ -1,6 +1,7 @@
 import Storage from "./Storage.js";
 import Studio from "./Studio.js";
 import Helper from "./Helper.js";
+import Games from "./Plugin/Games.js";
 import MeshHelper from "./MeshHelper.js";
 import {Euler, Quaternion} from "./Vendor/three.module.js";
 
@@ -106,10 +107,11 @@ export default class Entity{
             // }
         }
 
-        let models = Storage.findBy({
+        let game = Games.getGame(this.entry.gameId);
+
+        let models = game.findBy({
             type: Studio.MODEL,
             level: this.entry.level,
-            gameId: this.entry.gameId,
             name: modelName
         });
 

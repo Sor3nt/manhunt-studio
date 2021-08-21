@@ -1,9 +1,9 @@
 import Event from "./../Event.js";
 import Studio from "./../Studio.js";
-import Storage from "./../Storage.js";
 import {ComponentSection} from "../Plugin/Components.js";
 import IconBoxes from "../Plugin/Component/IconBoxes.js";
 import EntityTree from "../Plugin/Component/EntityTree.js";
+import Games from "../Plugin/Games.js";
 
 export default class SemanticallyTree {
 
@@ -46,8 +46,8 @@ export default class SemanticallyTree {
         //show per default the MAP section
         this.iconBox.onClick(Studio.ENTITY);
 
-        let entities = Storage.findBy({
-            gameId: this.mapEntry.gameId,
+        let game = Games.getGame(this.mapEntry.gameId);
+        let entities = game.findBy({
             type: Studio.ENTITY
         });
 

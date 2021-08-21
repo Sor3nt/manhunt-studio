@@ -2,10 +2,10 @@ import {Vector3, SpotLight, GridHelper, PerspectiveCamera, HemisphereLight} from
 import StudioScene from "./StudioScene.js";
 import SceneAbstract from "./Abstract.js";
 import Studio from "../Studio.js";
-import Storage from "../Storage.js";
 import Walk from "./Controler/Walk.js";
 import Event from "../Event.js";
 import Status from "../Status.js";
+import Games from "../Plugin/Games.js";
 
 export default class SceneMap extends SceneAbstract{
 
@@ -92,10 +92,10 @@ export default class SceneMap extends SceneAbstract{
 
     #setup(){
 
-        this.entitiesToProcess = Storage.findBy({
+        let game = Games.getGame(this.mapEntry.gameId);
+        this.entitiesToProcess = game.findBy({
             type: Studio.ENTITY,
-            level: this.mapEntry.level,
-            gameId: this.mapEntry.gameId
+            level: this.mapEntry.level
         });
 
         this.loadNearByEntities();

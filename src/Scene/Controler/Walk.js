@@ -9,6 +9,7 @@ import Status from "../../Status.js";
 import {RenderPass} from "../../Vendor/RenderPass.js";
 import {OutlinePass} from "../../Vendor/OutlinePass.js";
 import Studio from "../../Studio.js";
+import Config from "../../Config.js";
 
 
 
@@ -43,7 +44,7 @@ export default class Walk {
         this.sceneInfo.camera.rotation.order = 'YXZ';
 
 
-        if (Studio.settings.outlineActiveObject){
+        if (Config.outlineActiveObject){
             const renderPass = new RenderPass( sceneInfo.scene, sceneInfo.camera );
             WebGL.composer.addPass( renderPass );
             WebGL.composer.addPass( WebGL.effectFXAA );
@@ -246,7 +247,7 @@ export default class Walk {
         if (clickedGroups.length > 0) {
             console.log("RayCast Object", clickedGroups[0]);
 
-            if (Studio.settings.outlineActiveObject)
+            if (Config.outlineActiveObject)
                 this.outlinePass.selectedObjects = [clickedGroups[0].children[0]];
 
             this.setObject(clickedGroups[0]);
@@ -382,7 +383,7 @@ export default class Walk {
 
         if (mode === "fly") {
 
-            if (Studio.settings.outlineActiveObject)
+            if (Config.outlineActiveObject)
                 this.outlinePass.selectedObjects = [];
 
         }else if (mode === "transform") {

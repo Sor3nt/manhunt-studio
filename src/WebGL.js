@@ -4,6 +4,7 @@ import {EffectComposer} from "./Vendor/EffectComposer.js";
 import {FXAAShader} from "./Vendor/FXAAShader.js";
 import Studio from "./Studio.js";
 import {ShaderPass} from "./Vendor/ShaderPass.js";
+import Config from "./Config.js";
 
 
 export default class WebGL{
@@ -28,7 +29,7 @@ export default class WebGL{
         WebGL.renderer = new WebGLRenderer({antialias: false, alpha: true});
         WebGL.clock = new Clock();
 
-        if (Studio.settings.outlineActiveObject){
+        if (Config.outlineActiveObject){
             WebGL.composer = new EffectComposer( WebGL.renderer );
             WebGL.effectFXAA = new ShaderPass( FXAAShader );
         }
@@ -46,7 +47,7 @@ export default class WebGL{
         sceneInfo.camera.aspect = bbox.width / bbox.height;
         sceneInfo.camera.updateProjectionMatrix();
 
-        if (Studio.settings.outlineActiveObject){
+        if (Config.outlineActiveObject){
             WebGL.effectFXAA.uniforms[ 'resolution' ].value.set( 1 / bbox.width, 1 / bbox.height );
             WebGL.composer.setSize( bbox.width, bbox.height );
         }
@@ -68,7 +69,7 @@ export default class WebGL{
         sceneInfo.onRender(WebGL.clock.getDelta());
         WebGL.renderer.render(sceneInfo.scene, sceneInfo.camera);
 
-        if (Studio.settings.outlineActiveObject)
+        if (Config.outlineActiveObject)
             WebGL.composer.render();
     }
 }

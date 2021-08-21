@@ -5,6 +5,7 @@ import Status from "../Status.js";
 import Storage from "../Storage.js";
 import Entity from "../Entity.js";
 import Result from "../Plugin/Loader/Result.js";
+import Games from "../Plugin/Games.js";
 
 export default class Map {
 
@@ -106,10 +107,10 @@ export default class Map {
     createEntities(mapEntry){
         // let gameId = this.gameId;
 
-        this.partialLoad  = Storage.findBy({
+        let game = Games.getGame(mapEntry.gameId);
+        this.partialLoad  = game.findBy({
             type: Studio.INST,
-            level: mapEntry.level,
-            gameId: mapEntry.gameId
+            level: mapEntry.level
         });
 
         this.loadNextEntryBatch(mapEntry);

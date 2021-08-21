@@ -2,6 +2,7 @@ import AbstractLoader from "./../../Abstract.js";
 import Result from "../../Result.js";
 import NBinary from "../../../../NBinary.js";
 import Studio from "../../../../Studio.js";
+import Games from "../../../../Plugin/Games.js";
 
 export default class Inst extends AbstractLoader{
     static name = "INST (Manhunt 1/2)";
@@ -203,18 +204,18 @@ export default class Inst extends AbstractLoader{
                     let maybeType  = binary.getString(0, true);
 
                     if ([ 'flo', 'boo', 'str', 'int' ].indexOf(maybeType) !== -1){
-                        game = "mh2";
+                        game = Games.GAMES.MANHUNT_2;
                     }else{
-                        game = "mh1";
+                        game = Games.GAMES.MANHUNT;
                     }
                 }else{
-                    game = "mh1";
+                    game = Games.GAMES.MANHUNT;
                 }
 
 
             }
 
-            results.push(new Result(
+            let result = new Result(
                 Studio.INST,
                 internalName,
                 binary,
@@ -225,7 +226,11 @@ export default class Inst extends AbstractLoader{
                 function(){
                     return Inst.parse(binary, offset, game);
                 }
-            ));
+            );
+
+            result.gameFourCC = game;
+
+            results.push(result);
             
             binary.setCurrent(endOffset);
         });
@@ -263,7 +268,7 @@ export default class Inst extends AbstractLoader{
             let field = 0;
             while(binary.remain() > 0){
                 let setting = {};
-                    if (game === "mh1"){
+                    if (game === Games.GAMES.MANHUNT){
                     settings['unk_' + field] = binary.consume(4, 'int32');
 
                 }else{

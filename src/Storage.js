@@ -51,12 +51,6 @@ export default class Storage{
             (criteria.type !== undefined && criteria.gameId !== undefined && criteria.name !== undefined && criteria.level !== undefined) &&
             (criteria.offset === undefined && criteria.file === undefined && criteria.props === undefined)){
 
-            if (criteria.type === Studio.MODEL){
-                // let maxLen = 23; //todo
-                let maxLen = Studio.config.getGame(criteria.gameId).modelNameLengh;
-                criteria.name = criteria.name.substr(0, maxLen);
-            }
-
             let entries = Storage.byTypeGameName[ `S_${criteria.type}_${criteria.level}_${criteria.gameId}_${criteria.name}` ];
             if (entries === undefined)
                 return [];
@@ -67,12 +61,6 @@ export default class Storage{
 
         let result = [];
         Storage.storage.forEach(function ( entry ) {
-
-            if (criteria.type === Studio.MODEL && criteria.gameId !== undefined && criteria.name !== undefined){
-                // let maxLen = 23; //todo: Studio.config.getGame(criteria.gameId).modelNameLengh;
-                let maxLen = Studio.config.getGame(criteria.gameId).modelNameLengh;
-                criteria.name = criteria.name.substr(0, maxLen);
-            }
 
             if (criteria.hasChanges !== undefined && entry.hasChanges   !== criteria.hasChanges)   return;
             if (criteria.level   !== undefined && entry.level   !== criteria.level)   return;
