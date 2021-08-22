@@ -4,6 +4,7 @@ import { VertexColors, Face3, Color, Vector2, Vector3, Vector4, Bone, Matrix4, S
 import NBinary from "../../../../../NBinary.js";
 import Studio from "../../../../../Studio.js";
 import NormalizeModel from "./NormalizeModel.js";
+import Scan from "../../../Renderware/Utils/Scan.js";
 
 export default class Model extends AbstractLoader{
     static name = "Model (Manhunt 2 PC)";
@@ -70,6 +71,15 @@ export default class Model extends AbstractLoader{
                             binary.setCurrent(offset);
 
                             let data = Model.readClump(binary);
+                            if (data === false){
+                                //
+                                // binary.setCurrent(0);
+                                // let scanner = new Scan(binary);
+                                console.log("Scan", this);
+
+                                return false;
+                            }
+
                             data.name = name;
                             //
                             return new NormalizeModel(data);

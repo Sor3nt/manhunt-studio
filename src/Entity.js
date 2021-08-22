@@ -68,6 +68,11 @@ export default class Entity{
 
         this.mesh = MeshHelper.convertFromNormalized( this.model.props.normalize(), this.model );
 
+        if (this.mesh === false){
+            console.error("Unable to parse Mesh for Model", this.model.name, this.model);
+            return false;
+        }
+
         let instData = this.inst.data();
         this.setPosition(instData.position.x,instData.position.y,instData.position.z);
         this.setRotation(instData.rotation.x,instData.rotation.y,instData.rotation.z,instData.rotation.w);

@@ -81,6 +81,9 @@ export default class MeshHelper{
         // Status.set(`Convert ${result.name} to Mesh...`);
 // console.log(result);
 // die;
+        if (generic === false){
+            return false;
+        }
 
 
         let group = new Group();
@@ -96,6 +99,7 @@ export default class MeshHelper{
         }
 
         let objects = generic.getObjects();
+
         let material = [];
 
         if (generic.getMaterial() !== false)
