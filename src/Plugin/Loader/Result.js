@@ -45,6 +45,7 @@ export default class Result{
     }
 
     setFilePath(path){
+        //in some cases the function is called twice, ignore it
         if (this.level !== '' && this.filePath !== '' && this.file !== '' && this.fileName !== '' )
             return;
 

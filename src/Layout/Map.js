@@ -83,16 +83,17 @@ export default class Map {
 
         //todo: das stimmt hier nicht, wir laden ja immer neu auch wenn der tab bereits offen ist...
 
-        if (this.mapComponents[entry.name] === undefined){
+        if (this.mapComponents[entry.level] === undefined){
             this.createEntities(entry);
 
             this.mapComponent = new MapComponent({ entry: entry });
-            this.mapComponent.displayName = entry.name;
+            this.mapComponent.displayName = entry.level;
+
             this.section.add(this.mapComponent);
         }
 
 
-        this.section.tabNavigation.show(entry.name);
+        this.section.tabNavigation.show(entry.level);
     }
 
 

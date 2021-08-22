@@ -27,7 +27,7 @@ export default class SceneMap extends SceneAbstract{
      * @param mapComponent {Map}
      */
     constructor(entry, canvas, mapComponent) {
-        super(entry.name, canvas);
+        super(entry.level, canvas);
 
         let _this = this;
         this.mapEntry = entry;
