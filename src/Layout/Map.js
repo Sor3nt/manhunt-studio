@@ -41,8 +41,7 @@ export default class Map {
                 let entry = props.entry;
                 if (entry.type !== Studio.ENTITY) return;
 
-                // let StudioScene.getStudioSceneInfo(props.mapEntry.name)
-                _this.section.tabNavigation.show(props.mapEntry.name);
+                _this.section.tabNavigation.show(props.mapEntry.level);
 
                 _this.focusEntry(entry);
             }
