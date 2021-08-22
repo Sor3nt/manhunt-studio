@@ -22,8 +22,8 @@
 
 .fileTree {
     font-size: 12px;
+    height: calc(100vh - 75px);
     overflow-y: scroll;
-    height: calc(100vh - 80px);
 }
 
 .fileTree li{

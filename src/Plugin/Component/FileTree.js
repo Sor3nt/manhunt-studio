@@ -1,5 +1,5 @@
 import AbstractComponent from "./Abstract.js";
-import Studio from "./../../Studio.js";
+import Games from "./../../Plugin/Games.js";
 
 export class TreeNode{
     element = jQuery('<li>');
@@ -116,21 +116,50 @@ export default class FileTree extends AbstractComponent{
 
         //Gamefolder name
         if (usedParentNode === undefined){
-//<i class="icon-game-${game.game}" />
-//<span class="badge badge-warning">${game.platform}</span>
-            usedParentNode = new TreeNode({
-                value: jQuery(`<div>
+
+
+            if (entry.fileName === "scene2" || entry.fileName === "scene3")
+                return false;
+
+            let game = Games.getGame(entry.gameId);
+
+            if (entry.fileName === "scene1"){
+                usedParentNode = new TreeNode({
+                    value: jQuery(`<div style="display: inline-block;">
+                        <i class="icon-game-${game.game}" style="float:left"></i>
+                        <div style="float:left">
                         
-                        <div class="badges">
-                            
-                            <span class="badge badge-secondary">${entry.level}</span>
+                            <div class="badges">
+                                <span class="badge badge-warning">${game.platform}</span>
+                            </div>
+                             ${entry.level}
                         </div>
-                        ${entry.fileName}
+
                     </div>`),
-                onClick: function (props, event) {
-                    _this.onParentClick(entry);
-                }
-            });
+                    onClick: function (props, event) {
+                        _this.onParentClick(entry);
+                    }
+                });
+            }else{
+                usedParentNode = new TreeNode({
+                    value: jQuery(`<div style="display: inline-block;">
+                        <i class="icon-game-${game.game}" style="float:left"></i>
+                        <div style="float:left">
+    
+                            <div class="badges">
+                                <span class="badge badge-warning">${game.platform}</span>
+                                <span class="badge badge-secondary">${entry.level}</span>
+                            </div>
+                            ${entry.fileName}
+                        </div>
+                    </div>`),
+                    onClick: function (props, event) {
+                        _this.onParentClick(entry);
+                    }
+                });
+            }
+
+
             this.addNode(usedParentNode);
             this.nodes[indexId] = usedParentNode;
         }
@@ -147,8 +176,9 @@ export default class FileTree extends AbstractComponent{
         if (this.props.processType !== entry.type)
             return;
 
-
         let usedParentNode = this.getParentNode(entry);
+        if (usedParentNode === false)
+            return;
 
         let _this = this;
         let node = new TreeNode({

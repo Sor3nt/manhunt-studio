@@ -134,7 +134,6 @@ export default class FileDrop{
         let _this = this;
 
         this.files.forEach(function (file) {
-            Event.dispatch(Event.DROP_FILE, file);
 
             file.binary.setCurrent(0);
 
@@ -156,6 +155,8 @@ export default class FileDrop{
 
                     _this.entries.push(entry);
                 });
+
+                Event.dispatch(Event.DROP_FILE, file);
 
             }catch(error){
 console.log(error, file);
@@ -221,6 +222,7 @@ console.log(error, file);
         let ressourceInfo = this.guessGamePlatformVersion();
 
         let game = new Game(ressourceInfo.game, ressourceInfo.platform, ressourceInfo.version);
+        Games.addGame(game);
 
         this.entries.forEach(function (entry) {
 
@@ -231,8 +233,6 @@ console.log(error, file);
             });
 
         });
-
-        Games.addGame(game);
 
         Status.hide();
 

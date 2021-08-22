@@ -2,6 +2,7 @@ import AbstractComponent from "./Abstract.js";
 import Studio from "../../Studio.js";
 import Event from "../../Event.js";
 import Storage from "../../Storage.js";
+import Games from "../../Plugin/Games.js";
 import StudioScene from "../../Scene/StudioScene.js";
 
 export default class ResourceInfo extends AbstractComponent{
@@ -39,18 +40,18 @@ export default class ResourceInfo extends AbstractComponent{
 
             case Studio.ENTITY:
 
-                let record = Storage.findOneBy({
+                let game = Games.getGame(entry.gameId);
+
+                let record = game.findOneBy({
                     type: Studio.GLG,
                     level: entry.level,
-                    gameId: entry.gameId,
                     name: entry.props.instance.props.glgRecord
                 });
 
-                let model = Storage.findOneBy({
+                let model = game.findOneBy({
                     type: Studio.MODEL,
                     level: entry.level,
-                    gameId: entry.gameId,
-                    name: record.props.model,
+                    name: record.props.model
                 });
 
 
