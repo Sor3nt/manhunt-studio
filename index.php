@@ -40,9 +40,13 @@
         width: 300px;
         height: 300px;" loop autoplay></lottie-player>
         </div>
-        <h1 style="font-family: 'GF Ordner Inverted';
+        <h1  style="font-family: 'GF Ordner Inverted';
     font-weight: normal;
     font-style: normal; color: #fff;text-align: center;">Loading</h1>
+        <h2 data-id="status-msg" style="font-family: 'GF Ordner Inverted';
+    font-weight: normal; font-size: 12px;
+    font-style: normal; color: #fff;text-align: center;"></h2>
+
 
     </div>
 </div>
@@ -95,7 +99,7 @@
                                     <ul style="color: #fff; font-size: 12px;float: right;">
                                         <li style="font-size: 14px">
                                             Please use <b style="color: orange">Chrome</b> Browser!<br/>
-                                            Simply <b style="color: orange">drag</b> a file into this window to start the wizard 🤷‍♂️
+                                            Simply <b style="color: orange">drag</b> a <b style="color: orange">complete</b> game folder into this window 🤷‍♂️
                                         </li>
                                         <li>&nbsp;</li>
                                         <li>&nbsp;</li>

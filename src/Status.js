@@ -50,7 +50,9 @@ export default class Status{
             Status.loadingContainer = jQuery('#loading');
 
         Status.loadingContainer.show();
+        Status.loadingContainer.find('[data-id="status-msg"]').html(msg === undefined ? "loading" : msg);
     }
+
     static set(msg){
 
         console.log(msg, "last duration", +new Date() - Status.setAt);

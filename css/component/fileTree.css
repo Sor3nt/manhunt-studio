@@ -16,8 +16,14 @@
 
 /*}*/
 
+.fileTree::-webkit-scrollbar {
+    display: none;
+}
+
 .fileTree {
     font-size: 12px;
+    overflow-y: scroll;
+    height: calc(100vh - 80px);
 }
 
 .fileTree li{

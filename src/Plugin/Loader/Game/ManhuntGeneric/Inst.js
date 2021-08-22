@@ -155,6 +155,7 @@ export default class Inst extends AbstractLoader{
      * @returns {boolean}
      */
     static canHandle(binary){
+        if (binary.remain() <= 0) return false;
 
         let count = binary.consume(4, 'int32');
         if (count < 0) return false;

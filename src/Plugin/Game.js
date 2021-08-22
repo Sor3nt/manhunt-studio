@@ -1,5 +1,6 @@
 import Games from './Games.js';
 import Storage from "../Storage.js";
+import Studio from "../Studio.js";
 
 export default class Game{
 
@@ -38,7 +39,7 @@ export default class Game{
     findBy( criteria ){
         criteria.gameId = this.gameId;
 
-        if(criteria.name !== undefined)
+        if(criteria.type !== undefined && criteria.name !== undefined && criteria.type === Studio.MODEL)
             criteria.name = criteria.name.substr(0, this.modelNameLengh);
 
         return Storage.findBy(criteria);
@@ -48,7 +49,7 @@ export default class Game{
     findOneBy( criteria ){
         criteria.gameId = this.gameId;
 
-        if(criteria.name !== undefined)
+        if(criteria.type !== undefined && criteria.name !== undefined && criteria.type === Studio.MODEL)
             criteria.name = criteria.name.substr(0, this.modelNameLengh);
 
         return Storage.findOneBy(criteria);

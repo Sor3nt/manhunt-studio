@@ -12,6 +12,7 @@ export default class Config {
         'txd',      // Manhunt 1 Texture
         'bsp',      // Manhunt 1/2 Level/Map
         'glg',      // Manhunt 2 INI Files
+        'pak',      // Manhunt 1 Container file
 
     ];
 

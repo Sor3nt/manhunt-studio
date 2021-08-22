@@ -33,7 +33,6 @@ export default class Map extends AbstractComponent{
 
         //we try to set the original player position
         let playerInst = game.findOneBy({
-            gameId: props.entry.gameId,
             level: props.entry.level,
             type: Studio.INST,
             name: game.game === "mh2" ? 'player(player)' : 'player'

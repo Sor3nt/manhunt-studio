@@ -8,7 +8,10 @@ export default class Result{
     fileName = "";
 
     /**  @type {string} */
-    levelName = "";
+    level = "";
+
+    /**  @type {string} */
+    filePath = "";
 
     gameFourCC = null;
     platformFourCC = null;
@@ -42,6 +45,9 @@ export default class Result{
     }
 
     setFilePath(path){
+        if (this.level !== '' && this.filePath !== '' && this.file !== '' && this.fileName !== '' )
+            return;
+
         path = path.replace("\\", "/"); //normalize
 
         let parts = path.split("/");
