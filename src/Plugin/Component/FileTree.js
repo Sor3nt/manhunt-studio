@@ -15,6 +15,7 @@ export class TreeNode{
      */
     constructor(props) {
         let _this = this;
+        this.props = props;
         this.element.append(props.value);
         this.element.click(function (event) {
             return props.onClick(props, event);
@@ -118,12 +119,12 @@ export default class FileTree extends AbstractComponent{
         if (usedParentNode === undefined){
 
 
-            if (entry.fileName === "scene2" || entry.fileName === "scene3")
+            if (entry.fileName.indexOf('scene2') !== -1 || entry.fileName.indexOf('scene3') !== -1)
                 return false;
 
             let game = Games.getGame(entry.gameId);
 
-            if (entry.fileName === "scene1"){
+            if (entry.fileName.indexOf('scene1') !== -1){
                 usedParentNode = new TreeNode({
                     value: jQuery(`<div style="display: inline-block;">
                         <i class="icon-game-${game.game}" style="float:left"></i>
@@ -137,7 +138,14 @@ export default class FileTree extends AbstractComponent{
 
                     </div>`),
                     onClick: function (props, event) {
-                        _this.onParentClick(entry);
+                        // let childs = _this.nodes[indexId].children.find('li');
+                        // if (childs.length > 1){
+                            _this.onParentClick(entry);
+                        // }else{
+                            // jQuery(usedParentNode.children.find('li').get(0)).click();
+                            // _this.nodes[indexId].props.onClick(_this.nodes[indexId].props, event);
+                            // console.log("JOJO", childs);
+                        // }
                     }
                 });
             }else{
