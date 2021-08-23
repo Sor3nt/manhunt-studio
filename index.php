@@ -149,7 +149,7 @@ underline">Supported Formats</h6>
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
 underline">Changelog</h5>
                                 <ul style="color: #fff; font-size: 10px">
-                                    <li><b>XX-08-2021</b>: Manhunt 2 Support, Semantic Entity View, Speed modifier,<br/> Transparence fixes, navigation fixes and more</li>
+                                    <li><b>23-08-2021</b>: Manhunt 2 Support, Semantic Entity View, Speed modifier,<br/> Transparence fixes, navigation fixes and much more</li>
                                     <li><b>07-08-2021</b>: Search feature & Bugfixes</li>
                                     <li><b>30-07-2021</b>: Initial release 🎉</li>
                                 </ul>
