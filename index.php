@@ -17,7 +17,7 @@
 
     <script type="module" src="src/Studio.js"></script>
     <script type="module" src="src/Vendor/lottie-player.js"></script>
-    <script type="module" src="/src/Vendor/pako_inflate.min.js"></script>
+    <script type="module" src="src/Vendor/pako_inflate.min.js"></script>
 
 
     <title>Manhunt Studio</title>
