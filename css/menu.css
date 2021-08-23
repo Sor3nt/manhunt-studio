@@ -1,0 +1,34 @@
+.menu {
+
+}
+
+.menu li{
+    float: left;
+    margin-right: 15px;
+    font-size: 13px;
+    padding-top: 3px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.menu li.active{
+    background: #262626;
+}
+
+
+.menu li ul li:hover{
+    background: #3e3e3e;
+}
+
+.menu li ul li{
+    width: 100%;
+
+}
+.menu li ul {
+    position: absolute;
+    margin-left: -10px;
+    z-index: 2;
+    background: #262626;
+    padding: 5px;
+}
+

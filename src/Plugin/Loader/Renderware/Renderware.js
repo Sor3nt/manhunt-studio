@@ -626,18 +626,19 @@ export default class Renderware{
                 binary.seek(12); // extheader
 
                 name = findName();
+
+                if (name === "") {
+                    name = "Unk_" + offset;
+                }
             }
 
-            if (name !== ""){
-                (function (offset, name) {
-                    entries.push({
-                        name: name,
-                        offset: offset
-                    });
-                })(offset, name);
-            }else{
-                console.warn("this model has no name! offset: ", offset);
-            }
+            (function (offset, name) {
+                entries.push({
+                    name: name,
+                    offset: offset
+                });
+            })(offset, name);
+
 
             binary.setCurrent(next);
             count++;

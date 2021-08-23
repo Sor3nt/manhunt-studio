@@ -142,13 +142,6 @@ export default class FileDrop{
                 let parsed = Loader.parse(file.binary, {});
                 Status.show(`${file.fileNamePath} parsed`);
 
-
-                if (file.fileNamePath.indexOf(".pak") !== -1){
-                    console.log("JO hier", parsed);
-
-                }
-
-
                 parsed.forEach(function (entry) {
 
                     entry.setFilePath(file.fileNamePath);
@@ -159,7 +152,7 @@ export default class FileDrop{
                 Event.dispatch(Event.DROP_FILE, file);
 
             }catch(error){
-console.log(error, file);
+                console.error("Error parsing file",file.fileNamePath,"Exception", error);
             }
         });
 

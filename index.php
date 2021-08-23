@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/component/iconBoxes.css">
     <link rel="stylesheet" href="css/component/info.css">
     <link rel="stylesheet" href="css/fontawesome/css/all.css">
+    <link rel="stylesheet" href="css/menu.css">
     <link rel="stylesheet" href="css/studio.css">
 
     <script type="module" src="src/Studio.js"></script>
@@ -338,15 +339,12 @@ underline">Select Level</h5>
 
 <div class="container-fluid vh-100">
     <div class="row">
-        <div class="col" data-component-section="top">
-
-            <div style="height: 25px; background: #3e3e3e; color: #fff">
-                <i class="fas fa-save" data-save></i>
-<!--                <input type="file" multiple webkitdirectory id="dropFolder"/>-->
-            </div>
-
-
-            <div style="float:right; color: #fff" id="status"></div>
+        <div class="col" data-component-section="top" style="height: 25px; background: #3e3e3e; color: #fff">
+<!---->
+<!--                <i class="fas fa-save" data-save></i>-->
+<!---->
+<!---->
+<!--            <div style="float:right; color: #fff" id="status"></div>-->
         </div>
     </div>
 

@@ -1,23 +1,12 @@
 import Storage from "./Storage.js";
 import Studio from "./Studio.js";
 import Inst from "./Plugin/Loader/Game/ManhuntGeneric/Inst.js";
-import NBinary from "./NBinary.js";
 import {downloadZip} from "./Vendor/Zip.js";
 
-export class Save{
+export default class Save{
 
-    constructor(){
-        let _this = this;
-        jQuery('[data-save]').click(function () {
-            _this.onSave();
-        });
-    }
 
-    onSave(){
-        this.save();
-    }
-
-    async save(){
+    static async save(){
 
         let changedEntries = Storage.findBy({
             hasChanges: true
@@ -58,9 +47,11 @@ export class Save{
         if (files.length > 1){
             blob = await downloadZip(files).blob();
             name = "Modifications.zip";
-        }else{
+        }else if (files.length === 1){
             blob = new Blob( [ files[0].input ], { type: 'application/octet-stream' } );
             name = files[0].name;
+        }else{
+            return;
         }
 
         const link = document.createElement("a");
