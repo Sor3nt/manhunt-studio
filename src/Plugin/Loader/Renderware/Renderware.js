@@ -288,6 +288,8 @@ export default class Renderware{
     static CHUNK_UNK802 = 0x802; //Audio Entry
     static CHUNK_UNK803 = 0x803; //Audio Entry Settings
     static CHUNK_UNK804 = 0x804; //Audio Data
+    static CHUNK_UNK253F2FD = 0x253F2FD;
+    static CHUNK_UNK253F2F9 = 0x253F2F9;
 
     // static FLAGS_TRISTRIP   = 0x01;
     // static FLAGS_POSITIONS  = 0x02;
@@ -367,6 +369,8 @@ export default class Renderware{
         [Renderware.CHUNK_UNK802]           : Dummy,
         [Renderware.CHUNK_UNK803]           : Dummy,
         [Renderware.CHUNK_UNK804]           : Dummy,
+        [Renderware.CHUNK_UNK253F2FD]           : Dummy,
+        [Renderware.CHUNK_UNK253F2F9]           : Dummy,
         [Renderware.CHUNK_UNK895303]           : Dummy,
         [Renderware.CHUNK_UNK895302]           : Dummy,
     };

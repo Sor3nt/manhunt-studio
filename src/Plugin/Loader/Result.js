@@ -8,7 +8,7 @@ export default class Result{
     fileName = "";
 
     /**  @type {string} */
-    level = "";
+    level = "unk";
 
     /**  @type {string} */
     filePath = "";
