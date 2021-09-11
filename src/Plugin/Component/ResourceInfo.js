@@ -81,28 +81,54 @@ export default class ResourceInfo extends AbstractComponent{
                 object = StudioScene.getStudioSceneInfo().scene.getObjectByName(entry.name);
                 result.push({
                     label: 'Position',
-                    value: `<span class="badge badge-secondary">x</span>:${object.position.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.position.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.position.z.toFixed(2)} `,
-                    onClick: function () {
+                    value: `
+<span class="badge badge-secondary">x</span>:<input name="x" value="${object.position.x.toFixed(2)}" style="width: 40px;" /> 
+<span class="badge badge-secondary">y</span>:<input name="y" value="${object.position.y.toFixed(2)}" style="width: 40px;" />
+<span class="badge badge-secondary">z</span>:<input name="z" value="${object.position.z.toFixed(2)}" style="width: 40px;" />
+`,
+                    /**
+                     * @param element {jQuery}
+                     */
+                    postprocess: function ( element ) {
+                        element.find('span').click(function () {
 
-                        navigator.clipboard.writeText(`{
-        "x": ${object.position.x.toFixed(2)},
-        "y": ${object.position.z.toFixed(2) * -1},
-        "z": ${object.position.y.toFixed(2)}
-    }`);
+                            navigator.clipboard.writeText(`{
+    "x": ${object.position.x.toFixed(2)},
+    "y": ${object.position.z.toFixed(2) * -1},
+    "z": ${object.position.y.toFixed(2)}
+}`);
+                        });
+
+                        element.find('input').keyup(function (e) {
+
+                            let attr = jQuery(e.target).attr('name');
+                            let value = parseFloat(jQuery(e.target).val());
+
+                            if (attr === "x")
+                                object.position.x = value;
+                            if (attr === "y")
+                                object.position.y = value;
+                            if (attr === "z")
+                                object.position.z = value;
+
+                        });
+
                     }
                 });
 
                 result.push({
                     label: 'Rotation',
                     value: `<span class="badge badge-secondary">x</span>:${object.rotation.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.rotation.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.rotation.z.toFixed(2)} `,
-                    onClick: function () {
+                    postprocess: function ( element ) {
+                        element.find('span').click(function () {
 
                         navigator.clipboard.writeText(`{
-        "x": ${object.quaternion.x.toFixed(2)},
-        "y": ${object.quaternion.z.toFixed(2)},
-        "z": ${object.quaternion.y.toFixed(2) * -1},
-        "w": ${object.quaternion.w.toFixed(2)},
-    }`);
+    "x": ${object.quaternion.x.toFixed(2)},
+    "y": ${object.quaternion.z.toFixed(2)},
+    "z": ${object.quaternion.y.toFixed(2) * -1},
+    "w": ${object.quaternion.w.toFixed(2)},
+}`);
+                        });
                     }
                 });
                 break;
@@ -213,6 +239,9 @@ export default class ResourceInfo extends AbstractComponent{
             li.append(jQuery('<div>').append(info.value));
             if (info.onClick !== undefined)
                 li.click(info.onClick);
+
+            if (info.postprocess !== undefined)
+                info.postprocess(li);
 
             container.append(li);
         });
