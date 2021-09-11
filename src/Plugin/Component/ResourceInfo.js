@@ -81,12 +81,29 @@ export default class ResourceInfo extends AbstractComponent{
                 object = StudioScene.getStudioSceneInfo().scene.getObjectByName(entry.name);
                 result.push({
                     label: 'Position',
-                    value: `<span class="badge badge-secondary">x</span>:${object.position.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.position.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.position.z.toFixed(2)} `
+                    value: `<span class="badge badge-secondary">x</span>:${object.position.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.position.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.position.z.toFixed(2)} `,
+                    onClick: function () {
+
+                        navigator.clipboard.writeText(`{
+        "x": ${object.position.x.toFixed(2)},
+        "y": ${object.position.z.toFixed(2) * -1},
+        "z": ${object.position.y.toFixed(2)}
+    }`);
+                    }
                 });
 
                 result.push({
                     label: 'Rotation',
-                    value: `<span class="badge badge-secondary">x</span>:${object.rotation.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.rotation.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.rotation.z.toFixed(2)} `
+                    value: `<span class="badge badge-secondary">x</span>:${object.rotation.x.toFixed(2)} <span class="badge badge-secondary">y</span>:${object.rotation.y.toFixed(2)} <span class="badge badge-secondary">z</span>:${object.rotation.z.toFixed(2)} `,
+                    onClick: function () {
+
+                        navigator.clipboard.writeText(`{
+        "x": ${object.quaternion.x.toFixed(2)},
+        "y": ${object.quaternion.z.toFixed(2)},
+        "z": ${object.quaternion.y.toFixed(2) * -1},
+        "w": ${object.quaternion.w.toFixed(2)},
+    }`);
+                    }
                 });
                 break;
             case Studio.MODEL:
@@ -194,6 +211,9 @@ export default class ResourceInfo extends AbstractComponent{
             let li = jQuery('<li>');
             li.append(jQuery('<span>').append(info.label));
             li.append(jQuery('<div>').append(info.value));
+            if (info.onClick !== undefined)
+                li.click(info.onClick);
+
             container.append(li);
         });
 

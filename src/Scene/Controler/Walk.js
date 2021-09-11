@@ -119,7 +119,7 @@ export default class Walk {
         this.orbit.dampingFactor = 0.05;
         this.orbit.screenSpacePanning = false;
         this.orbit.minDistance = 0.5;
-        this.orbit.maxDistance = 3.0;
+        this.orbit.maxDistance = 15.0;
         this.orbit.maxPolarAngle = Math.PI / 2;
         this.orbit.target.set(0, 0, 0);
         this.orbit.enabled = false;
