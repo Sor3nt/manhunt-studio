@@ -3,7 +3,7 @@ import Studio from "./Studio.js";
 import Helper from "./Helper.js";
 import Games from "./Plugin/Games.js";
 import MeshHelper from "./MeshHelper.js";
-import {Euler, Quaternion} from "./Vendor/three.module.js";
+import {Group, Euler, Quaternion, Mesh, MeshBasicMaterial, SphereGeometry} from "./Vendor/three.module.js";
 
 export default class Entity{
     /**
@@ -22,7 +22,6 @@ export default class Entity{
      * @param instResult {Result}
      */
     constructor(entry, instResult){
-
         this.inst = instResult;
         this.entry = entry;
         this.name = instResult.name;
@@ -37,6 +36,37 @@ export default class Entity{
 
         if (this.glgEntry === null)
             return;
+
+
+        switch (this.glgEntry.props.getValue('CLASS')) {
+            case 'EC_TRIGGER':
+
+                const geometry = new SphereGeometry( this.inst.data().settings.radius, 32, 32 );
+                const material = new MeshBasicMaterial( {
+                    color: 0xffff00,
+                    opacity: 0.2,
+                    transparent: true
+                } );
+
+                this.model = new Group();
+                this.mesh = this.model;
+
+                let mesh = new Mesh( geometry, material );
+                this.model.add(mesh);
+
+                let instData = this.inst.data();
+                this.setPosition(instData.position.x,instData.position.y,instData.position.z);
+
+                break;
+
+            default:
+
+                this.#loadModel();
+
+        }
+
+        // console.log(this.glgEntry.props.getValue('CLASS'));
+
         //
         // let modelName = this.glgEntry.props.getValue('MODEL');
         // if (modelName === false)
@@ -49,8 +79,6 @@ export default class Entity{
         //     name: this.glgEntry.props.getValue('MODEL')
         // });
 
-
-        this.#loadModel();
 
 
     }

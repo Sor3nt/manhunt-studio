@@ -225,7 +225,7 @@ export default class Inst extends AbstractLoader{
                     glgRecord: glgRecord,
                 },
                 function(){
-                    return Inst.parse(binary, offset, game);
+                    return Inst.parse(binary, offset, endOffset, game);
                 }
             );
 
@@ -244,10 +244,11 @@ export default class Inst extends AbstractLoader{
      *
      * @param binary {NBinary}
      * @param offset {int}
+     * @param endOffset {int}
      * @param game {string}
      * @returns {{settings: Object, entityClass: string, rotation: Object, position: Object}}
      */
-    static parse(binary, offset, game){
+    static parse(binary, offset, endOffset, game){
         binary.setCurrent(offset);
 
 
@@ -267,10 +268,21 @@ export default class Inst extends AbstractLoader{
         // if (binary.remain() > 0){
 
             let field = 0;
-            while(binary.remain() > 0){
+            while(binary.current() < endOffset){
                 let setting = {};
-                    if (game === Games.GAMES.MANHUNT){
-                    settings['unk_' + field] = binary.consume(4, 'int32');
+                if (game === Games.GAMES.MANHUNT){
+
+                    if (entityClass === "Trigger_Inst"){
+                        switch (field) {
+                            case 1:
+                                settings['radius'] = binary.consume(4, 'float32');
+                                break;
+                            default:
+                                settings['unk_' + field] = binary.consume(4, 'int32');
+                        }
+                    }else{
+                        settings['unk_' + field] = binary.consume(4, 'int32');
+                    }
 
                 }else{
 
@@ -309,6 +321,8 @@ export default class Inst extends AbstractLoader{
 
                     settings[setting.name] = setting.value;
                 }
+
+                field++;
             }
         // }
 

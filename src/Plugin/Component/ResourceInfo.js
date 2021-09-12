@@ -48,24 +48,26 @@ export default class ResourceInfo extends AbstractComponent{
                     name: entry.props.instance.props.glgRecord
                 });
 
-                let model = game.findOneBy({
-                    type: Studio.MODEL,
-                    level: entry.level,
-                    name: record.props.model
-                });
+                if (record.props.model !== false){
+                    let model = game.findOneBy({
+                        type: Studio.MODEL,
+                        level: entry.level,
+                        name: record.props.model
+                    });
 
 
-                /**
-                 * @type {NormalizeModel}
-                 */
-                normalizedModel = model.props.normalize();
+                    /**
+                     * @type {NormalizeModel}
+                     */
+                    normalizedModel = model.props.normalize();
 
-                object = normalizedModel.getObjects()[0];
+                    object = normalizedModel.getObjects()[0];
 
-                result.push({
-                    label: 'Model',
-                    value: model.name
-                });
+                    result.push({
+                        label: 'Model',
+                        value: model.name
+                    });
+                }
 
                 result.push({
                     label: 'Instance',
@@ -131,6 +133,16 @@ export default class ResourceInfo extends AbstractComponent{
                         });
                     }
                 });
+
+
+                switch (record.props.getValue('CLASS')) {
+                    case 'EC_TRIGGER':
+                        result.push({
+                            label: 'Radius',
+                            value: `${entry.props.instance.data().settings.radius}`
+                        });
+                        break;
+                }
                 break;
             case Studio.MODEL:
 

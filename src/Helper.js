@@ -12,7 +12,7 @@ export default class Helper{
         }
 
         if (a !== b){
-            console.error((msg || ('Expect ' + b + ' got ' + a)) );
+            // console.error((msg || ('Expect ' + b + ' got ' + a)) );
             // debugger;
         }
     }

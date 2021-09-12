@@ -50,7 +50,7 @@ export default class Chunk {
             let size = chunk.binary.remain();
             let remain = chunk.binary.consume(size, 'arraybuffer');
 
-                console.log("Buffer",size, remain);
+                // console.log("Buffer",size, remain);
             assert(
                 false,
                 chunk.type + ': Unable to parse fully the data!'

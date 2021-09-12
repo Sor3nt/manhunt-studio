@@ -203,6 +203,9 @@ export default class Walk {
                 w: this.object.quaternion.w
             }
         });
+
+
+        this.orbit.target.copy(this.object.position);
     }
 
     doRayCast(event) {
