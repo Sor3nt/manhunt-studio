@@ -51,10 +51,23 @@ export default class SemanticallyTree {
             type: Studio.ENTITY
         });
 
+        let tree = _this.trees[Studio.ENTITY];
         entities.forEach(function (entity) {
-            let tree = _this.trees[Studio.ENTITY];
             tree.addEntry(entity);
         });
+
+
+
+
+        let waypoints = game.findBy({
+            type: Studio.WAYPOINT_ROUTE
+        });
+
+        waypoints.forEach(function (waypoint) {
+            tree.addWaypointRoute(waypoint);
+        });
+
+
 
         this.section.tabNavigation.add({
             displayName: mapEntry.level,
@@ -99,6 +112,7 @@ export default class SemanticallyTree {
 
 
     onTreeNodeClick(entry, event){
+
         Event.dispatch(Event.MAP_FOCUS_ENTITY, { entry: entry, mapEntry: this.mapEntry });
 
         event.preventDefault();

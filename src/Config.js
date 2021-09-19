@@ -14,6 +14,7 @@ export default class Config {
         'glg',      // Manhunt 2 INI Files
         'ini',      // Manhunt 1 INI Files
         'pak',      // Manhunt 1 Container file
+        'grf',      // Manhunt 1/2 Waypoints
 
     ];
 

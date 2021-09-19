@@ -28,6 +28,8 @@ export default class Studio{
     static WORLD = 10;
     static IMPORTED = 11;
     static FILE = 12;
+    static AREA_LOCATION = 13;
+    static WAYPOINT_ROUTE = 14;
 
     static registerPlugins(){
         Loader.registerPlugins();

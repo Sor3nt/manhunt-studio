@@ -79,8 +79,8 @@ export default class EntityTree extends AbstractComponent{
     /**
      * @param entry {Result}
      */
-    onParentClick(entry){
-        let usedParentNode = this.getParentNode(entry);
+    onParentClick(entry, usedParentNode){
+
         if (this.activeParent === usedParentNode)
             return;
 
@@ -103,42 +103,91 @@ export default class EntityTree extends AbstractComponent{
      * @param entry {Result}
      * @return {TreeNode}
      */
-    getParentNode( entry ){
+
+
+    /**
+     * @param entry {Result}
+     */
+    addWaypointRoute(entry){
         let _this = this;
 
-        /**
-         * @type {TreeNode}
-         */
-        let usedParentNode;
+        function getParentNode( entry ){
+            /**
+             * @type {TreeNode}
+             */
+            let usedParentNode;
 
-        let indexId = entry.props.glgEntry.props.getValue('CLASS');
-        usedParentNode = this.nodes[indexId];
+            let indexId = "Waypoints";
+            usedParentNode = _this.nodes[indexId];
 
-        //Gamefolder name
-        if (usedParentNode === undefined){
+            //Gamefolder name
+            if (usedParentNode === undefined){
 
-            usedParentNode = new TreeNode({
-                value: jQuery(`<div>
-                        ${indexId.replace("EC_", '').toLowerCase().replace(/(?:^|\s)\w/g, function(match) {
-                                                        return match.toUpperCase();
-                                                    })}
-                    </div>`),
-                onClick: function (props, event) {
-                    _this.onParentClick(entry);
-                }
-            });
-            this.addNode(usedParentNode);
-            this.nodes[indexId] = usedParentNode;
+                usedParentNode = new TreeNode({
+                    value: jQuery(`<div>Waypoints</div>`),
+                    onClick: function (props, event) {
+                        _this.onParentClick(entry, usedParentNode);
+                    }
+                });
+                _this.addNode(usedParentNode);
+                _this.nodes[indexId] = usedParentNode;
+            }
+
+
+            return usedParentNode;
         }
 
 
-        return usedParentNode;
+        let usedParentNode = getParentNode(entry);
+
+        let node = new TreeNode({
+            value: entry.name,
+            onClick: function (props, event) {
+                usedParentNode.children.find('li').removeClass('active');
+                jQuery(event.target).addClass('active');
+                _this.props.onEntryClick(entry, event);
+            }
+        });
+
+        usedParentNode.addChild(node);
+
     }
 
     /**
      * @param entry {Result}
      */
     addEntry(entry){
+        let _this = this;
+
+        function getParentNode( entry ){
+            /**
+             * @type {TreeNode}
+             */
+            let usedParentNode;
+
+            let indexId = entry.props.glgEntry.props.getValue('CLASS');
+            usedParentNode = _this.nodes[indexId];
+
+            //Gamefolder name
+            if (usedParentNode === undefined){
+
+                usedParentNode = new TreeNode({
+                    value: jQuery(`<div>
+                        ${indexId.replace("EC_", '').toLowerCase().replace(/(?:^|\s)\w/g, function(match) {
+                        return match.toUpperCase();
+                    })}
+                    </div>`),
+                    onClick: function (props, event) {
+                        _this.onParentClick(entry, usedParentNode);
+                    }
+                });
+                _this.addNode(usedParentNode);
+                _this.nodes[indexId] = usedParentNode;
+            }
+
+
+            return usedParentNode;
+        }
 
         if (this.props.processType !== entry.type)
             return;
@@ -154,9 +203,8 @@ export default class EntityTree extends AbstractComponent{
             return;
         }
 
-        let usedParentNode = this.getParentNode(entry);
+        let usedParentNode = getParentNode(entry);
 
-        let _this = this;
         let node = new TreeNode({
             value: entry.name,
             onClick: function (props, event) {

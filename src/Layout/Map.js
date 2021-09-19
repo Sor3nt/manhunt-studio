@@ -14,6 +14,8 @@ export default class Map {
      */
     model = undefined;
 
+    recentWaypoint;
+
     /**
      * @param section {ComponentSection}
      */
@@ -39,8 +41,6 @@ export default class Map {
             function (props) {
                 /** @type {Result}  */
                 let entry = props.entry;
-                if (entry.type !== Studio.ENTITY) return;
-
                 _this.section.tabNavigation.show(props.mapEntry.level);
 
                 _this.focusEntry(entry);
@@ -52,13 +52,48 @@ export default class Map {
      * @param entry {Result}
      */
     focusEntry(entry){
+
         /**
          * @type {SceneMap}
          */
         let studioScene = this.mapComponent.studioScene;
-        studioScene.sceneInfo.control.setObject(entry.mesh);
-        studioScene.sceneInfo.control.setMode('transform');
-        // studioScene.sceneInfo.control.keyStates.modeSelectObject = true; //note: inverted...
+
+        if (entry.type === Studio.WAYPOINT_ROUTE){
+
+
+            //give all unwanted nodes a opacity
+            if (this.recentWaypoint !== undefined){
+                this.recentWaypoint.mesh.material.color.set(0x00ff00);
+                this.recentWaypoint.mesh.material.opacity = 0.2;
+                this.recentWaypoint.mesh.material.transparent = true;
+                this.recentWaypoint.mesh.material.needsUpdate = true;
+
+                this.recentWaypoint.props.locations.forEach(function (location) {
+                    location.mesh.material.color.set(0x00ff00);
+                    location.mesh.material.opacity = 0.2;
+                    location.mesh.material.transparent = true;
+                    location.mesh.material.needsUpdate = true;
+                });
+            }
+
+            //highlight the path
+            entry.mesh.material.color.set(0xff0000);
+            entry.mesh.material.opacity = 1;
+            entry.mesh.material.transparent = false;
+            entry.mesh.material.needsUpdate = true;
+
+            this.recentWaypoint = entry;
+            entry.props.locations.forEach(function (location) {
+                location.mesh.material.color.set(0xff0000);
+                location.mesh.material.opacity = 1;
+                location.mesh.material.transparent = false;
+                location.mesh.material.needsUpdate = true;
+            });
+
+        }else{
+            studioScene.sceneInfo.control.setObject(entry.mesh);
+            studioScene.sceneInfo.control.setMode('transform');
+        }
 
     }
 
