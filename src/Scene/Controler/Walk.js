@@ -190,19 +190,24 @@ export default class Walk {
 
     onObjectChanged(){
 
-        this.object.userData.entity.props.instance.setData({
-            position: {
-                x: this.object.position.x,
-                y: this.object.position.y,
-                z: this.object.position.z,
-            },
-            rotation: {
-                x: this.object.quaternion.x,
-                y: this.object.quaternion.y,
-                z: this.object.quaternion.z,
-                w: this.object.quaternion.w
-            }
-        });
+        if (this.object.userData.entity.type === Studio.AREA_LOCATION){
+console.error("TODO");
+        }else{
+            this.object.userData.entity.props.instance.setData({
+                position: {
+                    x: this.object.position.x,
+                    y: this.object.position.y,
+                    z: this.object.position.z,
+                },
+                rotation: {
+                    x: this.object.quaternion.x,
+                    y: this.object.quaternion.y,
+                    z: this.object.quaternion.z,
+                    w: this.object.quaternion.w
+                }
+            });
+
+        }
 
 
         this.orbit.target.copy(this.object.position);

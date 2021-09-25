@@ -57,39 +57,10 @@ export default class Map {
          * @type {SceneMap}
          */
         let studioScene = this.mapComponent.studioScene;
-
         if (entry.type === Studio.WAYPOINT_ROUTE){
-
-
-            //give all unwanted nodes a opacity
-            if (this.recentWaypoint !== undefined){
-                this.recentWaypoint.mesh.material.color.set(0x00ff00);
-                this.recentWaypoint.mesh.material.opacity = 0.2;
-                this.recentWaypoint.mesh.material.transparent = true;
-                this.recentWaypoint.mesh.material.needsUpdate = true;
-
-                this.recentWaypoint.props.locations.forEach(function (location) {
-                    location.mesh.material.color.set(0x00ff00);
-                    location.mesh.material.opacity = 0.2;
-                    location.mesh.material.transparent = true;
-                    location.mesh.material.needsUpdate = true;
-                });
-            }
-
-            //highlight the path
-            entry.mesh.material.color.set(0xff0000);
-            entry.mesh.material.opacity = 1;
-            entry.mesh.material.transparent = false;
-            entry.mesh.material.needsUpdate = true;
-
-            this.recentWaypoint = entry;
-            entry.props.locations.forEach(function (location) {
-                location.mesh.material.color.set(0xff0000);
-                location.mesh.material.opacity = 1;
-                location.mesh.material.transparent = false;
-                location.mesh.material.needsUpdate = true;
-            });
-
+            studioScene.sceneInfo.control.setObject(entry.props.locations[0].mesh);
+            studioScene.sceneInfo.control.setMode('transform');
+            studioScene.waypoints.highlightRoute(entry.name);
         }else{
             studioScene.sceneInfo.control.setObject(entry.mesh);
             studioScene.sceneInfo.control.setMode('transform');
@@ -134,8 +105,6 @@ export default class Map {
     /**
      * Create Game-Entities
      * Each entity represents a object in the 3d world.
-     */
-    /**
      *
      * @param mapEntry {Result}
      */

@@ -1,7 +1,7 @@
 
 export default class SceneAbstract{
 
-    constructor(name, canvas) {
+    constructor(name, canvas, mapComponent) {
         this.name = name;
 
     }

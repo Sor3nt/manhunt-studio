@@ -6,6 +6,7 @@ import Walk from "./Controler/Walk.js";
 import Event from "../Event.js";
 import Status from "../Status.js";
 import Games from "../Plugin/Games.js";
+import Waypoints from "../Waypoints.js";
 
 export default class SceneMap extends SceneAbstract{
 
@@ -50,6 +51,8 @@ export default class SceneMap extends SceneAbstract{
             _this.#setup();
         });
 
+        this.waypoints = new Waypoints(this);
+
     }
 
 
@@ -90,71 +93,9 @@ export default class SceneMap extends SceneAbstract{
     }
 
 
-    #setupWaypoints() {
-        let game = Games.getGame(this.mapEntry.gameId);
-        let areaLocations = game.findBy({
-            type: Studio.AREA_LOCATION,
-            level: this.mapEntry.level
-        });
-
-        let locationById = {};
-
-        let _this = this;
-        areaLocations.forEach(function (location) {
-
-            const geometry = new BoxGeometry(0.5, 0.5, 0.5);
-            const material = new MeshBasicMaterial({color: 0x00ff00});
-            material.opacity = 0.2;
-            material.transparent = true;
-            const cube = new Mesh(geometry, material);
-
-            cube.position.x = location.props.position.x;
-            cube.position.y = location.props.position.z;
-            cube.position.z = location.props.position.y * -1;
-
-            locationById[location.props.id] = location;
-
-            cube.name = location.name;
-            cube.userData.entity = location;
-            location.mesh = cube;
-            _this.sceneInfo.scene.add(cube);
-
-        });
-
-
-        let routes = game.findBy({
-            type: Studio.WAYPOINT_ROUTE,
-            level: this.mapEntry.level
-        });
-
-        routes.forEach(function (route) {
-            let material = new LineBasicMaterial({color: 0x00ff00});
-            material.opacity = 0.2;
-            material.transparent = true;
-
-            let geometry = new Geometry();
-            geometry.verticesNeedUpdate = true;
-            geometry.dynamic = true;
-
-            route.props.entries.forEach(function (locationId) {
-                let pos = new Vector3();
-                pos.copy(locationById[locationId].mesh.position);
-                geometry.vertices.push(locationById[locationId].mesh.position);
-
-            });
-
-            let line = new Line(geometry, material);
-            line.name = route.name;
-            line.userData.entity = route;
-            route.mesh = line;
-            _this.sceneInfo.scene.add(line);
-        });
-
-    }
-
     #setup(){
 
-        this.#setupWaypoints();
+        this.waypoints.setup();
 
         let game = Games.getGame(this.mapEntry.gameId);
         this.entitiesToProcess = game.findBy({

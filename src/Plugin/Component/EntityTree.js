@@ -117,14 +117,14 @@ export default class EntityTree extends AbstractComponent{
              */
             let usedParentNode;
 
-            let indexId = "Waypoints";
+            let indexId = "Waypoints_" + entry.props.locations[0].props.area;
             usedParentNode = _this.nodes[indexId];
 
             //Gamefolder name
             if (usedParentNode === undefined){
 
                 usedParentNode = new TreeNode({
-                    value: jQuery(`<div>Waypoints</div>`),
+                    value: jQuery(`<div>Waypoints (${entry.props.locations[0].props.area})</div>`),
                     onClick: function (props, event) {
                         _this.onParentClick(entry, usedParentNode);
                     }
