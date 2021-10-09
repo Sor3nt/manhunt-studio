@@ -86,6 +86,10 @@ export default class Waypoints{
 
         route.props.entries.forEach(function (locationId) {
             let location = _this.locationById[locationId];
+            if (location === undefined){
+                console.error("Unable to find location with ID ", locationId);
+                return;
+            }
             _this.locationsByRoute[route.name].push(location);
 
             let pos = new Vector3();

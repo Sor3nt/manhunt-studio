@@ -21,6 +21,9 @@ export default class RenderwareLoader extends AbstractLoader{
         let header = Renderware.parseHeader(binary);
         binary.setCurrent(current);
 
+        if (header.version === 0)
+            return false;
+
         switch (header.id) {
             case Renderware.CHUNK_TOC:
             case Renderware.CHUNK_WORLD:

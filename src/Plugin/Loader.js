@@ -78,7 +78,6 @@ export default class Loader{
                 continue;
             }
 
-
             binary.setCurrent(current);
 
             return plugin.list(binary, options);

@@ -61,6 +61,7 @@ export default class Walk {
             _this.keyStates[event.code] = true;
         });
 
+
         document.addEventListener('keyup', (event) => {
             _this.keyStates[event.code] = false;
 
@@ -78,9 +79,14 @@ export default class Walk {
             // if (event.code === 'KeyH')
             //     this.highlightModelsInRange(10);
 
-            if (event.code === 'Escape') {
-                _this.keyStates.modeSelectObject = false;
-                _this.setMode("fly");
+            // if (event.code === 'Escape') {
+            //
+            //     _this.keyStates.modeSelectObject = false;
+            //     _this.setMode("fly");
+            // }
+
+            if (event.code === 'KeyL') {
+                _this.setMode("waypoint");
             }
 
             if (event.code === 'KeyI') {
@@ -97,12 +103,12 @@ export default class Walk {
         });
 
         WebGL.renderer.domElement.addEventListener('mousedown', () => {
-            if (this.mode === "fly")
+            if (this.mode === "fly" || this.mode === "transform" || this.mode === "waypoint")
                 document.body.requestPointerLock();
         });
 
         document.body.addEventListener('mousemove', (event) => {
-            if (document.pointerLockElement === document.body) {
+            if (document.pointerLockElement === document.body && (_this.mode === "fly" || _this.mode === "select")) {
                 sceneInfo.camera.rotation.y -= event.movementX / 500;
                 sceneInfo.camera.rotation.x -= event.movementY / 500;
             }
@@ -274,8 +280,13 @@ console.error("TODO");
     }
 
     getSideVector() {
-        this.sceneInfo.camera.getWorldDirection(this.playerDirection);
-        this.playerDirection.y = 0;
+        if (this.mode === "waypoint"){
+            this.playerDirection = new Vector3(0, -1, 0);
+        }else{
+            this.sceneInfo.camera.getWorldDirection(this.playerDirection);
+            this.playerDirection.y = 0;
+        }
+
         this.playerDirection.normalize();
         this.playerDirection.cross(this.sceneInfo.camera.up);
 
@@ -326,7 +337,7 @@ console.error("TODO");
 
     update(delta) {
 
-        if (this.mode === "fly" && document.pointerLockElement === document.body) {
+        if ((this.mode === "fly" || this.mode === "waypoint") && document.pointerLockElement === document.body) {
             this.flyControls(delta);
 
             const damping = Math.exp(-3 * delta) - 1;
@@ -336,6 +347,7 @@ console.error("TODO");
             this.playerCollider.translate(deltaPosition);
 
             this.sceneInfo.camera.position.copy(this.playerCollider.end);
+
 
         } else if (this.mode === "transform") {
             this.orbit.update(delta);
@@ -376,6 +388,16 @@ console.error("TODO");
 
         console.log("current mode", this.mode, "new mode", mode);
 
+        if (this.mode === "waypoint" && mode !== "waypoint"){
+            //show all game objects
+            this.sceneInfo.scene.children.forEach(function (child) {
+                if (child.type === "Group" && child.name !== "scene")
+                    child.visible = true;
+            });
+
+            this.sceneInfo.camera.up.set(0, 1, 0);
+        }
+
         if (this.mode === "transform" && mode !== "transform") {
             this.transform.detach();
             this.orbit.enabled = false;
@@ -385,7 +407,7 @@ console.error("TODO");
             }
 
             document.body.requestPointerLock();
-        } else if (this.mode === "fly" && mode !== "fly") {
+        } else if (this.mode === "fly" && mode !== "waypoint" && mode !== "fly") {
             document.exitPointerLock();
         }
 
@@ -393,6 +415,18 @@ console.error("TODO");
 
             if (Config.outlineActiveObject)
                 this.outlinePass.selectedObjects = [];
+
+        }else if (mode === "waypoint") {
+
+            //hide all game objects
+            this.sceneInfo.scene.children.forEach(function (child) {
+                if (child.type === "Group" && child.name !== "scene")
+                    child.visible = false;
+            });
+
+            this.sceneInfo.camera.position.set(0, 10, 0);
+            this.sceneInfo.camera.up.set(0, 0, -1);
+            this.sceneInfo.camera.lookAt(0, 0, 0);
 
         }else if (mode === "transform") {
             this.orbit.enabled = true;

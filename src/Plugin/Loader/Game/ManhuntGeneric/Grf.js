@@ -36,7 +36,6 @@ export default class Grf extends AbstractLoader{
      * @returns {Result[]}
      */
     static list(binary, options){
-
         let game = Games.GAMES.MANHUNT;
         let results = [];
 
@@ -94,7 +93,6 @@ export default class Grf extends AbstractLoader{
                 }
             ));
         });
-
         return results;
     }
 
