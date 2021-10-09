@@ -117,7 +117,14 @@ export default class Map {
             level: mapEntry.level
         });
 
-        this.loadNextEntryBatch(mapEntry);
+        let _this = this;
+
+
+        //workaround, it can happen that the MAP_ENTITIES_LOADED event is triggered before all modules are loaded....
+        window.setTimeout(function () {
+
+            _this.loadNextEntryBatch(mapEntry);
+        }, 1000);
 
     }
 

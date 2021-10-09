@@ -57,10 +57,15 @@ export default class SceneMap extends SceneAbstract{
 
 
     loadNearByEntities(){
-
-
         let len = this.entitiesToProcess.length;
-        if (len === 0) return false;
+        if (len === 0){
+
+            StudioScene.changeScene(this.mapComponent.studioScene.name);
+
+            Status.hide();
+
+            return false;
+        }
 
         let processEntries = 15;
         for(let i = 0; i < processEntries; i++){
@@ -94,7 +99,6 @@ export default class SceneMap extends SceneAbstract{
 
 
     #setup(){
-
         this.waypoints.setup();
 
         let game = Games.getGame(this.mapEntry.gameId);
