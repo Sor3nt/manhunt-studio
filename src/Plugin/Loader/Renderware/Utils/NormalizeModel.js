@@ -113,11 +113,20 @@ export default class NormalizeModel{
             };
 
             this.data.materials.forEach(function (material, index) {
-                mesh.material.push({
-                    diffuse: material.rgba,
-                    textureName: _this.data.material[index],
-                    opacitymap: null,
-                });
+
+                if (_this.data.material !== undefined && _this.data.material[index] !== undefined){
+                    mesh.material.push({
+                        diffuse: material.rgba,
+                        textureName: _this.data.material[index],
+                        opacitymap: null,
+                    });
+                }else{
+                    mesh.material.push({
+                        diffuse: material.rgba,
+                        textureName: "",
+                        opacitymap: null,
+                    });
+                }
             });
 
             meshes.push(mesh);
