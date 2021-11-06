@@ -20,6 +20,18 @@ export default class Model {
         });
     }
 
+    getActiveModelMesh() {
+        let name = this.section.tabNavigation.activeRelationName;
+        if (name === null)
+            return null;
+
+        if (this.models[name] === undefined)
+            return null;
+
+        return this.models[name].mesh;
+    }
+
+
     /**
      * @param entry {Result}
      */

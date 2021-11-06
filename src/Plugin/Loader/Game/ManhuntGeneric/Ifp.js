@@ -2,7 +2,7 @@ import AbstractLoader from "./../../Abstract.js";
 import Result from "../../Result.js";
 import NBinary from "../../../../NBinary.js";
 import Studio from "../../../../Studio.js";
-import {AnimationClip, Quaternion, Vector3} from "./../../../../Vendor/three.module.js";
+import { Quaternion, Vector3} from "./../../../../Vendor/three.module.js";
 
 export default class Ifp extends AbstractLoader{
     static name = "Animations (Manhunt 1/2)";
@@ -28,7 +28,6 @@ export default class Ifp extends AbstractLoader{
      * @returns {Result[]}
      */
     static list(binary, options){
-
         let results = [];
         let fourCC = Ifp.getFourCC(binary);
         binary.seek(4); //skip fourCC
@@ -59,10 +58,10 @@ export default class Ifp extends AbstractLoader{
                                 {
                                     group: groupName
                                 },
-                                function(){
+                                function(offset, _options){
+                                    console.log("_options", _options);
                                     binary.setCurrent(ANPK.anpkOffset[index]);
-
-                                    let clip = Ifp.getANPKAnim(options.convert || false, options.game, binary);
+                                    let clip = Ifp.getANPKAnim(_options.convert || false, _options.game, binary);
                                     clip.name = name;
                                     return clip;
                                 }
@@ -169,7 +168,7 @@ export default class Ifp extends AbstractLoader{
             binary.setCurrent(binary.current() + pecSize);
         }
 
-        return ANPK
+        return ANPK;
     }
 
     static readStrmAnimBinIndex(binary) {
@@ -626,7 +625,6 @@ export default class Ifp extends AbstractLoader{
         }
 
         return animation;
-        // return AnimationClip.parse( animation );
     }
 
 }

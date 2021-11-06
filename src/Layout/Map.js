@@ -14,8 +14,6 @@ export default class Map {
      */
     model = undefined;
 
-    recentWaypoint;
-
     /**
      * @param section {ComponentSection}
      */

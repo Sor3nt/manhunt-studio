@@ -79,9 +79,9 @@ export default class Loader{
             }
 
             binary.setCurrent(current);
-
             return plugin.list(binary, options);
         }
+        console.error("No valid handler found !");
 
         return [];
     }

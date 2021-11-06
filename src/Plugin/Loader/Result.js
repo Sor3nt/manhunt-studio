@@ -39,8 +39,9 @@ export default class Result{
         this.offset = offset;
         this.props = props;
 
+        let _this = this;
         this.getData = function () {
-            return getData(offset, this.props);
+            return getData(offset, _this.props);
         };
     }
 

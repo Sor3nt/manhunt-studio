@@ -8,6 +8,7 @@ import {ComponentSection} from "../Plugin/Components.js";
 import IconBoxes from "../Plugin/Component/IconBoxes.js";
 import SemanticallyTree from "./SemanticallyTree.js";
 import Components from "../Plugin/Components.js";
+import StudioScene from "../Scene/StudioScene.js";
 
 export default class ResourcesTree {
 
@@ -102,6 +103,10 @@ export default class ResourcesTree {
     onFileTreeNodeClick(entry, event){
 
         Event.dispatch(Event.OPEN_ENTRY, { entry: entry });
+
+        if (entry.type === Studio.ANIMATION){
+            StudioScene.activeSceneInfo.playAnimationOnActiveElement(entry);
+        }
 
         event.preventDefault();
         return false;

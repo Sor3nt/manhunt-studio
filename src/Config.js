@@ -11,6 +11,8 @@ export default class Config {
         'tex',      // Manhunt 2 Texture
         'txd',      // Manhunt 1 Texture
         'bsp',      // Manhunt 1/2 Level/Map
+        'ifp',      // Manhunt 1/2 Animation
+        'bin',      // Manhunt 2 Execution Animation
         'glg',      // Manhunt 2 INI Files
         'ini',      // Manhunt 1 INI Files
         'pak',      // Manhunt 1 Container file

@@ -10,6 +10,7 @@ export default class TabNavigation{
     constructor( componentSection ){
         this.relation = {};
         this.activeRelation = null;
+        this.activeRelationName = null;
 
         this.tabs = componentSection.container.find('.nav-tabs');
         this.content = componentSection.container.find('.nav-tabs-content');
@@ -143,6 +144,8 @@ export default class TabNavigation{
             return;
         }
 
+
+        this.activeRelationName = name;
         this.activeRelation = this.relation[name];
         this.activeRelation.tab.addClass('active');
         this.activeRelation.component.element.show();

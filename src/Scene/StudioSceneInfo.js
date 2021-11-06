@@ -1,8 +1,18 @@
-import {Scene as ThreeScene, Camera } from "./../Vendor/three.module.js";
+import {AnimationClip, Scene as ThreeScene, Camera } from "./../Vendor/three.module.js";
+import Animations from "../Animations.js";
+import Games from "../Plugin/Games.js";
 
 export default class StudioSceneInfo{
 
+    /**
+     * @type {Group}
+     */
     lookAt = null;
+
+    /**
+     * @type {Animations}
+     */
+    animations = null;
 
     /**
      *
@@ -18,6 +28,7 @@ export default class StudioSceneInfo{
 
         this.camera = props.camera;
         this.element = props.element;
+        this.animations = new Animations();
 
         this.control = props.control === null ? null : new props.control(this);
 
@@ -26,8 +37,23 @@ export default class StudioSceneInfo{
             if (_this.control !== null)
                 _this.control.update(delta);
 
+            _this.animations.update(delta);
             props.onRender(delta);
         };
+    }
+
+    /**
+     *
+     * @param animEntry {Result}
+     */
+    playAnimationOnActiveElement(animEntry){
+        let game = Games.getGame(animEntry.gameId);
+        animEntry.props.game = game.game;
+        let clip = AnimationClip.parse( animEntry.data() );
+
+
+        this.animations.play(this.lookAt.children[0], clip);
+
     }
 
 }

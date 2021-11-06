@@ -16,6 +16,11 @@ export default class Model extends AbstractComponent{
     studioScene = null;
 
     /**
+     * @type {Group}
+     */
+    mesh = null;
+
+    /**
      * @param props {{entry: Result}}
      */
     constructor(props) {
@@ -24,9 +29,9 @@ export default class Model extends AbstractComponent{
         this.name = props.entry.name;
 
         this.studioScene = new SceneModel(props.entry.name, WebGL.renderer.domElement);
-        let mesh = MeshHelper.convertFromNormalized(props.entry.props.normalize(), props.entry );
-        this.studioScene.display(mesh);
-
+        this.mesh = MeshHelper.convertFromNormalized(props.entry.props.normalize(), props.entry );
+        this.studioScene.display(this.mesh);
+        this.studioScene.sceneInfo.lookAt = this.mesh;
         StudioScene.changeScene(this.studioScene.name);
     }
 
