@@ -26,9 +26,9 @@ export default class NormalizeModel{
 
             if (this.data.frameNames.length > 0){
                 if (this.data.frames.length === this.data.frameNames.length){
-                    name = this.data.frames[i];
+                    name = this.data.frameNames[i];
                 }else{
-                    name = i === 0 ? "RootDummy" : this.data.frames[i - 1];
+                    name = i === 0 ? "RootDummy" : this.data.frameNames[i - 1];
                 }
             }
 
