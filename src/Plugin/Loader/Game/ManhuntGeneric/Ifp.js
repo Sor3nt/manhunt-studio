@@ -563,7 +563,9 @@ export default class Ifp extends AbstractLoader{
             let name;
 
             if (convertNames){
-                name = Ifp.getBoneNameByBoneId(game === "mh1" ? "mh2" : "mh1", bone.boneId);
+                let convertToGame = game === "mh1" ? "mh2" : "mh1";
+                console.info(`[IFP] Convert Animation to ${convertToGame}`);
+                name = Ifp.getBoneNameByBoneId(convertToGame, bone.boneId);
 
             }else{
                 name = Ifp.getBoneNameByBoneId(game, bone.boneId);
@@ -607,7 +609,6 @@ export default class Ifp extends AbstractLoader{
                                 0,0,0
                             );
                         }
-
                     }
 
                     trackQuaternion.values.push(

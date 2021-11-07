@@ -21,6 +21,8 @@ export default class Config {
     ];
 
     //it is disabled because of perforamcen issue in the current three version
-    outlineActiveObject = false;
+    static outlineActiveObject = false;
+
+    static debugLevel = 0;
 
 }

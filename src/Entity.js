@@ -96,6 +96,43 @@ export default class Entity{
 
         this.mesh = MeshHelper.convertFromNormalized( this.model.props.normalize(), this.model );
 
+        let head = this.glgEntry.props.getValue('HEAD');
+        if (head !== false){
+
+            let headGlg = Storage.findOneBy({
+                type: Studio.GLG,
+                gameId: this.entry.gameId,
+                level: this.entry.level,
+                name: head
+            });
+
+            if (headGlg === null){
+                console.error(`[Entity] Unable to find Head GLG ${head} for Model ${this.model.name}`);
+
+            }else{
+
+                let headModel = Storage.findOneBy({
+                    type: Studio.MODEL,
+                    gameId: this.entry.gameId,
+                    level: this.entry.level,
+                    name: headGlg.props.getValue('MODEL')
+                });
+
+                if (headModel === null){
+                    console.error(`[Entity] Unable to find Head Model ${headGlg.props.getValue('MODEL')} for Model ${this.model.name}`);
+                }else{
+                    let headMesh = MeshHelper.convertFromNormalized( headModel.props.normalize(), headModel );
+
+                    this.mesh.children[0].skeleton.bones.forEach(function (bone) {
+                        if (bone.name === "Bip01_Head") bone.add(headMesh); //mh2
+                        if (bone.name === "Bip01 Head") bone.add(headMesh); //mh1
+                    });
+
+                }
+            }
+
+        }
+
         if (this.mesh === false){
             console.error("Unable to parse Mesh for Model", this.model.name, this.model);
             return false;

@@ -267,7 +267,7 @@ console.error("TODO");
             //TODO: doppeltes handling, haben das auch in der map.js focusEntry...
             this.setObject(clickedGroups[0]);
             this.setMode('transform');
-            this.sceneInfo.lookAt = clickedGroups[0];
+            this.sceneInfo.lookAt = clickedGroups[0].userData.entity;
 
         }
     }

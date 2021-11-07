@@ -5,7 +5,7 @@ import Games from "../Plugin/Games.js";
 export default class StudioSceneInfo{
 
     /**
-     * @type {Group}
+     * @type {Result}
      */
     lookAt = null;
 
@@ -47,12 +47,18 @@ export default class StudioSceneInfo{
      * @param animEntry {Result}
      */
     playAnimationOnActiveElement(animEntry){
-        let game = Games.getGame(animEntry.gameId);
-        animEntry.props.game = game.game;
+        let animationGame = Games.getGame(animEntry.gameId);
+        let modelGame = Games.getGame(this.lookAt.gameId);
+
+        console.log(this.lookAt, modelGame);
+
+        animEntry.props.game = animationGame.game;
+        if (animationGame.game !== modelGame.game)
+            animEntry.props.convert = true;
+
         let clip = AnimationClip.parse( animEntry.data() );
 
-
-        this.animations.play(this.lookAt.children[0], clip);
+        this.animations.play(this.lookAt.mesh.children[0], clip);
 
     }
 

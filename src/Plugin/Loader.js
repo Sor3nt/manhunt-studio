@@ -11,11 +11,8 @@ import { default as ModelManhunt2Pc } from "./Loader/Game/Manhunt2/Pc/Model.js";
 import { default as MapManhunt2Pc } from "./Loader/Game/Manhunt2/Pc/Map.js";
 import { default as PakManhunt } from "./Loader/Generic/PAK.js";
 import RenderwareLoader from "./Loader/Renderware.js";
-import Api from "./../Api.js";
-import Storage from "./../Storage.js";
-import Event from "../Event.js";
-import Status from "../Status.js";
 import DDS from "./Loader/Generic/DDS.js";
+import Config from "../Config.js";
 
 export default class Loader{
 
@@ -81,7 +78,9 @@ export default class Loader{
             binary.setCurrent(current);
             return plugin.list(binary, options);
         }
-        console.error("No valid handler found !");
+
+        if (Config.debugLevel > 0)
+            console.error(`No valid handler found for file ${options.fileNamePath}`);
 
         return [];
     }

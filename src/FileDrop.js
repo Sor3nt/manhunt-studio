@@ -139,7 +139,7 @@ export default class FileDrop{
 
             try{
 
-                let parsed = Loader.parse(file.binary, {});
+                let parsed = Loader.parse(file.binary, {fileNamePath: file.fileNamePath});
                 Status.show(`${file.fileNamePath} parsed`);
 
                 parsed.forEach(function (entry) {

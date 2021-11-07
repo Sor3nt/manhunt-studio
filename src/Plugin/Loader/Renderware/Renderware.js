@@ -60,6 +60,7 @@ import PrtStdPlugin from "./Chunk/PrtStdPlugin.js";
 import Image from "./Chunk/Image.js";
 import UserDataPlugin from "./Chunk/UserDataPlugin.js";
 import Animation from "./Chunk/Animation.js";
+import Config from "../../../Config.js";
 const assert = Helper.assert;
 
 export default class Renderware{
@@ -464,7 +465,9 @@ export default class Renderware{
 
                         if (binary.current() - 12 - currentStart !== header.size){
                             header.oriSize = header.size;
-                            console.info("Renderware Chunk size correction from", header.size, "to", binary.current() - 12 - currentStart );
+
+                            if (Config.debugLevel > 1)
+                                console.info("Renderware Chunk size correction from", header.size, "to", binary.current() - 12 - currentStart );
                             // debugger;
                         }
 
