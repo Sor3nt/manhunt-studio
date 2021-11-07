@@ -112,21 +112,16 @@ export default class NormalizeModel{
                 cpv: chunksGeometry[i].vColor,
             };
 
-            this.data.materials.forEach(function (material, index) {
+            let requiredMaterials = [];
+            chunksGeometry[i].faceMat.matId.forEach(function (matId) {
+                if (requiredMaterials.indexOf(matId) !== -1) return;
+                requiredMaterials.push(matId);
 
-                if (_this.data.material !== undefined && _this.data.material[index] !== undefined){
-                    mesh.material.push({
-                        diffuse: material.rgba,
-                        textureName: _this.data.material[index],
-                        opacitymap: null,
-                    });
-                }else{
-                    mesh.material.push({
-                        diffuse: material.rgba,
-                        textureName: "",
-                        opacitymap: null,
-                    });
-                }
+                mesh.material.push({
+                    diffuse: _this.data.materials[matId].rgba,
+                    textureName: _this.data.material.shift(),
+                    opacitymap: null,
+                });
             });
 
             meshes.push(mesh);
