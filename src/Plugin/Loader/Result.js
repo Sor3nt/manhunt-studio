@@ -61,6 +61,9 @@ export default class Result{
                 levelName = parts[index + 1].toLowerCase();
         });
 
+        if (levelName === "" && parts.length > 2 && parts[0] === "")
+            levelName = parts[1];
+
         this.level = levelName;
         this.filePath = path;
         this.file = file;

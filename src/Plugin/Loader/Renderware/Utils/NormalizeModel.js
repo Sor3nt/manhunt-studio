@@ -112,6 +112,13 @@ export default class NormalizeModel{
                 cpv: chunksGeometry[i].vColor,
             };
 
+            /**
+             * I did here a hack:
+             * The material names for all objects are read into one array (Material.js:43)
+             * but each object need his own material.
+             * i currently hope that the order of the matId is always ASC
+             * so we can "shift" the values from the big name array
+             */
             let requiredMaterials = [];
             chunksGeometry[i].faceMat.matId.forEach(function (matId) {
                 if (requiredMaterials.indexOf(matId) !== -1) return;
@@ -119,7 +126,7 @@ export default class NormalizeModel{
 
                 mesh.material.push({
                     diffuse: _this.data.materials[matId].rgba,
-                    textureName: _this.data.material.shift(),
+                    textureName: _this.data.material.shift(), //shift hack to get the correct texturename
                     opacitymap: null,
                 });
             });
