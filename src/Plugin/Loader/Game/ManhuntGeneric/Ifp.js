@@ -59,7 +59,6 @@ export default class Ifp extends AbstractLoader{
                                     group: groupName
                                 },
                                 function(offset, _options){
-                                    console.log("_options", _options);
                                     binary.setCurrent(ANPK.anpkOffset[index]);
                                     let clip = Ifp.getANPKAnim(_options.convert || false, _options.game, binary);
                                     clip.name = name;
@@ -77,8 +76,32 @@ export default class Ifp extends AbstractLoader{
                 let result = Ifp.readStrmAnimBinIndex(binary);
                 IFPEntryArray = result[0];
                 IFPEntryIndexArray = result[1];
-                console.log("not implemented yet");
-                debugger;
+
+                IFPEntryIndexArray.forEach(function (ANPK, index) {
+                    ANPK.anpkName.forEach(function (name, index) {
+
+
+                        (function (index) {
+                            results.push(new Result(
+                                Studio.ANIMATION,
+                                name,
+                                binary,
+                                ANPK.anpkOffset[index],
+                                {
+                                    group: IFPEntryArray[index]
+                                },
+                                function(offset, _options){
+                                    binary.setCurrent(ANPK.anpkOffset[index]);
+                                    let clip = Ifp.getANPKAnim(_options.convert || false, _options.game, binary);
+                                    clip.name = name;
+                                    return clip;
+                                }
+                            ));
+
+                        })(index);
+
+                    });
+                });
 
                 break;
 
@@ -224,9 +247,9 @@ export default class Ifp extends AbstractLoader{
             }
 
             for (let j = 0; j < tempAnpk.length; j++) {
-                for (let jj = 0; jj < tempAnpk[j].AnpkName.length; jj++) {
-                    ANPK.anpkName.push(tempAnpk[j].AnpkName[jj]);
-                    ANPK.anpkOffset.push(tempAnpk[j].AnpkOffset[jj]);
+                for (let jj = 0; jj < tempAnpk[j].anpkName.length; jj++) {
+                    ANPK.anpkName.push(tempAnpk[j].anpkName[jj]);
+                    ANPK.anpkOffset.push(tempAnpk[j].anpkOffset[jj]);
                 }
             }
 

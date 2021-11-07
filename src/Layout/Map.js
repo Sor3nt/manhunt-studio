@@ -60,6 +60,7 @@ export default class Map {
             studioScene.sceneInfo.control.setMode('transform');
             studioScene.waypoints.highlightRoute(entry.name);
         }else{
+            studioScene.sceneInfo.lookAt = entry.mesh;
             studioScene.sceneInfo.control.setObject(entry.mesh);
             studioScene.sceneInfo.control.setMode('transform');
         }

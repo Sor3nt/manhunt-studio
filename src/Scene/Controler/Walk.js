@@ -264,8 +264,10 @@ console.error("TODO");
             if (Config.outlineActiveObject)
                 this.outlinePass.selectedObjects = [clickedGroups[0].children[0]];
 
+            //TODO: doppeltes handling, haben das auch in der map.js focusEntry...
             this.setObject(clickedGroups[0]);
             this.setMode('transform');
+            this.sceneInfo.lookAt = clickedGroups[0];
 
         }
     }
