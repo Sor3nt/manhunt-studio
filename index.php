@@ -121,6 +121,9 @@ underline">Current Features</h5>
                                         View textures, models and maps from Manhunt 1 and 2<i class="fas fa-check"></i>️
                                     </li>
                                     <li>
+                                        Play animations from Manhunt 1 and 2<i class="fas fa-check"></i>️
+                                    </li>
+                                    <li>
                                         <b>Move</b>, <b>Rotate</b> and save any game objects <i class="fas fa-check"></i>️
                                     </li>
 
@@ -135,11 +138,12 @@ underline">Supported Formats</h6>
                                 <li>
 
                                     <ul style="color: #fff;font-size: 10px">
-                                        <li>Manhunt 1 & 2 Map (scene1.bsp)</li>
-                                        <li>Manhunt 1 & 2 Texture (.txd/.tex) (PC,PSP,PS2,XBOX,WII)</li>
-                                        <li>Manhunt 1 & 2 Instances (.inst)</li>
-                                        <li>Manhunt 1 & 2 Models (.dff/.mdl)</li>
+                                        <li>Manhunt Animation (.ifp/.bin)</li>
                                         <li>Manhunt Container Format (.pak)</li>
+                                        <li>Manhunt Instances (.inst)</li>
+                                        <li>Manhunt Map (scene1.bsp)</li>
+                                        <li>Manhunt Models (.dff/.mdl)</li>
+                                        <li>Manhunt Texture (.txd/.tex) (PC,PSP,PS2,XBOX,WII)</li>
                                     </ul>
                                 </li>
                                 </ul>
@@ -149,6 +153,7 @@ underline">Supported Formats</h6>
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
 underline">Changelog</h5>
                                 <ul style="color: #fff; font-size: 10px">
+                                    <li><b>07-11-2021</b>: Animation player</li>
                                     <li><b>23-08-2021</b>: Manhunt 2 Support, Semantic Entity View, Speed modifier,<br/> Transparence fixes, navigation fixes and much more</li>
                                     <li><b>07-08-2021</b>: Search feature & Bugfixes</li>
                                     <li><b>30-07-2021</b>: Initial release 🎉</li>
@@ -167,7 +172,7 @@ underline">Changelog</h5>
 
             </div>
 
-            <div class="row">
+            <div class="row" style="margin-top: 20px">
                 <div class="col-12" style="text-align: center;">
 
                     <h6 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
