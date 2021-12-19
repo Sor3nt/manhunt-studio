@@ -21,7 +21,8 @@ export default class SceneModel extends SceneAbstract{
             OrbitAndTransform,
             function(){
 
-            }
+            },
+            this
         );
 
         this.#setup();

@@ -16,16 +16,18 @@ export default class StudioScene{
      * @param camera {Camera}
      * @param control {function}
      * @param onRender {function}
+     * @param studioScene {SceneAbstract}
      * @returns {StudioSceneInfo}
      */
-    static createSceneInfo(element, name, camera, control, onRender){
+    static createSceneInfo(element, name, camera, control, onRender, studioScene){
 
         let info = new StudioSceneInfo({
             name: name,
             onRender: onRender,
             camera: camera,
             control: control,
-            element: element
+            element: element,
+            studioScene: studioScene
         });
 
         StudioScene.sceneInfos[name] = info;

@@ -15,17 +15,28 @@ export default class StudioSceneInfo{
     animations = null;
 
     /**
+     * @type SceneAbstract {null}
+     */
+    studioScene = null;
+
+    /**
+     *
+     * @type {Scene}
+     */
+    scene = null;
+
+
+    /**
      *
      * @param props { {name: string, onRender: function, camera: Camera, control: function, element: jQuery} }
      */
     constructor(props) {
         this.name = props.name;
-        /**
-         * @type {Scene}
-         */
+
         this.scene = new ThreeScene();
         let _this = this;
 
+        this.studioScene = props.studioScene;
         this.camera = props.camera;
         this.element = props.element;
         this.animations = new Animations();

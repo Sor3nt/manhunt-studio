@@ -36,6 +36,13 @@ export default class SceneMap extends SceneAbstract{
         this.entitiesToProcess = [];
         this.entitiesProcess = 0;
 
+        Event.on(Event.MAP_ENTITIES_LOADED, function (props) {
+            if (_this.mapEntry !== props.entry) return;
+            _this.#setup();
+        });
+
+        this.waypoints = new Waypoints(this);
+
         this.sceneInfo = StudioScene.createSceneInfo(
             canvas,
             this.name,
@@ -43,15 +50,9 @@ export default class SceneMap extends SceneAbstract{
             Walk,
             function(){
 
-            }
+            },
+            this
         );
-
-        Event.on(Event.MAP_ENTITIES_LOADED, function (props) {
-            if (_this.mapEntry !== props.entry) return;
-            _this.#setup();
-        });
-
-        this.waypoints = new Waypoints(this);
 
     }
 

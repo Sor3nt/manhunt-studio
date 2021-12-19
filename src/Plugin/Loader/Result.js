@@ -13,6 +13,9 @@ export default class Result{
     /**  @type {string} */
     filePath = "";
 
+    /**  @type {Group} */
+    mesh = null;
+
     gameFourCC = null;
     platformFourCC = null;
 

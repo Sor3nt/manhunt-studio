@@ -31,13 +31,33 @@ export default class ResourceInfo extends AbstractComponent{
      * @param entry {Result}
      */
     setEntry(entry){
-
+console.log("CLICK", entry);
         let result = [];
         let object;
         let materialInfo;
         let normalizedModel;
         switch (entry.type) {
 
+            case Studio.AREA_LOCATION:
+
+                result.push({
+                    label: 'Mesh',
+                    value: `<span>GEN</span>`,
+                    postprocess: function ( element ) {
+                        element.find('span').click(function () {
+
+                            /**
+                             * @type {SceneMap}
+                             */
+                            let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+
+                            studioScene.waypoints.generateMeshByEntity(entry);
+                        });
+                    }
+                });
+
+
+                break;
             case Studio.ENTITY:
 
                 let game = Games.getGame(entry.gameId);
