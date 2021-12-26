@@ -37,12 +37,7 @@ export default class Menu{
         this.element.append(category.element);
     }
 
-    /**
-     *
-     * @param id
-     * @returns {{}|null}
-     */
-    getStatesById(id){
+    getById(id){
         /**
          *
          * @type {AbstractType|null}
@@ -54,7 +49,17 @@ export default class Menu{
                 found = type;
         });
 
-        return found === null ? null : found.states;
+        return found === null ? null : found;
+    }
+
+    /**
+     *
+     * @param id
+     * @returns {{}|null}
+     */
+    getStatesById(id){
+        let type = this.getById(id);
+        return type === null ? null : type.states;
     }
 
 }

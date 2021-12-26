@@ -43,7 +43,13 @@ export default class Node{
      * @type {Vector3}
      */
     position = new Vector3(0,0,0);
-    
+
+    /**
+     *
+     * @type {int}
+     */
+    color = 0x00ff00;
+
     /**
      *
      * @param entity {Result}
@@ -65,9 +71,9 @@ export default class Node{
            return this.entity.mesh;
        
         const geometry = new BoxGeometry(0.5, 0.5, 0.5);
-        const material = new MeshBasicMaterial({color: 0x00ff00});
-        material.opacity = 0.2;
-        material.transparent = true;
+        const material = new MeshBasicMaterial({color: this.color});
+        // material.opacity = 0.5;
+        // material.transparent = true;
         
         const cube = new Mesh(geometry, material);
         cube.name = this.name;

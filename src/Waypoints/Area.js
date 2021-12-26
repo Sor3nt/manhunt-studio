@@ -1,3 +1,4 @@
+import Helper from "../Helper.js";
 
 export default class Area{
 
@@ -13,8 +14,15 @@ export default class Area{
      */
     name = "newArea";
 
+    /**
+     *
+     * @type {int}
+     */
+    color = 0x0;
+
     constructor(name){
         this.name = name;
+        this.color = Helper.getRandomColor();
     }
 
     /**
@@ -22,6 +30,10 @@ export default class Area{
      * @param node {Node}
      */
     addNode(node){
+        //apply the area color
+        node.getMesh().children[0].material.color.setHex( this.color );
+        node.getMesh().children[0].material.needsUpdate = true;
+
         this.children.push(node);
     }
 

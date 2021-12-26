@@ -24,7 +24,7 @@ export default class StudioSceneInfo{
      *
      * @type {Scene}
      */
-    scene = null;
+    scene;
 
 
     /**

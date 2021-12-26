@@ -1,10 +1,9 @@
 import Studio from "./Studio.js";
-import Event from "./Event.js";
 import Games from "./Plugin/Games.js";
 import Node from "./Waypoints/Node.js";
 import Area from "./Waypoints/Area.js";
 import Route from "./Waypoints/Route.js";
-import Result from "./Plugin/Loader/Result.js";
+import Placing from "./Waypoints/Placing.js";
 
 
 export default class Waypoints{
@@ -47,6 +46,12 @@ export default class Waypoints{
 
     /**
      *
+     * @type {int}
+     */
+    nextNodeId = -1;
+
+    /**
+     *
      * @param sceneMap {SceneMap}
      */
     constructor(sceneMap){
@@ -77,34 +82,46 @@ export default class Waypoints{
         });
     }
 
-    placeNewNode(){
+    placeNewNode(areaName){
 
-        let areaLocation = new Result(
-            Studio.AREA_LOCATION,
-            ``,
-            new ArrayBuffer(0),
-            0,
-            {
-                id: 12345
-            },
-            function () {
-                console.error("HMMM TODO");
-                debugger;
+        let _this = this;
+
+        new Placing({
+            sceneInfo: this.sceneMap.sceneInfo,
+            nextNodeId: this.nextNodeId,
+            areaName: areaName,
+            onPlaceCallback: function (areaNode) {
+                _this.nodeByNodeId[_this.nextNodeId] = areaNode;
+
+                let area = _this.getCreateArea(areaName);
+                area.addNode(areaNode);
+                _this.createNodeRelations(area);
+
+                _this.game.addToStorage(areaNode);
+
+                _this.nextNodeId++;
+
             }
-        );
-
-        let node = new Node(areaLocation);
-        this.sceneMap.sceneInfo.scene.add(node.getMesh());
-
-        /**
-         * @type {Walk}
-         */
-        let walkController = this.sceneMap.sceneInfo.control;
-        walkController.setMode('placing');
-        //we do not use the setter because we do not want to transform
-        walkController.object = node.getMesh();
+        });
     }
 
+    getCreateArea(areaName){
+        let found = false;
+        this.children.forEach(function (area) {
+            if (found !== false)
+                return;
+
+            if (area.name === areaName)
+                found = area;
+        });
+
+        if (found !== false)
+            return found;
+
+        let area = new Area(areaName);
+        this.children.push(area);
+        return area;
+    }
 
     createAreasAndNodes(){
         let _this = this;
@@ -115,12 +132,18 @@ export default class Waypoints{
 
         let areaNodesByArea = {};
         areaNodes.forEach(function (areaNode) {
+            if (areaNode.props.id > _this.nextNodeId){
+                _this.nextNodeId = areaNode.props.id;
+            }
+
             let areaName = areaNode.props.areaName;
             if (areaNodesByArea[areaName] === undefined)
                 areaNodesByArea[areaName] = [];
 
             areaNodesByArea[areaName].push(areaNode);
         });
+
+        this.nextNodeId++;
 
         for(let areaName in areaNodesByArea){
             if (!areaNodesByArea.hasOwnProperty(areaName)) continue;

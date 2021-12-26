@@ -11,6 +11,8 @@ import Category from "./Menu/Category.js";
 import SceneMap from "./Scene/SceneMap.js";
 import SelectboxType from "./Menu/Types/SelectboxType.js";
 import ActionType from "./Menu/Types/ActionType.js";
+import Keyboard from "./Keyboard.js";
+import Mouse from "./Mouse.js";
 
 export default class Studio{
 
@@ -50,6 +52,8 @@ export default class Studio{
         Status.element = jQuery('#status');
         WebGL.boot();
         Studio.registerPlugins();
+        Keyboard.setup();
+        Mouse.setup();
 
         Studio.createMenu();
         new Save();
@@ -141,27 +145,66 @@ export default class Studio{
                     if (studioScene instanceof SceneMap){
 
 
+                        let waypoints = studioScene.waypoints;
 
                         catWaypointArea.addType(new ActionType({
                             id: 'waypoint-area-create',
                             label: 'Start new area',
                             callback: function (states) {
-                                studioScene.waypoints.placeNewNode();
+
+                                let name = prompt('New Area Name', 'area1');
+                                waypoints.placeNewNode(name);
                                 document.body.requestPointerLock();
 
                                 Studio.menu.closeAll();
                             }
                         }));
 
-                        catWaypointArea.addType(new SelectboxType({
-                            id: 'waypoint-area',
-                            values: studioScene.waypoints.children.map(function (area) {
-                                return area.name;
-                            }),
-                            callback: function (states) {
+                        waypoints.children.forEach(function (area) {
 
-                            }
-                        }));
+                            catWaypointArea.addType(new ActionType({
+                                id: 'waypoint-area-' + area.name,
+                                label: 'Add node to ' + area.name,
+                                callback: function (states) {
+
+                                    /**
+                                     * We need to take sure the nodes are showed
+                                     */
+                                    let showNodesType = Studio.menu.getById('waypoint-show-nodes');
+                                    if (showNodesType.states.active === false){
+                                        showNodesType.triggerClick();
+                                    }
+
+                                    /**
+                                     * Look at the first node in the area
+                                     */
+                                    if (area.children.length > 0){
+                                        let node = area.children[0];
+
+                                        studioSceneInfo.control.playerCollider.end.copy(node.position);
+                                        studioSceneInfo.camera.position.copy(node.position);
+                                    }
+
+                                    requestAnimationFrame(function () {
+                                        waypoints.placeNewNode(area.name);
+                                        document.body.requestPointerLock();
+                                    });
+
+                                    Studio.menu.closeAll();
+                                }
+                            }));
+//
+                        });
+
+//                         catWaypointArea.addType(new SelectboxType({
+//                             id: 'waypoint-area',
+//                             values: studioScene.waypoints.children.map(function (area) {
+//                                 return area.name;
+//                             }),
+//                             callback: function (states) {
+// console.log("hhhh", states);
+//                             }
+//                         }));
 
                     }
 

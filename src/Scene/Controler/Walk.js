@@ -84,10 +84,10 @@ export default class Walk {
             //     _this.keyStates.modeSelectObject = false;
             //     _this.setMode("fly");
             // }
-
-            if (event.code === 'KeyL') {
-                _this.setMode("waypoint");
-            }
+            //
+            // if (event.code === 'KeyL') {
+            //     _this.setMode("waypoint");
+            // }
 
             if (event.code === 'KeyI') {
                 _this.keyStates.modeSelectObject = !_this.keyStates.modeSelectObject;
@@ -103,40 +103,16 @@ export default class Walk {
         });
 
         WebGL.renderer.domElement.addEventListener('mousedown', () => {
-            if (this.mode === "fly" || this.mode === "transform" || this.mode === "waypoint" || this.mode === "placing")
+            if (this.mode === "fly" || this.mode === "transform" || this.mode === "placing")
                 document.body.requestPointerLock();
         });
 
-        const pointer = new Vector2(0, 0);
-        const raycaster = new Raycaster();
-        // WebGL.renderer.domElement.addEventListener( 'pointermove', function (event) {
-        //
-        //
-        // } );
-
-
         document.body.addEventListener('mousemove', (event) => {
-            if (document.pointerLockElement === document.body && (_this.mode === "fly" || _this.mode === "select" || _this.mode === "placing")) {
+            if (document.pointerLockElement === document.body && (_this.mode === "fly" || _this.mode === "select")) {
                 sceneInfo.camera.rotation.y -= event.movementX / 500;
                 sceneInfo.camera.rotation.x -= event.movementY / 500;
             }
 
-            if ( _this.mode === "placing"){
-                raycaster.setFromCamera( pointer, sceneInfo.camera );
-
-                const intersects = raycaster.intersectObjects( sceneInfo.scene.children[1].children );
-
-                if ( intersects.length > 0 ) {
-
-                    _this.object.position.set( 0, 0, 0 );
-                    _this.object.lookAt( intersects[ 0 ].face.normal );
-
-                    _this.object.position.copy( intersects[ 0 ].point );
-                    _this.object.position.y += 1;
-
-                }
-
-            }
         });
 
         WebGL.renderer.domElement.addEventListener('click', function (event) {
@@ -171,52 +147,6 @@ export default class Walk {
         sceneInfo.scene.add(this.transform);
 
         this.setMode('fly');
-
-
-        //
-        //
-        // const loader = new OBJLoader( );
-        // loader.load( 'tree.obj', function ( object ) {
-        //     console.log("ADDD", object);
-        //     let group = new Group();
-        //     group.add(object);
-        //     group.position.set(133.62, 0.32, -111.90);
-        //     // group.position.set(-45.43, 0.56,6.61);
-        //     sceneInfo.scene.add( group );
-        //
-        //
-        //
-        //     _this.composer = new EffectComposer( WebGL.renderer );
-        //
-        //     const renderPass = new RenderPass( sceneInfo.scene, sceneInfo.camera );
-        //     _this.composer.addPass( renderPass );
-        //
-        //     let effectFXAA = new ShaderPass( FXAAShader );
-        //     effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
-        //     _this.composer.addPass( effectFXAA );
-        //
-        //     let outlinePass = new OutlinePass( new Vector2( window.innerWidth, window.innerHeight ), sceneInfo.scene, sceneInfo.camera );
-        //     _this.composer.addPass( outlinePass );
-        //
-        //     outlinePass.selectedObjects = [group];
-        //
-        //
-        //     //
-        //     //
-        //     //             //outline stuff
-        //     // const renderPass = new RenderPass( sceneInfo.scene, sceneInfo.camera );
-        //     // WebGL.composer.addPass( renderPass );
-        //     //
-        //     // WebGL.composer.addPass( WebGL.effectFXAA );
-        //     //
-        //     // let bbox = sceneInfo.element.parentNode.getBoundingClientRect();
-        //     // _this.outlinePass = new OutlinePass( new Vector2( bbox.width, bbox.height ), sceneInfo.scene, sceneInfo.camera );
-        //     // WebGL.composer.addPass( _this.outlinePass );
-        //     //
-        //     // _this.outlinePass.selectedObjects = [group];
-        //
-        // } );
-
     }
 
     onObjectChanged(){
@@ -308,12 +238,12 @@ console.error("TODO");
     }
 
     getSideVector() {
-        if (this.mode === "waypoint"){
-            this.playerDirection = new Vector3(0, -1, 0);
-        }else{
+        // if (this.mode === "waypoint"){
+        //     this.playerDirection = new Vector3(0, -1, 0);
+        // }else{
             this.sceneInfo.camera.getWorldDirection(this.playerDirection);
             this.playerDirection.y = 0;
-        }
+        // }
 
         this.playerDirection.normalize();
         this.playerDirection.cross(this.sceneInfo.camera.up);
@@ -349,11 +279,6 @@ console.error("TODO");
     setObject(object) {
         this.object = object;
 
-        // let relativeCameraOffset = new Vector3(0, 2, -3);
-        // object.updateMatrixWorld();
-        // let cameraOffset = relativeCameraOffset.applyMatrix4(object.matrixWorld);
-        //
-        // this.sceneInfo.camera.position.lerp(cameraOffset, 0.1);
         this.sceneInfo.camera.lookAt(object.position);
         this.orbit.target.copy(object.position);
 
@@ -365,7 +290,7 @@ console.error("TODO");
 
     update(delta) {
 
-        if ((this.mode === "fly" || this.mode === "waypoint") && document.pointerLockElement === document.body) {
+        if ((this.mode === "fly" ) && document.pointerLockElement === document.body) {
             this.flyControls(delta);
 
             const damping = Math.exp(-3 * delta) - 1;
@@ -415,16 +340,16 @@ console.error("TODO");
     setMode(mode) {
 
         console.log("current mode", this.mode, "new mode", mode);
-
-        if (this.mode === "waypoint" && mode !== "waypoint"){
-            //show all game objects
-            this.sceneInfo.scene.children.forEach(function (child) {
-                if (child.type === "Group" && child.name !== "scene")
-                    child.visible = true;
-            });
-
-            this.sceneInfo.camera.up.set(0, 1, 0);
-        }
+        //
+        // if (this.mode === "waypoint" && mode !== "waypoint"){
+        //     //show all game objects
+        //     this.sceneInfo.scene.children.forEach(function (child) {
+        //         if (child.type === "Group" && child.name !== "scene")
+        //             child.visible = true;
+        //     });
+        //
+        //     this.sceneInfo.camera.up.set(0, 1, 0);
+        // }
 
         if (this.mode === "transform" && mode !== "transform") {
             this.transform.detach();
@@ -435,7 +360,7 @@ console.error("TODO");
             }
 
             document.body.requestPointerLock();
-        } else if (this.mode === "fly" && mode !== "waypoint" && mode !== "fly") {
+        } else if (this.mode === "fly" &&  mode !== "fly") {
             document.exitPointerLock();
         }
 
@@ -444,17 +369,17 @@ console.error("TODO");
             if (Config.outlineActiveObject)
                 this.outlinePass.selectedObjects = [];
 
-        }else if (mode === "waypoint") {
-
-            //hide all game objects
-            this.sceneInfo.scene.children.forEach(function (child) {
-                if (child.type === "Group" && child.name !== "scene")
-                    child.visible = false;
-            });
-
-            this.sceneInfo.camera.position.set(0, 10, 0);
-            this.sceneInfo.camera.up.set(0, 0, -1);
-            this.sceneInfo.camera.lookAt(0, 0, 0);
+        // }else if (mode === "waypoint") {
+        //
+        //     //hide all game objects
+        //     this.sceneInfo.scene.children.forEach(function (child) {
+        //         if (child.type === "Group" && child.name !== "scene")
+        //             child.visible = false;
+        //     });
+        //
+        //     this.sceneInfo.camera.position.set(0, 10, 0);
+        //     this.sceneInfo.camera.up.set(0, 0, -1);
+        //     this.sceneInfo.camera.lookAt(0, 0, 0);
 
         }else if (mode === "transform") {
             this.orbit.enabled = true;

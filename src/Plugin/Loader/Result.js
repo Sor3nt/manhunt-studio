@@ -39,7 +39,7 @@ export default class Result{
      * @param getData {function}
      */
     constructor(type, name, binary, offset, props, getData){
-
+//TODO: change to "props" handling....
         this.type = type;
         this.name = name;
         this.binary = binary;
