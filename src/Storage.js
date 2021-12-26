@@ -25,6 +25,19 @@ export default class Storage{
     }
 
     /**
+     * @param result {Result}
+     */
+    static remove(result){
+
+        Storage.count--;
+
+        let index = `S_${result.type}_${result.level}_${result.gameId}_${result.name}`;
+        delete Storage.byTypeGameName[ index ];
+
+        Storage.storage.splice( Storage.storage.indexOf(result), 1);
+    }
+
+    /**
      * @param criteria {{}}
      * @returns {Result}
      */

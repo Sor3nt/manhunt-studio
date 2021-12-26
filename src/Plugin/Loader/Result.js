@@ -20,6 +20,10 @@ export default class Result{
     platformFourCC = null;
 
 
+    /**
+     *
+     * @type {int|null}
+     */
     gameId = null;
     cache = null;
     hasChanges = false;

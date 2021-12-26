@@ -2,58 +2,59 @@ import Components from "./Plugin/Components.js";
 
 export default class Menu{
 
-    static container;
+    element = null;
 
-    static categories = {};
+    /**
+     *
+     * @type {Category[]}
+     */
+    children = [];
 
-    static addCategory( name ){
-        let category = jQuery('<li>').html(name);
-        let child = jQuery('<ul>');
-        child.hide();
-        category.append(child);
+    constructor(){
+        this.element = jQuery('<ul class="menu">');
 
-        this.categories[name] = {
-            container: category,
-            childs: child
-        };
+        let topSection = Components.getSection('top');
+        topSection.container.append(this.element);
+    }
 
+    closeAll(){
 
-        let _this = this;
-        category.click(function (e) {
-            Menu.container.find('li > ul').hide();
+        this.children.forEach(function (category) {
+            category.close();
+        })
+    }
 
-            if (category.hasClass('active')){
-                Menu.container.find('> li').removeClass('active');
-                return;
-            }
+    /**
+     *
+     * @param category {Category}
+     */
+    addCategory(category){
+        if (this.children.indexOf(category) !== -1)
+            return;
 
-            Menu.container.find('> li').removeClass('active');
+        this.children.push(category);
 
-            category.addClass('active');
-            child.show();
+        this.element.append(category.element);
+    }
+
+    /**
+     *
+     * @param id
+     * @returns {{}|null}
+     */
+    getStatesById(id){
+        /**
+         *
+         * @type {AbstractType|null}
+         */
+        let found = null;
+        this.children.forEach(function (category) {
+            let type = category.getTypeById(id);
+            if (type !== false)
+                found = type;
         });
-        Menu.container.append(category);
-    }
 
-
-    static addEntry(categoryName, name, onClick){
-        this.categories[categoryName].childs.append(jQuery('<li>').html(name).click(function (e) {
-            Menu.container.find('li > ul').hide();
-            Menu.container.find('> li').removeClass('active');
-            onClick();
-            e.preventDefault();
-            return false;
-
-        }))
-    }
-
-    static create(){
-
-        Menu.container = jQuery('<ul class="menu">');
-        let top = Components.getSection('top');
-        top.container.append(Menu.container);
-
-
+        return found === null ? null : found.states;
     }
 
 }

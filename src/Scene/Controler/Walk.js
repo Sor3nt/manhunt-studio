@@ -103,14 +103,39 @@ export default class Walk {
         });
 
         WebGL.renderer.domElement.addEventListener('mousedown', () => {
-            if (this.mode === "fly" || this.mode === "transform" || this.mode === "waypoint")
+            if (this.mode === "fly" || this.mode === "transform" || this.mode === "waypoint" || this.mode === "placing")
                 document.body.requestPointerLock();
         });
 
+        const pointer = new Vector2(0, 0);
+        const raycaster = new Raycaster();
+        // WebGL.renderer.domElement.addEventListener( 'pointermove', function (event) {
+        //
+        //
+        // } );
+
+
         document.body.addEventListener('mousemove', (event) => {
-            if (document.pointerLockElement === document.body && (_this.mode === "fly" || _this.mode === "select")) {
+            if (document.pointerLockElement === document.body && (_this.mode === "fly" || _this.mode === "select" || _this.mode === "placing")) {
                 sceneInfo.camera.rotation.y -= event.movementX / 500;
                 sceneInfo.camera.rotation.x -= event.movementY / 500;
+            }
+
+            if ( _this.mode === "placing"){
+                raycaster.setFromCamera( pointer, sceneInfo.camera );
+
+                const intersects = raycaster.intersectObjects( sceneInfo.scene.children[1].children );
+
+                if ( intersects.length > 0 ) {
+
+                    _this.object.position.set( 0, 0, 0 );
+                    _this.object.lookAt( intersects[ 0 ].face.normal );
+
+                    _this.object.position.copy( intersects[ 0 ].point );
+                    _this.object.position.y += 1;
+
+                }
+
             }
         });
 
@@ -253,6 +278,7 @@ console.error("TODO");
         let clickedGroups = [];
         intersects.forEach(function (obj) {
             let parent = obj.object.parent;
+
             if (parent === null || parent.type !== "Group" || parent.userData.entity === undefined)
                 return;
             clickedGroups.push(parent);

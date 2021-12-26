@@ -62,28 +62,70 @@ export default class NBinary{
         return this.consume(4, 'uint32',little);
     }
 
+    setUInt32( val ){
+        let view = new DataView(this.data, this._current, 4);
+        view.setUint32(0, val, true);
+        this._current += 4;
+    }
+
     uInt16(little){
         return this.consume(2, 'uint16',little);
+    }
+
+    setUInt16( val ){
+        let view = new DataView(this.data, this._current, 4);
+        view.setUint16(0, val, true);
+        this._current += 2;
     }
 
     uInt8(little){
         return this.consume(1, 'uint8',little);
     }
 
+    setUInt8( val ){
+        let view = new DataView(this.data, this._current, 4);
+        view.setUint8(0, val, true);
+        this._current += 1;
+    }
+
     int32(little){
         return this.consume(4, 'int32',little);
+    }
+
+    setInt32( val ){
+        let view = new DataView(this.data, this._current, 4);
+        view.setInt32(0, val, true);
+        this._current += 4;
     }
 
     int16(little){
         return this.consume(2, 'int16',little);
     }
 
+    setInt16( val ){
+        let view = new DataView(this.data, this._current, 4);
+        view.setInt16(0, val, true);
+        this._current += 2;
+    }
+
     int8(little){
         return this.consume(1, 'int8',little);
     }
 
+    setInt8( val ){
+        let view = new DataView(this.data, this._current, 4);
+        view.setInt8(0, val, true);
+        this._current += 1;
+    }
+
     float32(little){
         return this.consume(4, 'float32',little);
+    }
+
+    setFloat32( flt ){
+        let view = new DataView(this.data, this._current, 4);
+        view.setFloat32(0, flt, true);
+        this._current += 4;
     }
 
     parseStruct(obj){
@@ -205,12 +247,7 @@ export default class NBinary{
         return name;
     }
 
-    setFloat32( flt ){
-        let view = new DataView(this.data, this._current, 4);
-        view.setFloat32(0, flt, true);
-        // console.log(view);
-        this._current += 4;
-    }
+
 
     readXYZ() {
         return {

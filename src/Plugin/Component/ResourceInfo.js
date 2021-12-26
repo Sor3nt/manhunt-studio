@@ -4,6 +4,7 @@ import Event from "../../Event.js";
 import Storage from "../../Storage.js";
 import Games from "../../Plugin/Games.js";
 import StudioScene from "../../Scene/StudioScene.js";
+import Result from "../Loader/Result.js";
 
 export default class ResourceInfo extends AbstractComponent{
 
@@ -41,6 +42,56 @@ console.log("CLICK", entry);
             case Studio.AREA_LOCATION:
 
                 result.push({
+                    label: '',
+                    value: `<span>Clear</span>`,
+                    postprocess: function ( element ) {
+                        element.find('span').click(function () {
+
+                            /**
+                             * @type {SceneMap}
+                             */
+                            let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+
+                            studioScene.waypoints.clear();
+                        });
+                    }
+                });
+
+                result.push({
+                    label: '',
+                    value: `<span>create</span>`,
+                    postprocess: function ( element ) {
+                        element.find('span').click(function () {
+
+                            /**
+                             * @type {SceneMap}
+                             */
+                            let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+
+
+                            let newNode = new Result(
+                                Studio.AREA_LOCATION,
+                                `ai`,
+                                '',
+                                0,
+                                {
+
+                                },
+                                function () {
+                                    console.error("HMMM TODO");
+                                    debugger;
+                                }
+                            );
+
+                            studioScene.waypoints.createNode(newNode);
+
+
+                            // studioScene.waypoints.createNewNode();
+                        });
+                    }
+                });
+
+                result.push({
                     label: 'Mesh',
                     value: `<span>GEN</span>`,
                     postprocess: function ( element ) {
@@ -52,6 +103,22 @@ console.log("CLICK", entry);
                             let studioScene = StudioScene.getStudioSceneInfo().studioScene;
 
                             studioScene.waypoints.generateMeshByEntity(entry);
+                        });
+                    }
+                });
+
+                result.push({
+                    label: 'Route',
+                    value: `<span>GEN</span>`,
+                    postprocess: function ( element ) {
+                        element.find('span').click(function () {
+
+                            /**
+                             * @type {SceneMap}
+                             */
+                            let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+
+                            studioScene.waypoints.generateRoutes();
                         });
                     }
                 });

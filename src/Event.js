@@ -7,6 +7,8 @@ export default class Event{
     static MAP_ENTITIES_LOADED = 4;
     static MAP_FOCUS_ENTITY = 5;
     static CLOSE_COMPONENT = 6;
+    static WAYPOINT_SHOW_RELATIONS = 7;
+    static WAYPOINT_SHOW_NODES = 8;
 
     static events = {};
 

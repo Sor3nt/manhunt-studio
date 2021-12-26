@@ -15,9 +15,10 @@ export default class StudioSceneInfo{
     animations = null;
 
     /**
-     * @type SceneAbstract {null}
+     * @type {SceneAbstract}
      */
     studioScene = null;
+
 
     /**
      *

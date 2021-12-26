@@ -22,6 +22,10 @@ export default class SceneMap extends SceneAbstract{
     mapEntry;
 
     /**
+     * @type {Waypoints}
+     */
+    waypoints;
+    /**
      *
      * @param entry {Result}
      * @param canvas {jQuery}
@@ -40,8 +44,6 @@ export default class SceneMap extends SceneAbstract{
             if (_this.mapEntry !== props.entry) return;
             _this.#setup();
         });
-
-        this.waypoints = new Waypoints(this);
 
         this.sceneInfo = StudioScene.createSceneInfo(
             canvas,
@@ -100,7 +102,10 @@ export default class SceneMap extends SceneAbstract{
 
 
     #setup(){
-        this.waypoints.setup();
+        this.waypoints = new Waypoints(this);
+        this.waypoints.nodeVisible(false);
+        this.waypoints.lineVisible(false);
+        this.waypoints.routeVisible(false);
 
         let game = Games.getGame(this.mapEntry.gameId);
         this.entitiesToProcess = game.findBy({

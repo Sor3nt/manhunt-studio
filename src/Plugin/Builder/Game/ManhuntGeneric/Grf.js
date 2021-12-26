@@ -1,62 +1,56 @@
-import AbstractLoader from "./../../Abstract.js";
-import Result from "../../Result.js";
+import AbstractBuilder from "./../../Abstract.js";
+import Result from "../../../Loader/Result.js";
 import NBinary from "../../../../NBinary.js";
 import Studio from "../../../../Studio.js";
 import Games from "../../../../Plugin/Games.js";
-import Config from "../../../../Config.js";
-import Game from "../../../Game.js";
 
-export default class Grf extends AbstractLoader{
+
+export default class Grf extends AbstractBuilder{
     static name = "Waypoints (Manhunt 1/2)";
 
     /**
-     * @param entry {Result}
-     */
-    static update(entry){
-
-    }
-
-    /**
-     * @param binary {NBinary}
-     * @returns {boolean}
-     */
-    static canHandle(binary){
-        if (binary.remain() <= 0) return false;
-
-        binary.setCurrent(8);
-
-        let isZero = binary.consume(4, 'int32');
-
-        return isZero === 0;
-    }
-
-    /**
-     * @param binary {NBinary}
-     * @param options {{}}
+     * @param game {Game}
      * @returns {Result[]}
      */
-    static list(binary, options){
-        let game = Games.GAMES.MANHUNT;
-        let results = [];
+    static build(game){
 
-        let count = binary.consume(4, 'int32');
+        let areaLocations = game.findBy({
+            type: Studio.AREA_LOCATION
+        });
 
-        //GNIA :  Manhunt 2
-        if (count === 1095323207){
-            game = Games.GAMES.MANHUNT_2;
-            binary.seek(4); //const
-            count = binary.consume(4, 'int32');
+        let binary = new NBinary();
+        let rememberOffset = {
+            count: 0
+        };
+
+        if (game.game === Games.GAMES.MANHUNT) {
+
+            rememberOffset.count = binary.current();
+            binary.setInt32(0);
+
+        }else if (game.game === Games.GAMES.MANHUNT_2){
+            binary.setInt32(1095323207); //GNIA
+            binary.setInt32(1); //const
+
+            rememberOffset.count = binary.current();
+            binary.setInt32(0); //count
         }
 
 
-        let area = Grf.parseArea(binary, count, game);
+        let area = Grf.createAreas(binary, count, game);
+
+
+
+
+
 
         let waypointRoutes = Grf.parseWaypointRoutes(binary);
-        let areaNames = Grf.parseAreaNames(binary);
+        let areaNames = Grf.createAreasNames(binary);
 
         let locationById = {};
 
         area.forEach(function (location) {
+            location.area = areaNames[location.groupIndex];
             let result = new Result(
                 Studio.AREA_LOCATION,
                 location.name,
@@ -67,8 +61,6 @@ export default class Grf extends AbstractLoader{
                     return location;
                 }
             );
-
-            result.props.areaName = areaNames[location.groupIndex];
 
             locationById[location.id] = result;
             results.push(result);
@@ -102,7 +94,7 @@ export default class Grf extends AbstractLoader{
      * @param binary
      * @returns {string[]}
      */
-    static parseAreaNames(binary){
+    static createAreasNames(binary){
         let count = binary.int32();
 
         let results = [];
@@ -142,7 +134,7 @@ export default class Grf extends AbstractLoader{
      * @param game
      * @returns {{name: string, groupIndex: int, position: {x:double,y:double,z:double}, radius: double, nodeName: string, relation: int[], waypoints: mix[]}[]}
      */
-    static parseArea(binary, entryCount, game){
+    static createAreas(binary, entryCount, game){
 
         let entries = [];
 
@@ -152,13 +144,7 @@ export default class Grf extends AbstractLoader{
                 id: i,
                 name: binary.getString(0, true),
                 groupIndex: binary.int32(),
-                position: (function () {
-                    let position = binary.readVector3();
-                    let y = position.y;
-                    position.y = position.z;
-                    position.z = y * -1;
-                    return position;
-                })(),
+                position: binary.readVector3(),
                 radius: binary.float32(),
                 nodeName: binary.getString(0, true),
                 relation: Grf.parseBlock(binary)

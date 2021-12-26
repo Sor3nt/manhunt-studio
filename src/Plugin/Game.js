@@ -36,6 +36,11 @@ export default class Game{
         }
     }
 
+    /**
+     *
+     * @param criteria
+     * @returns {Array<Result>}
+     */
     findBy( criteria ){
         criteria.gameId = this.gameId;
 
@@ -63,6 +68,15 @@ export default class Game{
     addToStorage(result){
         result.gameId = this.gameId;
         Storage.add(result);
+    }
+
+    /**
+     *
+     * @param result {Result}
+     */
+    removeFromStorage(result){
+        result.gameId = this.gameId;
+        Storage.remove(result);
     }
 
 }
