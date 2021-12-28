@@ -4,6 +4,7 @@ import Node from "./Waypoints/Node.js";
 import Area from "./Waypoints/Area.js";
 import Route from "./Waypoints/Route.js";
 import Placing from "./Waypoints/Placing.js";
+import NodeGenerator from "./Waypoints/NodeGenerator.js";
 
 
 export default class Waypoints{
@@ -80,6 +81,63 @@ export default class Waypoints{
         this.routes.forEach(function (route) {
             route.setVisible(state);
         });
+    }
+
+    /**
+     *
+     * @param areaName {string|undefined}
+     */
+    clear(areaName){
+        let _this = this;
+        // if (areaName === undefined)
+        this.children.forEach(function (area) {
+            if (areaName !== undefined && areaName !== area.name)
+                return;
+
+            area.children.forEach(function (node) {
+                _this.sceneMap.sceneInfo.scene.remove(node.getMesh());
+
+                node.lines.forEach(function (line) {
+                    _this.sceneMap.sceneInfo.scene.remove(line);
+                });
+
+                node.lines = [];
+            });
+
+
+            area.children = [];
+        });
+
+    }
+
+    /**
+     *
+     * @param area {Area}
+     * @param position {Vector3}
+     */
+    nodeGenerate(area, position){
+        let _this = this;
+
+        new NodeGenerator({
+            area: area,
+            scene: this.sceneMap.sceneInfo.scene,
+            meshes: this.sceneMap.sceneInfo.scene.children[1].children,
+            nextNodeId: this.nextNodeId,
+            position: position,
+            game: this.game,
+            callback: function (lastNodeId, nodes) {
+
+                nodes.forEach(function (node) {
+                    _this.nodeByNodeId[node.id] = node;
+                });
+
+                _this.nextNodeId = lastNodeId + 1;
+
+                _this.createNodeRelations(area);
+
+            }
+
+        })
     }
 
     placeNewNode(areaName){

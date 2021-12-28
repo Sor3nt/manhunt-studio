@@ -70,7 +70,7 @@ export default class Node{
        if (this.entity.mesh !== null)
            return this.entity.mesh;
        
-        const geometry = new BoxGeometry(0.5, 0.5, 0.5);
+        const geometry = new BoxGeometry(0.25, 0.25, 0.25);
         const material = new MeshBasicMaterial({color: this.color});
         // material.opacity = 0.5;
         // material.transparent = true;

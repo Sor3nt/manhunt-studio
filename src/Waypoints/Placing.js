@@ -77,6 +77,8 @@ export default class Placing{
         Mouse.removeOnMouseClick(this.binding.mouseClick);
         Mouse.removeOnMouseMove(this.binding.mouseMove);
 
+        this.node.entity.props.position = this.node.getMesh().position.clone();
+
         this.onPlaceCallback(this.node);
     }
 
@@ -110,7 +112,7 @@ export default class Placing{
                 id: this.nextNodeId,
                 areaName: this.areaName,
                 waypoints: [],
-                entries: [] //todo rename to "routeNodeIds"
+                // entries: [] //todo rename to "routeNodeIds"
             },
             function () {
                 console.error("HMMM TODO");

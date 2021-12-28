@@ -162,9 +162,17 @@ export default class Studio{
 
                         waypoints.children.forEach(function (area) {
 
-                            catWaypointArea.addType(new ActionType({
+                            let catWaypointAreaEntry = new Category({
                                 id: 'waypoint-area-' + area.name,
-                                label: 'Add node to ' + area.name,
+                                label: area.name,
+                                callback: function (states) {
+
+                                }
+                            });
+
+                            catWaypointAreaEntry.addType(new ActionType({
+                                id: 'waypoint-area-node-' + area.name,
+                                label: 'Add node',
                                 callback: function (states) {
 
                                     /**
@@ -180,7 +188,7 @@ export default class Studio{
                                      */
                                     if (area.children.length > 0){
                                         let node = area.children[0];
-
+console.log("EHH nodes?", node);
                                         studioSceneInfo.control.playerCollider.end.copy(node.position);
                                         studioSceneInfo.camera.position.copy(node.position);
                                     }
@@ -193,6 +201,42 @@ export default class Studio{
                                     Studio.menu.closeAll();
                                 }
                             }));
+
+
+                            catWaypointAreaEntry.addType(new ActionType({
+                                id: 'waypoint-area-gen-' + area.name,
+                                label: 'Generate Mesh',
+                                callback: function (states) {
+
+                                    /**
+                                     * We need to take sure the nodes are showed
+                                     */
+                                    let showNodesType = Studio.menu.getById('waypoint-show-nodes');
+                                    if (showNodesType.states.active === false){
+                                        showNodesType.triggerClick();
+                                    }
+
+                                    /**
+                                     * Look at the first node in the area
+                                     */
+                                    if (area.children.length > 0){
+                                        let node = area.children[0];
+                                        //
+                                        // studioSceneInfo.control.playerCollider.end.copy(node.position);
+                                        // studioSceneInfo.camera.position.copy(node.position);
+
+                                        waypoints.nodeGenerate(area, node.getMesh().position);
+
+                                    }
+
+
+                                    Studio.menu.closeAll();
+                                }
+                            }));
+
+
+                            catWaypointArea.addSubCategory(catWaypointAreaEntry);
+
 //
                         });
 
@@ -215,6 +259,23 @@ export default class Studio{
         });
 
         catWaypoint.addSubCategory(catWaypointArea);
+        catWaypoint.addType(new ActionType({
+            id: 'waypoint-clear',
+            label: 'Clear anything',
+            callback: function (states) {
+
+                let studioSceneInfo = StudioScene.getStudioSceneInfo();
+                if (studioSceneInfo === null)
+                    return;
+
+                let studioScene = studioSceneInfo.studioScene;
+                if (studioScene instanceof SceneMap) {
+
+                    let waypoints = studioScene.waypoints;
+                    waypoints.clear();
+                }
+            }
+        }));
 
         Studio.menu.addCategory(catWaypoint);
         //
