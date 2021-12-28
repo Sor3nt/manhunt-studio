@@ -5,6 +5,26 @@ import {downloadZip} from "./Vendor/Zip.js";
 
 export default class Save{
 
+    /**
+     *
+     * @param binary {NBinary}
+     * @param filename {string}
+     */
+    static async output(binary, filename){
+        let files = [{
+            name: filename,
+            lastModified: new Date(),
+            input: new Uint8Array(binary.data)
+        }];
+
+        let blob = new Blob( [ files[0].input ], { type: 'application/octet-stream' } );
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = files[0].name;
+        link.click();
+        link.remove();
+    }
 
     static async save(){
 

@@ -127,6 +127,9 @@ export default class NodeGenerator{
                     id: _this.nextNodeId,
                     areaName: _this.area.name,
                     position: position,
+                    radius: 0.5,
+                    nodeName: "",
+                    unkFlags: [],
                     waypoints: []
                 },
                 function () {

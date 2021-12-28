@@ -2,7 +2,7 @@ import Mouse from "../Mouse.js";
 import Result from "../Plugin/Loader/Result.js";
 import Studio from "../Studio.js";
 import Node from "./Node.js";
-import {Raycaster, Vector2} from "../Vendor/three.module.js";
+import {Raycaster, Vector2, Vector3} from "../Vendor/three.module.js";
 
 export default class Placing{
 
@@ -111,6 +111,10 @@ export default class Placing{
             {
                 id: this.nextNodeId,
                 areaName: this.areaName,
+                position: new Vector3(),
+                radius: 0.5,
+                nodeName: "",
+                unkFlags: [],
                 waypoints: [],
                 // entries: [] //todo rename to "routeNodeIds"
             },

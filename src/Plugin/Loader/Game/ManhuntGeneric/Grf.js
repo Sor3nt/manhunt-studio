@@ -161,11 +161,11 @@ export default class Grf extends AbstractLoader{
                 })(),
                 radius: binary.float32(),
                 nodeName: binary.getString(0, true),
-                relation: Grf.parseBlock(binary)
+                unkFlags: Grf.parseBlock(binary)
             };
 
             if (game === Games.GAMES.MANHUNT_2){
-                entry.relation2 = Grf.parseBlock(binary);
+                entry.unkFlags2 = Grf.parseBlock(binary);
             }
 
             entry.waypoints = Grf.parseWayPointBlock(binary);

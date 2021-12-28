@@ -223,6 +223,49 @@ export default class NBinary{
         return view;
     }
 
+    /**
+     *
+     * @param string {string}
+     * @param delimiter {int}
+     * @param doPadding {boolean}
+     * @param paddingChar {int|undefined}
+     */
+    writeString(string, delimiter, doPadding, paddingChar){
+
+        if (paddingChar === undefined)
+            paddingChar = delimiter;
+
+        let strLen = string.length + 1;
+        let padLen = 0;
+        if (4 - (strLen % 4) !== 4){
+            padLen = 4 - (strLen % 4);
+        }
+
+        var enc = new TextEncoder(); // always utf-8
+        let encoded = enc.encode(string);
+
+        let view = new DataView(this.data, this._current, strLen + padLen);
+        let offset = 0;
+        encoded.forEach(function (uInt8) {
+            view.setUint8(offset, uInt8);
+            offset++;
+        });
+
+        view.setUint8(offset, delimiter);
+        offset++;
+
+        for(let i = 0; i < padLen; i++){
+            view.setUint8(offset, paddingChar);
+            offset++;
+        }
+
+        this._current += offset;
+    }
+
+    end(){
+        this.data = this.data.slice(0, this._current);
+    }
+
 
     getString(delimiter, doPadding) {
 

@@ -13,6 +13,8 @@ import SelectboxType from "./Menu/Types/SelectboxType.js";
 import ActionType from "./Menu/Types/ActionType.js";
 import Keyboard from "./Keyboard.js";
 import Mouse from "./Mouse.js";
+import Games from "./Plugin/Games.js";
+import Grf from "./Plugin/Builder/Game/ManhuntGeneric/Grf.js";
 
 export default class Studio{
 
@@ -71,6 +73,35 @@ export default class Studio{
     static createMenu(){
 
         Studio.menu = new Menu();
+
+        /**
+         * Save
+         */
+        let catSave = new Category({
+            id: 'save',
+            label: 'Save'
+        });
+
+        catSave.addType(new ActionType({
+            id: 'save-waypoint',
+            label: 'Waypoint',
+            callback: function (states) {
+
+                let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                if (studioScene instanceof SceneMap){
+                    let game = Games.getGame(studioScene.mapEntry.gameId);
+                    let level = studioScene.mapEntry.level;
+
+                    let binary = Grf.build(game, level);
+                    Save.output(binary, 'teest.grf');
+                    Studio.menu.closeAll();
+                }
+
+            }
+        }));
+
+        Studio.menu.addCategory(catSave);
+
 
         /**
          * Waypoint

@@ -10,198 +10,145 @@ export default class Grf extends AbstractBuilder{
 
     /**
      * @param game {Game}
-     * @returns {Result[]}
+     * @param level {string}
+     * @returns {NBinary}
      */
-    static build(game){
+    static build(game, level){
 
         let areaLocations = game.findBy({
+            level: level,
             type: Studio.AREA_LOCATION
         });
 
-        let binary = new NBinary();
-        let rememberOffset = {
-            count: 0
-        };
+        let waypointRoutes = game.findBy({
+            level: level,
+            type: Studio.WAYPOINT_ROUTE
+        });
 
-        if (game.game === Games.GAMES.MANHUNT) {
+        let binary = new NBinary(new ArrayBuffer(1024 * 1024));
 
-            rememberOffset.count = binary.current();
-            binary.setInt32(0);
-
-        }else if (game.game === Games.GAMES.MANHUNT_2){
+        if (game.game === Games.GAMES.MANHUNT_2){
             binary.setInt32(1095323207); //GNIA
             binary.setInt32(1); //const
-
-            rememberOffset.count = binary.current();
-            binary.setInt32(0); //count
         }
 
+        binary.setInt32(areaLocations.length);
 
-        let area = Grf.createAreas(binary, count, game);
+        Grf.createAreas(binary, areaLocations, game);
+        Grf.createWaypointRoutes(binary, waypointRoutes);
+        Grf.createAreasNames(binary, areaLocations);
 
+        binary.end();
 
-
-
-
-
-        let waypointRoutes = Grf.parseWaypointRoutes(binary);
-        let areaNames = Grf.createAreasNames(binary);
-
-        let locationById = {};
-
-        area.forEach(function (location) {
-            location.area = areaNames[location.groupIndex];
-            let result = new Result(
-                Studio.AREA_LOCATION,
-                location.name,
-                "",
-                0,
-                location,
-                function(){
-                    return location;
-                }
-            );
-
-            locationById[location.id] = result;
-            results.push(result);
-        });
-
-
-        waypointRoutes.forEach(function (route) {
-
-
-            route.locations = [];
-            route.entries.forEach(function (locationId) {
-                route.locations.push(locationById[locationId]);
-            });
-
-            results.push(new Result(
-                Studio.WAYPOINT_ROUTE,
-                route.name,
-                "",
-                0,
-                route,
-                function(){
-                    return route;
-                }
-            ));
-        });
-        return results;
+        return binary;
     }
 
     /**
      *
      * @param binary
-     * @returns {string[]}
+     * @param areaLocations {Result[]}
      */
-    static createAreasNames(binary){
-        let count = binary.int32();
+    static createAreasNames(binary, areaLocations){
+        let groupIndex = [];
+        areaLocations.forEach(function (areaLocation) {
+            if (groupIndex.indexOf(areaLocation.props.areaName) !== -1)
+                return;
 
-        let results = [];
-        for(let x = 0; x < count; x++){
-            results.push(binary.getString(0, true));
-        }
+            groupIndex.push(areaLocation.props.areaName);
+        });
 
-        return results;
+        binary.setInt32(groupIndex.length);
+        groupIndex.forEach(function (name) {
+            binary.writeString(name, 0, true, 0x70);
+        });
     }
 
     /**
      *
-     * @param binary
+     * @param binary {NBinary}
+     * @param waypointRoutes {Result[]}
      * @returns {{order:int, name: string, entries: int[] }[]}
      */
-    static parseWaypointRoutes(binary){
+    static createWaypointRoutes(binary, waypointRoutes){
 
-        let count = binary.int32();
+        binary.setInt32(waypointRoutes.length);
 
-        let results = [];
-        for(let i = 0; i < count; i++){
-            results.push({
-                'order' :  i,
-                'name' :  binary.getString(0, true),
-                'entries' :  Grf.parseBlock(binary)
+        waypointRoutes.forEach(function (route) {
+            binary.writeString(route.name, 0, true, 0x70);
+
+            binary.setInt32(route.props.entries.length);
+            route.props.entries.forEach(function (nodeId) {
+                binary.setInt32(nodeId);
             });
-        }
 
-        return results;
-
+        });
     }
 
     /**
      *
-     * @param binary
-     * @param entryCount
-     * @param game
+     * @param binary {NBinary}
+     * @param areaLocations {Result[]}
+     * @param game {Game}
      * @returns {{name: string, groupIndex: int, position: {x:double,y:double,z:double}, radius: double, nodeName: string, relation: int[], waypoints: mix[]}[]}
      */
-    static createAreas(binary, entryCount, game){
+    static createAreas(binary, areaLocations, game){
 
-        let entries = [];
+        let groupIndex = [];
+        areaLocations.forEach(function (areaLocation) {
+            if (groupIndex.indexOf(areaLocation.props.areaName) !== -1)
+                return;
 
-        for(let i = 0; i < entryCount; i++){
+            groupIndex.push(areaLocation.props.areaName);
+        });
 
-            let entry = {
-                id: i,
-                name: binary.getString(0, true),
-                groupIndex: binary.int32(),
-                position: binary.readVector3(),
-                radius: binary.float32(),
-                nodeName: binary.getString(0, true),
-                relation: Grf.parseBlock(binary)
-            };
 
-            if (game === Games.GAMES.MANHUNT_2){
-                entry.relation2 = Grf.parseBlock(binary);
+        areaLocations.forEach(function (areaLocation) {
+            let mesh = areaLocation.mesh;
+            binary.writeString(areaLocation.props.name, 0x0, true, 0x70);
+
+            binary.setInt32(groupIndex.indexOf(areaLocation.props.areaName));
+            binary.setFloat32(mesh.position.x);
+            binary.setFloat32(mesh.position.z * -1);
+            binary.setFloat32(mesh.position.y);
+            binary.setFloat32(areaLocation.props.radius);
+            binary.writeString(areaLocation.props.nodeName, 0x0, true, 0x70);
+
+            //unkFlags
+            binary.setInt32(areaLocation.props.unkFlags.length);
+            areaLocation.props.unkFlags.forEach(function (flag) {
+                binary.setInt32(flag);
+            });
+
+            //unkFlags2
+            if (game.game === Games.GAMES.MANHUNT_2){
+                if (areaLocation.props.unkFlags2 === undefined)
+                    areaLocation.props.unkFlags2 = [];
+
+                binary.setInt32(areaLocation.props.unkFlags2.length);
+                areaLocation.props.unkFlags2.forEach(function (flag) {
+                    binary.setInt32(flag);
+                });
             }
 
-            entry.waypoints = Grf.parseWayPointBlock(binary);
+            binary.setInt32(areaLocation.props.waypoints.length);
+            areaLocation.props.waypoints.forEach(function (waypoint) {
+                binary.setInt32(waypoint.linkId);
+                binary.setInt32(waypoint.type);
 
-            if (game === Games.GAMES.MANHUNT_2){
-                let zero1 = binary.int32();
-                if (zero1 !== 0) console.error("zero is not zero ...");
-                let zero2 = binary.int32();
-                if (zero2 !== 0) console.error("zero2 is not zero ...");
+                binary.setInt32(waypoint.relation.length);
+                waypoint.relation.forEach(function (flag) {
+                    binary.setInt32(flag);
+                });
+            });
+
+            if (game.game === Games.GAMES.MANHUNT_2){
+                binary.setInt32(0);
+                binary.setInt32(0);
             }
+        });
 
-            entries.push(entry);
-        }
-
-        return entries;
     }
 
-
-    static parseBlock(binary){
-        let count = binary.int32();
-
-        let result = [];
-        for(let x = 0; x < count; x++){
-            result.push(binary.int32());
-        }
-
-        return result;
-    }
-
-    static parseWayPointBlock(binary){
-
-        let count = binary.int32();
-
-        let result = [];
-        for(let x = 0; x < count; x++){
-
-            let linkId1 = binary.int32();
-            let type = binary.int32();
-
-            let entry = {
-                'linkId' :  linkId1,
-                'type' :  type,
-                'relation' :  Grf.parseBlock(binary)
-            };
-
-            result.push(entry);
-        }
-
-        return result;
-    }
 
 
 }
