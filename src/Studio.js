@@ -85,6 +85,7 @@ export default class Studio{
         catSave.addType(new ActionType({
             id: 'save-waypoint',
             label: 'Waypoint',
+            enabled: false,
             callback: function (states) {
 
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
@@ -108,7 +109,8 @@ export default class Studio{
          */
         let catWaypoint = new Category({
             id: 'waypoint',
-            label: 'Waypoint'
+            label: 'Waypoint',
+            enabled: false
         });
 
         catWaypoint.addType(new CheckboxType({
@@ -235,7 +237,7 @@ console.log("EHH nodes?", node);
 
 
                             catWaypointAreaEntry.addType(new ActionType({
-                                id: 'waypoint-area-gen-' + area.name,
+                                id: `waypoint-area-${area.name}-gen`,
                                 label: 'Generate Mesh',
                                 callback: function (states) {
 
@@ -262,6 +264,24 @@ console.log("EHH nodes?", node);
 
 
                                     Studio.menu.closeAll();
+                                }
+                            }));
+
+                            catWaypointAreaEntry.addType(new ActionType({
+                                id: `waypoint-area-${area.name}-clear`,
+                                label: 'Clear',
+                                callback: function (states) {
+
+                                    let studioSceneInfo = StudioScene.getStudioSceneInfo();
+                                    if (studioSceneInfo === null)
+                                        return;
+
+                                    let studioScene = studioSceneInfo.studioScene;
+                                    if (studioScene instanceof SceneMap) {
+
+                                        let waypoints = studioScene.waypoints;
+                                        waypoints.clear(area.name);
+                                    }
                                 }
                             }));
 
@@ -309,6 +329,10 @@ console.log("EHH nodes?", node);
         }));
 
         Studio.menu.addCategory(catWaypoint);
+        //
+        // let test = Studio.menu.getById('waypoint-area-create');
+        // console.log("hhh",test);
+
         //
         // Menu.create();
         // Menu.addCategory('File');

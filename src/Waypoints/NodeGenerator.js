@@ -107,7 +107,7 @@ export default class NodeGenerator{
                 if (side === "back" ) newPos.x = ogPos.x - (i * 2);
 
                 //its going down, stop here
-                if (_this.getDistanceToBottomMesh(newPos) > 1) continue;
+                if (_this.getDistanceToBottomMesh(newPos) > 1.5) continue;
 
                 if (ogPos.x + '_' + ogPos.y + '_' + ogPos.z === newPos.x + '_' + newPos.y + '_' + newPos.z)
                     continue;

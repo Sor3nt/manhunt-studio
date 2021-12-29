@@ -15,7 +15,7 @@ export default class ActionType extends AbstractType{
 
     /**
      *
-     * @param props {{id:mix, label:string, callback: function}}
+     * @param props {{id:mix, label:string, enabled: boolean, callback: function}}
      */
     constructor(props){
         super(props);
@@ -35,7 +35,8 @@ export default class ActionType extends AbstractType{
         this.element.find('span')
             .html(this.label)
             .click(function () {
-                _this.triggerClick();
+                if (_this.enabled)
+                    _this.triggerClick();
             })
         ;
     }

@@ -62,6 +62,11 @@ export default class Waypoints{
 
         this.createAreasAndNodes();
         this.createRoutes();
+
+        let test = Studio.menu.getById('waypoint');
+        console.log("hhh",test);
+        test.enable();
+
     }
 
     nodeVisible(state){

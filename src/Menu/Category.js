@@ -7,6 +7,8 @@ export default class Category {
      */
     id = null;
 
+    enabled = true;
+
     states = {
         open: false
     };
@@ -43,10 +45,11 @@ export default class Category {
 
     /**
      *
-     * @param props {{id:mix, label: string, callback: function }}
+     * @param props {{id:mix, label: string, enabled:boolean, callback: function }}
      */
     constructor(props){
         this.id = props.id;
+        this.enabled = props.enabled === undefined ? true : props.enabled;
         this.label = props.label;
         this.callback = props.callback || null;
         this.states.open = false;
@@ -63,9 +66,13 @@ export default class Category {
         this.element.find('span')
             .html(this.label)
             .click(function () {
-                _this.triggerClick();
+                if (_this.enabled)
+                    _this.triggerClick();
             })
         ;
+console.log(this.enabled);
+        if (this.enabled === false)
+            this.disable();
 
         this.list = this.element.find('ul');
         this.list.hide();
@@ -73,11 +80,12 @@ export default class Category {
 
     triggerClick(){
         this.list.hide();
-        if (this.states.open === false){
-            this.list.show();
-        }
-
         this.states.open = !this.states.open;
+        if (this.states.open === true){
+            this.list.show();
+        }else{
+            this.close();
+        }
 
         if (this.callback !== null)
             this.callback(this.states);
@@ -89,6 +97,10 @@ export default class Category {
 
         this.states.open = false;
         this.list.hide();
+
+        this.children.forEach(function (category) {
+            category.close();
+        });
     }
 
 
@@ -106,8 +118,13 @@ export default class Category {
         this.children.push(menuType);
         this.childrenById[menuType.id] = menuType;
 
+        let container = jQuery('<li>');
+
+        if (menuType.enabled === false)
+            menuType.disable();
+
         this.list.append(
-            jQuery('<li>').append(menuType.element)
+            container.append(menuType.element)
         );
     }
 
@@ -126,10 +143,36 @@ export default class Category {
         this.list.append(category.element);
     }
 
-    getTypeById(id){
-        if (this.childrenById[id] === undefined)
-            return false;
+    getById(id){
+        if (this.childrenById[id] !== undefined){
+            console.log("found", this.childrenById[id], id);
+            return this.childrenById[id];
 
-        return this.childrenById[id];
+        }
+
+        let subResult = false;
+        this.children.forEach(function (child) {
+            if (subResult !== false) return;
+            if (child instanceof Category){
+                console.log("check", child.id, id);
+
+                subResult = child.getById(id);
+            }
+
+        });
+
+        return subResult;
+
+    }
+
+
+    enable(){
+        this.element.removeClass('disabled');
+        this.enabled = true;
+    }
+
+    disable(){
+        this.element.addClass('disabled');
+        this.enabled = false;
     }
 }

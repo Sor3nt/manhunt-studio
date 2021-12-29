@@ -40,11 +40,21 @@ export default class Menu{
     getById(id){
         /**
          *
-         * @type {AbstractType|null}
+         * @type {AbstractType|bool}
          */
-        let found = null;
+        let found = false;
         this.children.forEach(function (category) {
-            let type = category.getTypeById(id);
+            if (found !== false)
+                return;
+            console.log("check", category.id, id);
+            if (category.id === id){
+                console.log("found", category.id, id);
+                found = category;
+                return;
+            }
+
+
+            let type = category.getById(id);
             if (type !== false)
                 found = type;
         });

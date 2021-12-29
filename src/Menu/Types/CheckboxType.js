@@ -36,7 +36,8 @@ export default class CheckboxType extends AbstractType{
         this.element.find('span')
             .html(this.label)
             .click(function () {
-                _this.triggerClick();
+                if (_this.enabled)
+                    _this.triggerClick();
             })
         ;
     }
