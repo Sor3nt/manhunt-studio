@@ -50,14 +50,22 @@ export default class NodeGenerator{
 
     /**
      *
-     * @type {Area|string}
+     * @type {Area|null}
      */
     area = null;
+
     /**
      *
-     * @param props {{area:Area, scene: Scene, meshes: Mesh[], nextNodeId: int, game: Game, callback: function, position: Vector3}}
+     * @type {string|null}
+     */
+    level = null;
+
+    /**
+     *
+     * @param props {{level:string, area:Area, scene: Scene, meshes: Mesh[], nextNodeId: int, game: Game, callback: function, position: Vector3}}
      */
     constructor(props){
+        this.level = props.level;
         this.area = props.area;
         this.scene = props.scene;
         this.worldMeshes = props.meshes;
@@ -120,7 +128,7 @@ export default class NodeGenerator{
 
             let areaLocation = new Result(
                 Studio.AREA_LOCATION,
-                `ai_${position.x}_${position.y}_${position.z}`,
+                '',
                 new ArrayBuffer(0),
                 0,
                 {
@@ -128,6 +136,7 @@ export default class NodeGenerator{
                     areaName: _this.area.name,
                     position: position,
                     radius: 0.5,
+                    name: "",
                     nodeName: "",
                     unkFlags: [],
                     waypoints: []
@@ -137,6 +146,9 @@ export default class NodeGenerator{
                     debugger;
                 }
             );
+
+            areaLocation.level = _this.level;
+
 
             _this.nextNodeId++;
             let node = new Node(areaLocation);
@@ -213,30 +225,39 @@ export default class NodeGenerator{
 
         let _this = this;
 
-        this.children.forEach(function (waypointOuter) {
-            waypointOuter.entity.props.waypoints = [];
-            _this.children.forEach(function (waypointInner) {
+        let waypoints = this.game.findBy({
+            level: this.level,
+            type: Studio.AREA_LOCATION
+        });
+
+        waypoints.forEach(function (waypoint) {
+            waypoint.props.waypoints = [];
+        });
+
+
+        waypoints.forEach(function (waypointOuter) {
+            waypoints.forEach(function (waypointInner) {
                 if (waypointInner === waypointOuter) return;
 
-                let dist = waypointOuter.getMesh().position.distanceTo(waypointInner.getMesh().position);
+                let dist = waypointOuter.mesh.position.distanceTo(waypointInner.mesh.position);
                 if (dist <= 3.2){
 
                     let dir = new Vector3();
-                    dir.subVectors( waypointInner.position, waypointOuter.position ).normalize();
+                    dir.subVectors( waypointInner.mesh.position, waypointOuter.mesh.position ).normalize();
 
-                    let collisions = (new Raycaster( waypointOuter.position, dir )).intersectObjects( _this.worldMeshes );
+                    let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.worldMeshes );
 
                     if (collisions.length === 0) return;
                     if (collisions[0].distance < 2.5) return;
 
-                    waypointOuter.entity.props.waypoints.push({
-                        linkId: waypointInner.id,
+                    waypointOuter.props.waypoints.push({
+                        linkId: waypointInner.props.id,
                         type: 3,
                         relation: []
                     });
 
-                    waypointInner.entity.props.waypoints.push({
-                        linkId: waypointOuter.id,
+                    waypointInner.props.waypoints.push({
+                        linkId: waypointOuter.props.id,
                         type: 3,
                         relation: []
                     });
@@ -245,4 +266,44 @@ export default class NodeGenerator{
             });
         });
     }
+//     generateRoutes(){
+//
+//         let _this = this;
+//
+//         //         let waypoints = this.game.findBy({
+// //             type: Studio.AREA_LOCATION
+// //         });
+//
+//         this.children.forEach(function (waypointOuter) {
+//             waypointOuter.entity.props.waypoints = [];
+//             _this.children.forEach(function (waypointInner) {
+//                 if (waypointInner === waypointOuter) return;
+//
+//                 let dist = waypointOuter.getMesh().position.distanceTo(waypointInner.getMesh().position);
+//                 if (dist <= 3.2){
+//
+//                     let dir = new Vector3();
+//                     dir.subVectors( waypointInner.position, waypointOuter.position ).normalize();
+//
+//                     let collisions = (new Raycaster( waypointOuter.position, dir )).intersectObjects( _this.worldMeshes );
+//
+//                     if (collisions.length === 0) return;
+//                     if (collisions[0].distance < 2.5) return;
+//
+//                     waypointOuter.entity.props.waypoints.push({
+//                         linkId: waypointInner.id,
+//                         type: 3,
+//                         relation: []
+//                     });
+//
+//                     waypointInner.entity.props.waypoints.push({
+//                         linkId: waypointOuter.id,
+//                         type: 3,
+//                         relation: []
+//                     });
+//                 }
+//
+//             });
+//         });
+//     }
 }

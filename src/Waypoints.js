@@ -125,6 +125,7 @@ export default class Waypoints{
             nextNodeId: this.nextNodeId,
             position: position,
             game: this.game,
+            level: this.level,
             callback: function (lastNodeId, nodes) {
 
                 nodes.forEach(function (node) {
@@ -155,6 +156,7 @@ export default class Waypoints{
                 area.addNode(areaNode);
                 _this.createNodeRelations(area);
 
+                areaNode.entity.level = _this.level;
                 _this.game.addToStorage(areaNode);
 
                 _this.nextNodeId++;
