@@ -58,6 +58,7 @@ export default class Node{
     constructor(entity){
         this.id = entity.props.id;
         this.entity = entity;
+        this.name = entity.name || 'newNode';
 
         if(entity.props.position !== undefined)
             this.position = entity.props.position;
@@ -113,8 +114,8 @@ export default class Node{
         geometry.verticesNeedUpdate = true;
         geometry.dynamic = true;
 
-        geometry.vertices.push(this.getMesh().position);
-        geometry.vertices.push(node.getMesh().position);
+        geometry.vertices.push(this.position);
+        geometry.vertices.push(node.position);
 
         let line = new Line(geometry, material);
         line.name = `${this.name}_to_${node.name}`;

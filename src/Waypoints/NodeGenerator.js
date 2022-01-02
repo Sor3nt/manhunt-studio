@@ -25,6 +25,12 @@ export default class NodeGenerator{
 
     /**
      *
+     * @type {Vector3[]}
+     */
+    generatedPoints = [];
+
+    /**
+     *
      * @type {number}
      */
     nextNodeId = 0;
@@ -74,7 +80,45 @@ export default class NodeGenerator{
         this.callback = props.callback;
 
         this.generateFromPosition(props.position);
-        this.generateRoutes();
+
+        let _this = this;
+        this.generatedPoints.forEach(function (position) {
+
+            let areaLocation = new Result(
+                Studio.AREA_LOCATION,
+                `pos_${position.x}_${position.y}_${position.z}`,
+                new ArrayBuffer(0),
+                0,
+                {
+                    id: _this.nextNodeId,
+                    areaName: _this.area.name,
+                    position: position.clone(),
+                    radius: 0.5,
+                    name: "",
+                    nodeName: "",
+                    unkFlags: [],
+                    waypoints: []
+                },
+                function () {
+                    console.error("HMMM TODO");
+                    debugger;
+                }
+            );
+
+            areaLocation.level = _this.level;
+
+            _this.nextNodeId++;
+            let node = new Node(areaLocation);
+            _this.children.push(node);
+
+            _this.area.addNode(node);
+
+            _this.scene.add(node.getMesh());
+            _this.game.addToStorage(areaLocation);
+        });
+
+
+        // this.generateRoutes();
 
         this.callback(this.nextNodeId, this.children);
     }
@@ -118,54 +162,12 @@ export default class NodeGenerator{
                     continue;
 
                 _this.generatedPointsCache.push(posString);
+                _this.generatedPoints.push(newPos.clone());
 
                 newPoints.push(newPos.clone());
             }
         });
 
-
-        newPoints.forEach(function (position) {
-
-            let areaLocation = new Result(
-                Studio.AREA_LOCATION,
-                '',
-                new ArrayBuffer(0),
-                0,
-                {
-                    id: _this.nextNodeId,
-                    areaName: _this.area.name,
-                    position: position,
-                    radius: 0.5,
-                    name: "",
-                    nodeName: "",
-                    unkFlags: [],
-                    waypoints: []
-                },
-                function () {
-                    console.error("HMMM TODO");
-                    debugger;
-                }
-            );
-
-            areaLocation.level = _this.level;
-
-
-            _this.nextNodeId++;
-            let node = new Node(areaLocation);
-            _this.children.push(node);
-
-            //take sure we do not clip inside a wall
-            let adjusted = node.position.clone();
-            _this.adjustPosition(adjusted);
-            node.getMesh().position.copy(adjusted);
-            node.position = adjusted;
-            areaLocation.props.position = adjusted;
-
-            _this.area.addNode(node);
-
-            _this.scene.add(node.getMesh());
-            _this.game.addToStorage(areaLocation);
-        });
 
         newPoints.forEach(function (pos) {
             _this.generateFromPosition(pos);
@@ -221,59 +223,40 @@ export default class NodeGenerator{
             back: col4.length === 0 ? false : col4[0].distance
         };
     }
-
-    generateRoutes(){
-
-        let _this = this;
-
-        let waypoints = this.game.findBy({
-            level: this.level,
-            type: Studio.AREA_LOCATION
-        });
-
-        waypoints.forEach(function (waypoint) {
-            waypoint.props.waypoints = [];
-        });
-
-
-        waypoints.forEach(function (waypointOuter) {
-            let tmpLow = 10000000;
-
-            waypoints.forEach(function (waypointInner) {
-                if (waypointInner === waypointOuter) return;
-
-                let dist = waypointOuter.mesh.position.distanceTo(waypointInner.mesh.position);
-
-                if (tmpLow > dist) tmpLow = dist;
-
-                if (dist <= 3.05){
-
-                    // let dir = new Vector3();
-                    // dir.subVectors( waypointInner.mesh.position, waypointOuter.mesh.position ).normalize();
-                    //
-                    // let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.worldMeshes );
-                    //
-                    // if (collisions.length === 0) return;
-                    // if (collisions[0].distance < 1.05) return;
-
-                    waypointOuter.props.waypoints.push({
-                        linkId: waypointInner.props.id,
-                        type: 3,
-                        relation: []
-                    });
-                    //
-                    // waypointInner.props.waypoints.push({
-                    //     linkId: waypointOuter.props.id,
-                    //     type: 3,
-                    //     relation: []
-                    // });
-                }
-
-            });
-
-            console.log(waypointOuter.props.waypoints, "rel geneerated min dist", tmpLow);
-        });
-    }
+    //
+    // generateRoutes(){
+    //
+    //     let waypoints = this.game.findBy({
+    //         level: this.level,
+    //         type: Studio.AREA_LOCATION
+    //     });
+    //
+    //     waypoints.forEach(function (waypoint) {
+    //         waypoint.props.waypoints = [];
+    //     });
+    //
+    //
+    //     waypoints.forEach(function (waypointOuter) {
+    //         // let tmpLow = 10000000;
+    //
+    //         waypoints.forEach(function (waypointInner) {
+    //             if (waypointInner === waypointOuter) return;
+    //
+    //             let dist = waypointOuter.mesh.position.distanceTo(waypointInner.mesh.position);
+    //             if (dist <= 3.05){
+    //
+    //                 waypointOuter.props.waypoints.push({
+    //                     linkId: waypointInner.props.id,
+    //                     type: 3,
+    //                     relation: []
+    //                 });
+    //
+    //             }
+    //
+    //         });
+    //
+    //     });
+    // }
 //     generateRoutes(){
 //
 //         let _this = this;

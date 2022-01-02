@@ -78,6 +78,7 @@ export default class Placing{
         Mouse.removeOnMouseMove(this.binding.mouseMove);
 
         this.node.entity.props.position = this.node.getMesh().position.clone();
+        this.node.position = this.node.getMesh().position.clone();
 
         this.onPlaceCallback(this.node);
     }
@@ -105,11 +106,12 @@ export default class Placing{
 
         let areaLocation = new Result(
             Studio.AREA_LOCATION,
-            ``,
+            `new_node_${this.nextNodeId}`,
             new ArrayBuffer(0),
             0,
             {
                 id: this.nextNodeId,
+                name: "",
                 areaName: this.areaName,
                 position: new Vector3(),
                 radius: 0.5,
