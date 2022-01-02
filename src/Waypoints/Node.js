@@ -1,4 +1,5 @@
 import {Geometry, Line, LineBasicMaterial, BoxGeometry, Group, Mesh, MeshBasicMaterial, Vector3} from "../Vendor/three.module.js";
+import Storage from "../Storage.js";
 
 export default class Node{
 
@@ -22,9 +23,9 @@ export default class Node{
 
     /**
      *
-     * @type {{Group}}
+     * @type {{{node:Node, line:line}}}
      */
-    linesByNodeId = {};
+    relatedNodes = {};
 
     /**
      *
@@ -94,6 +95,10 @@ export default class Node{
      * @param node {Node}
      */
     addRelation(node){
+
+        if(node === this)
+            return;
+
         if (this.children.indexOf(node) !== -1)
             return;
 
@@ -101,23 +106,42 @@ export default class Node{
 
 
         let material = new LineBasicMaterial({color: 0x00ff00});
-        material.opacity = 0.2;
-        material.transparent = true;
+        // material.opacity = 0.2;
+        // material.transparent = true;
 
         let geometry = new Geometry();
         geometry.verticesNeedUpdate = true;
         geometry.dynamic = true;
 
-        geometry.vertices.push(this.position);
-        geometry.vertices.push(node.position);
+        geometry.vertices.push(this.getMesh().position);
+        geometry.vertices.push(node.getMesh().position);
 
         let line = new Line(geometry, material);
         line.name = `${this.name}_to_${node.name}`;
 
         this.lines.push(line);
-        this.linesByNodeId[node.id] = line;
+        this.relatedNodes[node.id] = {
+            node: node,
+            line: line
+        };
 
         this.getMesh().parent.add(line);
+    }
+
+    /**
+     *
+     * @param node {Node}
+     */
+    removeRelation(node){
+
+        let relNode = this.relatedNodes[node.id];
+        if (relNode === undefined) return;
+
+        relNode.node.removeRelation(node);
+        this.getMesh().parent.remove(relNode.line);
+
+        delete this.relatedNodes[node.id];
+
     }
 
     /**
@@ -146,10 +170,29 @@ export default class Node{
      */
     highlight(state){
         let mesh = this.getMesh().children[0];
-        mesh.material.color.set(state ? 0xff0000 : 0x00ff00);
-        mesh.material.opacity = state ? 1 : 0.2;
+        mesh.material.color.set(state ? 0xff0000 : this.color);
+        // mesh.material.opacity = state ? 1 : 0.2;
         mesh.material.transparent = !state;
         mesh.material.needsUpdate = true;
+    }
+
+    remove(){
+
+        for(let i in this.relatedNodes){
+            if (!this.relatedNodes.hasOwnProperty(i)) continue;
+
+            this.relatedNodes[i].node.removeRelation(this);
+        }
+
+        let mesh = this.getMesh();
+        let scene = this.getMesh().parent;
+        scene.remove(mesh);
+
+        this.lines.forEach(function (line) {
+            scene.remove(line);
+        });
+
+        Storage.remove(this.entity);
     }
 
 }

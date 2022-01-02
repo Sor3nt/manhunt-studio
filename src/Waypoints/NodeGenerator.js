@@ -159,6 +159,7 @@ export default class NodeGenerator{
             _this.adjustPosition(adjusted);
             node.getMesh().position.copy(adjusted);
             node.position = adjusted;
+            areaLocation.props.position = adjusted;
 
             _this.area.addNode(node);
 
@@ -236,34 +237,41 @@ export default class NodeGenerator{
 
 
         waypoints.forEach(function (waypointOuter) {
+            let tmpLow = 10000000;
+
             waypoints.forEach(function (waypointInner) {
                 if (waypointInner === waypointOuter) return;
 
                 let dist = waypointOuter.mesh.position.distanceTo(waypointInner.mesh.position);
-                if (dist <= 3.2){
 
-                    let dir = new Vector3();
-                    dir.subVectors( waypointInner.mesh.position, waypointOuter.mesh.position ).normalize();
+                if (tmpLow > dist) tmpLow = dist;
 
-                    let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.worldMeshes );
+                if (dist <= 3.05){
 
-                    if (collisions.length === 0) return;
-                    if (collisions[0].distance < 2.5) return;
+                    // let dir = new Vector3();
+                    // dir.subVectors( waypointInner.mesh.position, waypointOuter.mesh.position ).normalize();
+                    //
+                    // let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.worldMeshes );
+                    //
+                    // if (collisions.length === 0) return;
+                    // if (collisions[0].distance < 1.05) return;
 
                     waypointOuter.props.waypoints.push({
                         linkId: waypointInner.props.id,
                         type: 3,
                         relation: []
                     });
-
-                    waypointInner.props.waypoints.push({
-                        linkId: waypointOuter.props.id,
-                        type: 3,
-                        relation: []
-                    });
+                    //
+                    // waypointInner.props.waypoints.push({
+                    //     linkId: waypointOuter.props.id,
+                    //     type: 3,
+                    //     relation: []
+                    // });
                 }
 
             });
+
+            console.log(waypointOuter.props.waypoints, "rel geneerated min dist", tmpLow);
         });
     }
 //     generateRoutes(){

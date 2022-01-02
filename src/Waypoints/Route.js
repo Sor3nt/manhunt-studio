@@ -77,7 +77,7 @@ export default class Route{
 
         let mesh = this.getMesh();
         mesh.material.color.set(state ? 0xff0000 : 0x00ff00);
-        mesh.material.opacity = state ? 1 : 0.5;
+        // mesh.material.opacity = state ? 1 : 0.5;
         mesh.material.transparent = !state;
         mesh.material.needsUpdate = true;
 

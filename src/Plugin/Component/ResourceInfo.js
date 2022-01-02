@@ -5,6 +5,7 @@ import Storage from "../../Storage.js";
 import Games from "../../Plugin/Games.js";
 import StudioScene from "../../Scene/StudioScene.js";
 import Result from "../Loader/Result.js";
+import SceneMap from "../../Scene/SceneMap.js";
 
 export default class ResourceInfo extends AbstractComponent{
 
@@ -37,91 +38,91 @@ console.log("CLICK", entry);
         let object;
         let materialInfo;
         let normalizedModel;
+        let _this = this;
         switch (entry.type) {
 
             case Studio.AREA_LOCATION:
 
                 result.push({
-                    label: '',
-                    value: `<span>Clear</span>`,
+                    label: 'Position',
+                    value: `
+<span class="badge badge-secondary">x</span>:<input name="x" value="${entry.mesh.position.x.toFixed(2)}" style="width: 40px;" /> 
+<span class="badge badge-secondary">y</span>:<input name="y" value="${entry.mesh.position.y.toFixed(2)}" style="width: 40px;" />
+<span class="badge badge-secondary">z</span>:<input name="z" value="${entry.mesh.position.z.toFixed(2)}" style="width: 40px;" />
+`,
+                    /**
+                     * @param element {jQuery}
+                     */
                     postprocess: function ( element ) {
-                        element.find('span').click(function () {
 
-                            /**
-                             * @type {SceneMap}
-                             */
-                            let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                        element.find('input').keyup(function (e) {
 
-                            studioScene.waypoints.clear();
+                            let attr = jQuery(e.target).attr('name');
+                            let value = parseFloat(jQuery(e.target).val());
+
+                            if (attr === "x")
+                                entry.mesh.position.x = value;
+                            if (attr === "y")
+                                entry.mesh.position.y = value;
+                            if (attr === "z")
+                                entry.mesh.position.z = value;
+
                         });
+
                     }
                 });
 
                 result.push({
-                    label: '',
-                    value: `<span>create</span>`,
+                    label: 'Node name',
+                    value: `<input value="${entry.props.nodeName}" />`,
+                    /**
+                     * @param element {jQuery}
+                     */
                     postprocess: function ( element ) {
-                        element.find('span').click(function () {
-
-                            /**
-                             * @type {SceneMap}
-                             */
-                            let studioScene = StudioScene.getStudioSceneInfo().studioScene;
-
-
-                            let newNode = new Result(
-                                Studio.AREA_LOCATION,
-                                `ai`,
-                                '',
-                                0,
-                                {
-
-                                },
-                                function () {
-                                    console.error("HMMM TODO");
-                                    debugger;
-                                }
-                            );
-
-                            studioScene.waypoints.createNode(newNode);
-
-
-                            // studioScene.waypoints.createNewNode();
+                        element.find('input').keyup(function (e) {
+                            entry.props.nodeName = jQuery(e.target).val();
                         });
+
                     }
                 });
+
 
                 result.push({
-                    label: 'Mesh',
-                    value: `<span>GEN</span>`,
+                    label: 'Radius',
+                    value: `<input value="${entry.props.radius}" />`,
+                    /**
+                     * @param element {jQuery}
+                     */
                     postprocess: function ( element ) {
-                        element.find('span').click(function () {
-
-                            /**
-                             * @type {SceneMap}
-                             */
-                            let studioScene = StudioScene.getStudioSceneInfo().studioScene;
-
-                            studioScene.waypoints.generateMeshByEntity(entry);
+                        element.find('input').keyup(function (e) {
+                            entry.props.radius = parseFloat(jQuery(e.target).val());
                         });
+
                     }
                 });
+
 
                 result.push({
-                    label: 'Route',
-                    value: `<span>GEN</span>`,
-                    postprocess: function ( element ) {
-                        element.find('span').click(function () {
-
+                    label: '&nbsp;',
+                    value: `<span>Remove</span>`,
+                    onClick: function (  ) {
+                        let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                        if (studioScene instanceof SceneMap){
+                            let node = studioScene.waypoints.nodeByNodeId[entry.props.id];
+                            node.remove();
                             /**
-                             * @type {SceneMap}
+                             *
+                             * @type {Walk}
                              */
-                            let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                            let control = StudioScene.getStudioSceneInfo().control;
+                            control.setMode('fly');
+                            _this.element.html('');
+                        }
 
-                            studioScene.waypoints.generateRoutes();
-                        });
                     }
                 });
+
+
 
 
                 break;

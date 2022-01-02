@@ -70,7 +70,7 @@ export default class Category {
                     _this.triggerClick();
             })
         ;
-console.log(this.enabled);
+
         if (this.enabled === false)
             this.disable();
 
@@ -106,6 +106,8 @@ console.log(this.enabled);
 
     clear(){
         this.list.html("");
+
+
         this.children = [];
         this.childrenById = {};
     }
@@ -145,17 +147,13 @@ console.log(this.enabled);
 
     getById(id){
         if (this.childrenById[id] !== undefined){
-            console.log("found", this.childrenById[id], id);
             return this.childrenById[id];
-
         }
 
         let subResult = false;
         this.children.forEach(function (child) {
             if (subResult !== false) return;
             if (child instanceof Category){
-                console.log("check", child.id, id);
-
                 subResult = child.getById(id);
             }
 

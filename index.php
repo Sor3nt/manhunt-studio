@@ -407,6 +407,11 @@ underline">Select Level</h5>
                 </div>
 
 
+                <div class="info" data-info-id="route-selection" style="display: none">
+                    <b>CLICK</b> to build Route, <b>ESC</b> to Stop edit.
+                </div>
+
+
 
                 <div id="webgl" style="z-index: 1;position: absolute; top:25px; width: 100%; height: calc(100% - 25px - 15px); background: #3e3e3e;"></div>
 

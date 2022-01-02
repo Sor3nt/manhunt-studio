@@ -81,6 +81,7 @@ export default class Walk {
 
             // if (event.code === 'Escape') {
             //
+
             //     _this.keyStates.modeSelectObject = false;
             //     _this.setMode("fly");
             // }
@@ -103,12 +104,12 @@ export default class Walk {
         });
 
         WebGL.renderer.domElement.addEventListener('mousedown', () => {
-            if (this.mode === "fly" || this.mode === "transform" || this.mode === "placing")
+            if (this.mode === "fly" || this.mode === "transform" || this.mode === "route-selection")
                 document.body.requestPointerLock();
         });
 
         document.body.addEventListener('mousemove', (event) => {
-            if (document.pointerLockElement === document.body && (_this.mode === "fly" || _this.mode === "select")) {
+            if (document.pointerLockElement === document.body && (_this.mode === "fly" || _this.mode === "select" || _this.mode === "route-selection")) {
                 sceneInfo.camera.rotation.y -= event.movementX / 500;
                 sceneInfo.camera.rotation.x -= event.movementY / 500;
             }
@@ -290,7 +291,7 @@ console.error("TODO");
 
     update(delta) {
 
-        if ((this.mode === "fly" ) && document.pointerLockElement === document.body) {
+        if ((this.mode === "fly" || this.mode === "route-selection" ) && document.pointerLockElement === document.body) {
             this.flyControls(delta);
 
             const damping = Math.exp(-3 * delta) - 1;
@@ -340,16 +341,6 @@ console.error("TODO");
     setMode(mode) {
 
         console.log("current mode", this.mode, "new mode", mode);
-        //
-        // if (this.mode === "waypoint" && mode !== "waypoint"){
-        //     //show all game objects
-        //     this.sceneInfo.scene.children.forEach(function (child) {
-        //         if (child.type === "Group" && child.name !== "scene")
-        //             child.visible = true;
-        //     });
-        //
-        //     this.sceneInfo.camera.up.set(0, 1, 0);
-        // }
 
         if (this.mode === "transform" && mode !== "transform") {
             this.transform.detach();
@@ -369,18 +360,6 @@ console.error("TODO");
             if (Config.outlineActiveObject)
                 this.outlinePass.selectedObjects = [];
 
-        // }else if (mode === "waypoint") {
-        //
-        //     //hide all game objects
-        //     this.sceneInfo.scene.children.forEach(function (child) {
-        //         if (child.type === "Group" && child.name !== "scene")
-        //             child.visible = false;
-        //     });
-        //
-        //     this.sceneInfo.camera.position.set(0, 10, 0);
-        //     this.sceneInfo.camera.up.set(0, 0, -1);
-        //     this.sceneInfo.camera.lookAt(0, 0, 0);
-
         }else if (mode === "transform") {
             this.orbit.enabled = true;
             this.keyStates.modeSelectObject = true;
@@ -392,6 +371,8 @@ console.error("TODO");
             Status.showInfo('select');
         }else if (mode === "transform"){
             Status.showInfo('transform');
+        }else if (mode === "route-selection"){
+            Status.showInfo('route-selection');
         }
 
         this.mode = mode;

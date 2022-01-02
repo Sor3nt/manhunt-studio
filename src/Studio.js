@@ -9,7 +9,6 @@ import StudioScene from "./Scene/StudioScene.js";
 import CheckboxType from "./Menu/Types/CheckboxType.js";
 import Category from "./Menu/Category.js";
 import SceneMap from "./Scene/SceneMap.js";
-import SelectboxType from "./Menu/Types/SelectboxType.js";
 import ActionType from "./Menu/Types/ActionType.js";
 import Keyboard from "./Keyboard.js";
 import Mouse from "./Mouse.js";
@@ -85,11 +84,12 @@ export default class Studio{
         catSave.addType(new ActionType({
             id: 'save-waypoint',
             label: 'Waypoint',
-            enabled: false,
+            // enabled: false,
             callback: function (states) {
 
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                 if (studioScene instanceof SceneMap){
+                    // console.log("ok");
                     let game = Games.getGame(studioScene.mapEntry.gameId);
                     let level = studioScene.mapEntry.level;
 
@@ -155,10 +155,69 @@ export default class Studio{
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                 if (studioScene instanceof SceneMap){
                     studioScene.waypoints.routeVisible(states.active);
+                    studioScene.waypoints.routeHighlight(states.active);
                 }
             }
         }));
 
+
+        /**
+         * Waypoint => Routes
+         */
+        // let catWaypointRoutes = new Category({
+        //     id: 'waypoint-routes',
+        //     label: 'Routes',
+        //     callback: function (states) {
+        //         catWaypointRoutes.clear();
+        //
+        //         let studioSceneInfo = StudioScene.getStudioSceneInfo();
+        //         if (studioSceneInfo === null)
+        //             return;
+        //
+        //         let studioScene = studioSceneInfo.studioScene;
+        //         if (studioScene instanceof SceneMap) {
+        //
+        //             let waypoints = studioScene.waypoints;
+        //             waypoints.routes.forEach(function (route) {
+        //
+        //                 let catWaypointRouteEntry = new Category({
+        //                     id: 'waypoint-route-' + route.name,
+        //                     label: route.name,
+        //                     callback: function (states) {
+        //
+        //
+        //
+        //                     }
+        //                 });
+        //
+        //
+        //                 catWaypointRouteEntry.addType(new ActionType({
+        //                     id: 'waypoint-route-route-' + route.name,
+        //                     label: 'Add node',
+        //                     callback: function (states) {
+        //                         waypoints.routeVisible(false);
+        //                         waypoints.routeHighlight(false);
+        //                         route.setVisible(true);
+        //                         route.highlight(true);
+        //
+        //                         /**
+        //                          * @type {Walk}
+        //                          */
+        //                         let control = studioSceneInfo.control;
+        //                         control.setMode('route-selection');
+        //
+        //                         waypoints.routeSelection(route);
+        //                     }
+        //                 }));
+        //
+        //
+        //                 catWaypointRoutes.addSubCategory(catWaypointRouteEntry);
+        //
+        //             });
+        //         }
+        //     }
+        // });
+        // catWaypoint.addSubCategory(catWaypointRoutes);
 
         /**
          * Waypoint => Area
@@ -192,6 +251,7 @@ export default class Studio{
                                 Studio.menu.closeAll();
                             }
                         }));
+
 
                         waypoints.children.forEach(function (area) {
 
@@ -266,6 +326,25 @@ console.log("EHH nodes?", node);
                                     Studio.menu.closeAll();
                                 }
                             }));
+
+//                             catWaypointAreaEntry.addType(new ActionType({
+//                                 id: `waypoint-area-${area.name}-rel-gen`,
+//                                 label: 'Generate Relations',
+//                                 callback: function (states) {
+//
+//                                     /**
+//                                      * We need to take sure the nodes are showed
+//                                      */
+//                                     let showNodesType = Studio.menu.getById('waypoint-show-nodes');
+//                                     if (showNodesType.states.active === false){
+//                                         showNodesType.triggerClick();
+//                                     }
+// funzt nicht weil erst generateRoutes von NodeGenerator erstellt die relations....
+//                                     waypoints.createNodeRelations(area);
+//
+//                                     Studio.menu.closeAll();
+//                                 }
+//                             }));
 
                             catWaypointAreaEntry.addType(new ActionType({
                                 id: `waypoint-area-${area.name}-clear`,

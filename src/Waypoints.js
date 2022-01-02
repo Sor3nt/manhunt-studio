@@ -5,6 +5,7 @@ import Area from "./Waypoints/Area.js";
 import Route from "./Waypoints/Route.js";
 import Placing from "./Waypoints/Placing.js";
 import NodeGenerator from "./Waypoints/NodeGenerator.js";
+import RouteSelection from "./Waypoints/RouteSelection.js";
 
 
 export default class Waypoints{
@@ -88,6 +89,12 @@ export default class Waypoints{
         });
     }
 
+    routeHighlight(state){
+        this.routes.forEach(function (route) {
+            route.highlight(state);
+        });
+    }
+
     /**
      *
      * @param areaName {string|undefined}
@@ -113,6 +120,21 @@ export default class Waypoints{
             area.children = [];
         });
 
+    }
+
+    /**
+     *
+     * @param route {Route}
+     */
+    routeSelection(route){
+        new RouteSelection({
+            sceneInfo: this.sceneMap.sceneInfo,
+            waypoints: this,
+            route: route,
+            onPlaceCallback: function () {
+
+            }
+        });
     }
 
     /**
@@ -159,7 +181,7 @@ export default class Waypoints{
 
                 let area = _this.getCreateArea(areaName);
                 area.addNode(areaNode);
-                _this.createNodeRelations(area);
+                // _this.createNodeRelations(area);
 
                 areaNode.entity.level = _this.level;
                 _this.game.addToStorage(areaNode);
@@ -252,7 +274,6 @@ export default class Waypoints{
                 route.addNode(node);
             });
 
-            route.highlight(true);
             _this.sceneMap.sceneInfo.scene.add(route.getMesh());
 
             _this.routes.push(route);

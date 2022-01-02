@@ -30,10 +30,14 @@ export default class Area{
      * @param node {Node}
      */
     addNode(node){
+        if (this.children.indexOf(node) !== -1)
+            return;
+
         //apply the area color
         node.getMesh().children[0].material.color.setHex( this.color );
         node.getMesh().children[0].material.needsUpdate = true;
 
+        node.color = this.color;
         this.children.push(node);
     }
 
