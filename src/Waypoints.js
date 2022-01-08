@@ -7,6 +7,8 @@ import Placing from "./Waypoints/Placing.js";
 import NodeGenerator from "./Waypoints/NodeGenerator.js";
 import RouteSelection from "./Waypoints/RouteSelection.js";
 import {Vector3, Raycaster} from "./Vendor/three.module.js";
+import StopperPlacing from "./Waypoints/StopperPlacing.js";
+import Result from "./Plugin/Loader/Result.js";
 
 
 export default class Waypoints{
@@ -55,6 +57,12 @@ export default class Waypoints{
 
     /**
      *
+     * @type {Mesh[]}
+     */
+    meshesForRaycast = [];
+
+    /**
+     *
      * @param sceneMap {SceneMap}
      */
     constructor(sceneMap){
@@ -64,6 +72,7 @@ export default class Waypoints{
 
         this.createAreasAndNodes();
         this.createRoutes();
+        this.loadMeshesForRaycast();
 
         let test = Studio.menu.getById('waypoint');
         console.log("hhh",test);
@@ -71,8 +80,42 @@ export default class Waypoints{
 
     }
 
-    getMeshesForRaycast(){
-        return this.sceneMap.sceneInfo.scene.children[1].children;
+    loadMeshesForRaycast(){
+        // if (this.meshesForRaycast.length > 0)
+        //     return this.meshesForRaycast;
+
+        let _this = this;
+        let stoppers = this.game.findBy({
+            type: Studio.WAYPOINT_STOPPER,
+            level: this.level,
+        });
+
+        stoppers.forEach(function (stopper) {
+            _this.meshesForRaycast.push(stopper.mesh.children[0]);
+        });
+
+
+        let entities = this.game.findBy({
+            type: Studio.ENTITY,
+            level: this.level,
+        });
+
+        entities.forEach(function (result) {
+            if (result.mesh === null)
+                return;
+            if (result.props.className !== "Base_Inst")
+                return;
+
+            // console.log(result);
+
+            _this.meshesForRaycast.push(result.mesh.children[0]);
+        });
+
+
+        //add world meshes
+        this.sceneMap.sceneInfo.scene.children[1].children.forEach(function (mesh) {
+            _this.meshesForRaycast.push(mesh);
+        });
     }
 
     nodeVisible(state){
@@ -102,34 +145,52 @@ export default class Waypoints{
 
     /**
      *
+     * @param areaName {string}
+     * @returns {boolean|Area}
+     */
+    getAreaByName(areaName){
+        let result = false;
+        this.children.forEach(function (area) {
+            if (area.name === areaName)
+                result = area;
+        });
+
+        return result;
+    }
+
+    /**
+     *
      * @param areaName {string|undefined}
      */
     clear(areaName){
-        let _this = this;
-        // if (areaName === undefined)
-        this.children.forEach(function (area) {
-            if (areaName !== undefined && areaName !== area.name)
-                return;
-
-            area.children.forEach(function (node) {
-                _this.sceneMap.sceneInfo.scene.remove(node.getMesh());
-
-                node.lines.forEach(function (line) {
-                    _this.sceneMap.sceneInfo.scene.remove(line);
-                });
-
-                node.lines = [];
-                node.children = [];
-
-                _this.game.removeFromStorage(node.entity);
+        //we want to clean the whole map (all areas)
+        if (areaName === undefined){
+            this.children.forEach(function (area) {
+                area.clear();
             });
 
+            this.routes.forEach(function (route) {
+                route.remove();
+            });
 
-            area.children = [];
-        });
+            this.routes = [];
 
-        if (areaName === undefined)
             this.nextNodeId = 0;
+        }else{
+
+            let area = this.getAreaByName(areaName);
+
+            this.routes = this.routes.filter(function (route) {
+                let nodeInArea = route.isRouteNodeInArea(area);
+                if (nodeInArea)
+                    route.remove();
+
+                return !nodeInArea;
+            });
+
+            area.clear();
+
+        }
 
     }
 
@@ -159,7 +220,7 @@ export default class Waypoints{
         new NodeGenerator({
             area: area,
             scene: this.sceneMap.sceneInfo.scene,
-            meshes: this.getMeshesForRaycast(),
+            meshes: this.meshesForRaycast,
             nextNodeId: this.nextNodeId,
             position: position,
             game: this.game,
@@ -175,10 +236,8 @@ export default class Waypoints{
 
                 _this.generateRoutes();
                 _this.createNodeRelations(area);
-
             }
-
-        })
+        });
     }
 
     placeNewNode(areaName){
@@ -190,6 +249,9 @@ export default class Waypoints{
             nextNodeId: this.nextNodeId,
             areaName: areaName,
             onPlaceCallback: function (areaNode) {
+                if (areaNode === null)
+                    return;
+
                 _this.nodeByNodeId[_this.nextNodeId] = areaNode;
 
                 let area = _this.getCreateArea(areaName);
@@ -198,13 +260,41 @@ export default class Waypoints{
                 areaNode.entity.level = _this.level;
                 _this.game.addToStorage(areaNode.entity);
 
-
-                _this.generateRoutes();
+                _this.generateNearByRoute(areaNode);
                 _this.createNodeRelations(area);
-
 
                 _this.nextNodeId++;
 
+                _this.placeNewNode(areaName);
+            }
+        });
+    }
+
+    placeStopper(){
+
+        let _this = this;
+
+        new StopperPlacing({
+            sceneInfo: this.sceneMap.sceneInfo,
+            onPlaceCallback: function (mesh) {
+                let areaBlocker = new Result(
+                    Studio.WAYPOINT_STOPPER,
+                    'stopper',
+                    new ArrayBuffer(0),
+                    0,
+                    {},
+                    function () {
+                        console.error("HMMM TODO");
+                        debugger;
+                    }
+                );
+
+                areaBlocker.level = _this.level;
+                areaBlocker.mesh = mesh;
+
+                _this.meshesForRaycast.push(mesh.children[0]);
+
+                _this.game.addToStorage(areaBlocker);
             }
         });
     }
@@ -308,9 +398,63 @@ export default class Waypoints{
         let _this = this;
         area.children.forEach(function (node) {
             node.entity.props.waypoints.forEach(function (waypoint) {
-                node.addRelation(_this.nodeByNodeId[waypoint.linkId]);
+                let relNode = _this.nodeByNodeId[waypoint.linkId];
+                if (relNode !== undefined)
+                    node.addRelation(relNode);
+                else
+                    console.error(`[Waypoints] Invalid Waypoint ID ${waypoint.linkId} in node ${node.id}`)
             })
         });
+    }
+
+
+    /**
+     *
+     * @param node {Node}
+     */
+    generateNearByRoute(node){
+
+        let _this = this;
+        let waypoints = this.game.findBy({
+            level: this.level,
+            type: Studio.AREA_LOCATION
+        });
+
+        waypoints.forEach(function (waypointOuter) {
+            if (node === waypointOuter) return;
+
+
+            let dist = waypointOuter.mesh.position.distanceTo(node.entity.mesh.position);
+            if (dist <= 3.05){
+
+                let dir = new Vector3();
+                dir.subVectors( node.entity.mesh.position, waypointOuter.mesh.position ).normalize();
+
+                let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.meshesForRaycast );
+
+                if (collisions.length === 0) return;
+                // console.log(collisions[0].distance );
+                if (collisions[0].distance < 3.05) return;
+
+                let found = false;
+                waypointOuter.props.waypoints.forEach(function (link) {
+                    if (link.linkId === node.id)
+                        found = true;
+                });
+
+                if (found === false){
+                    waypointOuter.props.waypoints.push({
+                        linkId: node.id,
+                        type: 3,
+                        relation: []
+                    });
+
+                }
+
+            }
+
+        });
+
     }
 
     generateRoutes(){
@@ -320,10 +464,10 @@ export default class Waypoints{
             level: this.level,
             type: Studio.AREA_LOCATION
         });
-
-        waypoints.forEach(function (waypoint) {
-            waypoint.props.waypoints = [];
-        });
+        //
+        // waypoints.forEach(function (waypoint) {
+        //     waypoint.props.waypoints = [];
+        // });
 
 
         waypoints.forEach(function (waypointOuter) {
@@ -338,17 +482,26 @@ export default class Waypoints{
                     let dir = new Vector3();
                     dir.subVectors( waypointInner.mesh.position, waypointOuter.mesh.position ).normalize();
 
-                    let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.getMeshesForRaycast() );
+                    let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.meshesForRaycast );
 
                     if (collisions.length === 0) return;
                     // console.log(collisions[0].distance );
                     if (collisions[0].distance < 3.05) return;
 
-                    waypointOuter.props.waypoints.push({
-                        linkId: waypointInner.props.id,
-                        type: 3,
-                        relation: []
+                    let found = false;
+                    waypointOuter.props.waypoints.forEach(function (link) {
+                        if (link.linkId === waypointInner.props.id)
+                            found = true;
                     });
+
+                    if (found === false){
+                        waypointOuter.props.waypoints.push({
+                            linkId: waypointInner.props.id,
+                            type: 3,
+                            relation: []
+                        });
+
+                    }
 
                 }
 

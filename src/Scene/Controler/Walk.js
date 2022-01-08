@@ -152,6 +152,9 @@ export default class Walk {
 
     onObjectChanged(){
 
+        if (this.object.userData.entity === undefined)
+            return;
+
         if (this.object.userData.entity.type === Studio.AREA_LOCATION){
 console.error("TODO");
         }else{
@@ -210,7 +213,7 @@ console.error("TODO");
         intersects.forEach(function (obj) {
             let parent = obj.object.parent;
 
-            if (parent === null || parent.type !== "Group" || parent.userData.entity === undefined)
+            if (parent === null || parent.type !== "Group" || parent.name === "scene")
                 return;
             clickedGroups.push(parent);
         });
@@ -286,7 +289,8 @@ console.error("TODO");
         this.transform.detach();
         this.transform.attach(object);
 
-        Event.dispatch(Event.VIEW_ENTRY, { entry: object.userData.entity });
+        if (object.userData.entity !== undefined)
+            Event.dispatch(Event.VIEW_ENTRY, { entry: object.userData.entity });
     }
 
     update(delta) {

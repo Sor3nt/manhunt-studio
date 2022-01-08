@@ -11,7 +11,7 @@ export default class Node{
 
     /**
      *
-     * @type {Node[]}
+     * @type {{{node:Node, line:line}}}
      */
     children = [];
 
@@ -21,11 +21,6 @@ export default class Node{
      */
     lines = [];
 
-    /**
-     *
-     * @type {{{node:Node, line:line}}}
-     */
-    relatedNodes = {};
 
     /**
      *
@@ -100,10 +95,9 @@ export default class Node{
         if(node === this)
             return;
 
-        if (this.children.indexOf(node) !== -1)
+        if (this.children[node.id] !== undefined)
             return;
 
-        this.children.push(node);
 
 
         let material = new LineBasicMaterial({color: 0x00ff00});
@@ -114,14 +108,14 @@ export default class Node{
         geometry.verticesNeedUpdate = true;
         geometry.dynamic = true;
 
-        geometry.vertices.push(this.position);
-        geometry.vertices.push(node.position);
+        geometry.vertices.push(this.getMesh().position);
+        geometry.vertices.push(node.getMesh().position);
 
         let line = new Line(geometry, material);
         line.name = `${this.name}_to_${node.name}`;
 
         this.lines.push(line);
-        this.relatedNodes[node.id] = {
+        this.children[node.id] = {
             node: node,
             line: line
         };
@@ -135,13 +129,20 @@ export default class Node{
      */
     removeRelation(node){
 
-        let relNode = this.relatedNodes[node.id];
+        let relNode = this.children[node.id];
         if (relNode === undefined) return;
 
-        relNode.node.removeRelation(node);
-        this.getMesh().parent.remove(relNode.line);
+        let mesh = this.getMesh();
+        let scene = mesh.parent;
+        if (scene !== null)
+            scene.remove(relNode.line);
 
-        delete this.relatedNodes[node.id];
+        this.entity.props.waypoints = this.entity.props.waypoints.filter(function (waypoint) {
+            return !(waypoint.linkId === relNode.node.id);
+        });
+
+
+        delete this.children[node.id];
 
     }
 
@@ -160,8 +161,8 @@ export default class Node{
      * @param state {int}
      */
     nodeVisible(state){
-        this.children.forEach(function (node) {
-            node.getMesh().visible = state;
+        this.children.forEach(function (child) {
+            child.node.getMesh().visible = state;
         });
     }
 
@@ -178,20 +179,26 @@ export default class Node{
     }
 
     remove(){
+        //remove node object
+        let mesh = this.getMesh();
+        let scene = mesh.parent;
+        if (scene !== null){
+            scene.remove(mesh);
 
-        for(let i in this.relatedNodes){
-            if (!this.relatedNodes.hasOwnProperty(i)) continue;
-
-            this.relatedNodes[i].node.removeRelation(this);
+            //remove relation lines
+            this.lines.forEach(function (line) {
+                scene.remove(line);
+            });
         }
 
-        let mesh = this.getMesh();
-        let scene = this.getMesh().parent;
-        scene.remove(mesh);
+        //remove relations TO this node
+        for(let i in this.children){
+            if (!this.children.hasOwnProperty(i)) continue;
 
-        this.lines.forEach(function (line) {
-            scene.remove(line);
-        });
+            this.children[i].node.removeRelation(this);
+        }
+
+        this.children = [];
 
         Storage.remove(this.entity);
     }

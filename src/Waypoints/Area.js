@@ -41,6 +41,14 @@ export default class Area{
         this.children.push(node);
     }
 
+    clear(){
+        this.children.forEach(function (node) {
+            node.remove();
+        });
+
+        this.children = [];
+    }
+
     setLinesVisible(state){
         this.children.forEach(function (node) {
             node.relationsVisible(state);

@@ -42,6 +42,7 @@ export default class Studio{
     static FILE = 12;
     static AREA_LOCATION = 13;
     static WAYPOINT_ROUTE = 14;
+    static WAYPOINT_STOPPER = 15;
 
     static registerPlugins(){
         Loader.registerPlugins();
@@ -65,7 +66,7 @@ export default class Studio{
         WebGL.render();
 
         Status.hide();
-        // Status.showWelcome();
+        Status.showWelcome();
 
     }
 
@@ -94,7 +95,7 @@ export default class Studio{
                     let level = studioScene.mapEntry.level;
 
                     let binary = Grf.build(game, level);
-                    Save.output(binary, 'teest.grf');
+                    Save.output(binary, 'mapAI.grf');
                     Studio.menu.closeAll();
                 }
 
@@ -240,11 +241,25 @@ export default class Studio{
                         let waypoints = studioScene.waypoints;
 
                         catWaypointArea.addType(new ActionType({
+                            id: 'waypoint-stopper-create',
+                            label: 'Create stopper',
+                            callback: function (states) {
+                                waypoints.placeStopper();
+                                document.body.requestPointerLock();
+
+                                Studio.menu.closeAll();
+                            }
+                        }));
+
+                        catWaypointArea.addType(new ActionType({
                             id: 'waypoint-area-create',
                             label: 'Start new area',
                             callback: function (states) {
 
                                 let name = prompt('New Area Name', 'area1');
+                                if (name === null || name === '')
+                                    return;
+
                                 waypoints.placeNewNode(name);
                                 document.body.requestPointerLock();
 
@@ -281,7 +296,6 @@ export default class Studio{
                                      */
                                     if (area.children.length > 0){
                                         let node = area.children[0];
-console.log("EHH nodes?", node);
                                         studioSceneInfo.control.playerCollider.end.copy(node.position);
                                         studioSceneInfo.camera.position.copy(node.position);
                                     }
@@ -314,9 +328,6 @@ console.log("EHH nodes?", node);
                                      */
                                     if (area.children.length > 0){
                                         let node = area.children[0];
-                                        //
-                                        // studioSceneInfo.control.playerCollider.end.copy(node.position);
-                                        // studioSceneInfo.camera.position.copy(node.position);
 
                                         waypoints.nodeGenerate(area, node.getMesh().position);
 
@@ -327,24 +338,6 @@ console.log("EHH nodes?", node);
                                 }
                             }));
 
-//                             catWaypointAreaEntry.addType(new ActionType({
-//                                 id: `waypoint-area-${area.name}-rel-gen`,
-//                                 label: 'Generate Relations',
-//                                 callback: function (states) {
-//
-//                                     /**
-//                                      * We need to take sure the nodes are showed
-//                                      */
-//                                     let showNodesType = Studio.menu.getById('waypoint-show-nodes');
-//                                     if (showNodesType.states.active === false){
-//                                         showNodesType.triggerClick();
-//                                     }
-// funzt nicht weil erst generateRoutes von NodeGenerator erstellt die relations....
-//                                     waypoints.createNodeRelations(area);
-//
-//                                     Studio.menu.closeAll();
-//                                 }
-//                             }));
 
                             catWaypointAreaEntry.addType(new ActionType({
                                 id: `waypoint-area-${area.name}-clear`,
@@ -367,18 +360,8 @@ console.log("EHH nodes?", node);
 
                             catWaypointArea.addSubCategory(catWaypointAreaEntry);
 
-//
                         });
 
-//                         catWaypointArea.addType(new SelectboxType({
-//                             id: 'waypoint-area',
-//                             values: studioScene.waypoints.children.map(function (area) {
-//                                 return area.name;
-//                             }),
-//                             callback: function (states) {
-// console.log("hhhh", states);
-//                             }
-//                         }));
 
                     }
 
@@ -408,73 +391,6 @@ console.log("EHH nodes?", node);
         }));
 
         Studio.menu.addCategory(catWaypoint);
-        //
-        // let test = Studio.menu.getById('waypoint-area-create');
-        // console.log("hhh",test);
-
-        //
-        // Menu.create();
-        // Menu.addCategory('File');
-        // Menu.addEntry('File', 'Save', function () {
-        //     Save.save();
-        // });
-        // Menu.addEntry('File', 'Export (experimental)', function () {
-        //     let exporter = new OBJExporter();
-        //     const result = exporter.parse( StudioScene.getStudioSceneInfo().scene );
-        //
-        //     let blob = new Blob( [ result ], { type: 'application/octet-stream' } );
-        //
-        //     const link = document.createElement("a");
-        //     link.href = URL.createObjectURL(blob);
-        //     link.download = "export.obj";
-        //     link.click();
-        //     link.remove();
-        //
-        //     console.log(result);
-        // });
-        //
-        // Menu.addCategory('Waypoints');
-        // Menu.addEntry('Waypoints', 'Create Node', function (element) {
-        //
-        //     let studioScene = StudioScene.getStudioSceneInfo().studioScene;
-        //     if (studioScene instanceof SceneMap){
-        //         // studioScene.waypoints.
-        //     }
-        //
-        // });
-        //
-        // Menu.addEntry('Waypoints', 'Show nodes<i class="fas fa-check" style="float: right"></i>', function (element) {
-        //
-        //     let enable = true;
-        //     let box = jQuery(element).find('i');
-        //     if (box.hasClass('fa-check')){
-        //         box.removeClass('fa-check');
-        //         enable = false;
-        //     }else{
-        //         box.addClass('fa-check');
-        //     }
-        //
-        //     Event.dispatch(Event.WAYPOINT_SHOW_NODES, {
-        //         enabled: enable
-        //     });
-        //
-        // });
-        // Menu.addEntry('Waypoints', 'Show relations<i class="fas fa-check" style="float: right"></i>', function (element) {
-        //
-        //     let enable = true;
-        //     let box = jQuery(element).find('i');
-        //     if (box.hasClass('fa-check')){
-        //         box.removeClass('fa-check');
-        //         enable = false;
-        //     }else{
-        //         box.addClass('fa-check');
-        //     }
-        //
-        //     Event.dispatch(Event.WAYPOINT_SHOW_RELATIONS, {
-        //         enabled: enable
-        //     });
-        //
-        // });
 
     }
 

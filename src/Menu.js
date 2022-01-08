@@ -1,4 +1,5 @@
 import Components from "./Plugin/Components.js";
+import Mouse from "./Mouse.js";
 
 export default class Menu{
 
@@ -15,6 +16,13 @@ export default class Menu{
 
         let topSection = Components.getSection('top');
         topSection.container.append(this.element);
+
+        let _this = this;
+        Mouse.onMouseClick(function (e) {
+            if(e.path.indexOf(_this.element.get(0)) === -1){
+                _this.closeAll();
+            }
+        });
     }
 
     closeAll(){
@@ -46,9 +54,7 @@ export default class Menu{
         this.children.forEach(function (category) {
             if (found !== false)
                 return;
-            console.log("check", category.id, id);
             if (category.id === id){
-                console.log("found", category.id, id);
                 found = category;
                 return;
             }

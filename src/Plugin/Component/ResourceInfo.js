@@ -33,6 +33,11 @@ export default class ResourceInfo extends AbstractComponent{
      * @param entry {Result}
      */
     setEntry(entry){
+        if (entry === undefined)
+            return;
+
+        if (entry === null)
+            return;
 console.log("CLICK", entry);
         let result = [];
         let object;
@@ -108,14 +113,18 @@ console.log("CLICK", entry);
                     onClick: function (  ) {
                         let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                         if (studioScene instanceof SceneMap){
+                            /**
+                             * @type {Node}
+                             */
                             let node = studioScene.waypoints.nodeByNodeId[entry.props.id];
                             node.remove();
                             /**
-                             *
                              * @type {Walk}
                              */
                             let control = StudioScene.getStudioSceneInfo().control;
-                            control.setMode('fly');
+                            control.keyStates.modeSelectObject = true;
+                            control.setMode('select');
+                            document.exitPointerLock();
                             _this.element.html('');
                         }
 

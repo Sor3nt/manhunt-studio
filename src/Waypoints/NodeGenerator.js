@@ -21,7 +21,7 @@ export default class NodeGenerator{
      *
      * @type {string[]}
      */
-    generatedPointsCache = [];
+    generatedPointsCache = {};
 
     /**
      *
@@ -84,6 +84,9 @@ export default class NodeGenerator{
         let _this = this;
         this.generatedPoints.forEach(function (position) {
 
+            let adjustedPosition = position.clone();
+            _this.adjustPosition(adjustedPosition);
+
             let areaLocation = new Result(
                 Studio.AREA_LOCATION,
                 `pos_${position.x}_${position.y}_${position.z}`,
@@ -92,7 +95,7 @@ export default class NodeGenerator{
                 {
                     id: _this.nextNodeId,
                     areaName: _this.area.name,
-                    position: position.clone(),
+                    position: adjustedPosition,
                     radius: 0.5,
                     name: "",
                     nodeName: "",
@@ -117,13 +120,15 @@ export default class NodeGenerator{
             _this.game.addToStorage(areaLocation);
         });
 
-
-        // this.generateRoutes();
-
         this.callback(this.nextNodeId, this.children);
     }
 
+    tmpBreak = 0;
+
     generateFromPosition(position){
+        this.tmpBreak++;
+        if (this.tmpBreak > 500)
+            return;
 
         let _this = this;
         let ogPos = position.clone();
@@ -150,25 +155,30 @@ export default class NodeGenerator{
                 if (side === "front") newPos.x = ogPos.x + (i * 2);
                 if (side === "back" ) newPos.x = ogPos.x - (i * 2);
 
+                let distBottom = _this.getDistanceToBottomMesh(newPos);
+
                 //its going down, stop here
-                if (_this.getDistanceToBottomMesh(newPos) > 1.5) continue;
+                if (distBottom > 2.5) return;
 
-                if (ogPos.x + '_' + ogPos.y + '_' + ogPos.z === newPos.x + '_' + newPos.y + '_' + newPos.z)
+                newPos.y -= distBottom;
+                newPos.y += .5;
+
+                if (ogPos.x + '_' + ogPos.z === newPos.x + '_' + newPos.z)
                     continue;
 
-                let posString = newPos.x + '_' + newPos.y + '_' + newPos.z;
+                let posString = newPos.x + '_'  + newPos.z;
 
-                if (_this.generatedPointsCache.indexOf(posString) !== -1)
+                if (_this.generatedPointsCache[posString] === true)
                     continue;
 
-                _this.generatedPointsCache.push(posString);
+                _this.generatedPointsCache[posString] = true;
                 _this.generatedPoints.push(newPos.clone());
 
                 newPoints.push(newPos.clone());
             }
         });
 
-
+        //
         newPoints.forEach(function (pos) {
             _this.generateFromPosition(pos);
         });
@@ -198,7 +208,7 @@ export default class NodeGenerator{
         let ray = new Raycaster( position.clone(), new Vector3(0,-1, 0) );
         let collisionResults = ray.intersectObjects( this.worldMeshes );
 
-        if (collisionResults.length === 0) return 0.5;
+        if (collisionResults.length === 0) return 0;
 
         return collisionResults[0].distance;
     }
@@ -223,78 +233,5 @@ export default class NodeGenerator{
             back: col4.length === 0 ? false : col4[0].distance
         };
     }
-    //
-    // generateRoutes(){
-    //
-    //     let waypoints = this.game.findBy({
-    //         level: this.level,
-    //         type: Studio.AREA_LOCATION
-    //     });
-    //
-    //     waypoints.forEach(function (waypoint) {
-    //         waypoint.props.waypoints = [];
-    //     });
-    //
-    //
-    //     waypoints.forEach(function (waypointOuter) {
-    //         // let tmpLow = 10000000;
-    //
-    //         waypoints.forEach(function (waypointInner) {
-    //             if (waypointInner === waypointOuter) return;
-    //
-    //             let dist = waypointOuter.mesh.position.distanceTo(waypointInner.mesh.position);
-    //             if (dist <= 3.05){
-    //
-    //                 waypointOuter.props.waypoints.push({
-    //                     linkId: waypointInner.props.id,
-    //                     type: 3,
-    //                     relation: []
-    //                 });
-    //
-    //             }
-    //
-    //         });
-    //
-    //     });
-    // }
-//     generateRoutes(){
-//
-//         let _this = this;
-//
-//         //         let waypoints = this.game.findBy({
-// //             type: Studio.AREA_LOCATION
-// //         });
-//
-//         this.children.forEach(function (waypointOuter) {
-//             waypointOuter.entity.props.waypoints = [];
-//             _this.children.forEach(function (waypointInner) {
-//                 if (waypointInner === waypointOuter) return;
-//
-//                 let dist = waypointOuter.getMesh().position.distanceTo(waypointInner.getMesh().position);
-//                 if (dist <= 3.2){
-//
-//                     let dir = new Vector3();
-//                     dir.subVectors( waypointInner.position, waypointOuter.position ).normalize();
-//
-//                     let collisions = (new Raycaster( waypointOuter.position, dir )).intersectObjects( _this.worldMeshes );
-//
-//                     if (collisions.length === 0) return;
-//                     if (collisions[0].distance < 2.5) return;
-//
-//                     waypointOuter.entity.props.waypoints.push({
-//                         linkId: waypointInner.id,
-//                         type: 3,
-//                         relation: []
-//                     });
-//
-//                     waypointInner.entity.props.waypoints.push({
-//                         linkId: waypointOuter.id,
-//                         type: 3,
-//                         relation: []
-//                     });
-//                 }
-//
-//             });
-//         });
-//     }
+
 }

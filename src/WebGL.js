@@ -24,6 +24,9 @@ export default class WebGL{
     /** @type {ShaderPass} */
     static effectFXAA;
 
+    /** @type {function[]} */
+    static renderCallbacks = [];
+
     static boot(){
         WebGL.container = document.getElementById('webgl');
         WebGL.renderer = new WebGLRenderer({antialias: false, alpha: true});
@@ -55,6 +58,13 @@ export default class WebGL{
         WebGL.renderer.setSize(bbox.width, bbox.height);
     }
 
+    static onRender(callback){
+        if (WebGL.renderCallbacks.indexOf(callback) !== -1)
+            return;
+
+        WebGL.renderCallbacks.push(callback);
+    }
+
     static render() {
 
         //limit fps to 60fps for performance increase
@@ -66,7 +76,12 @@ export default class WebGL{
         let sceneInfo = StudioScene.activeSceneInfo;
         if (sceneInfo === null) return;
 
-        sceneInfo.onRender(WebGL.clock.getDelta());
+        let delta = WebGL.clock.getDelta();
+        WebGL.renderCallbacks.forEach(function (callback) {
+            callback(delta);
+        });
+
+        sceneInfo.onRender(delta);
         WebGL.renderer.render(sceneInfo.scene, sceneInfo.camera);
 
         if (Config.outlineActiveObject)

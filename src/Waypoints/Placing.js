@@ -30,6 +30,7 @@ export default class Placing{
     binding = {
         mouseClick: null,
         mouseMove: null,
+        keyUpEsc: null
     };
 
     nextNodeId = 0;
@@ -60,6 +61,7 @@ export default class Placing{
 
         this.binding.mouseClick = this.onMouseClick.bind(this);
         this.binding.mouseMove = this.onMouseMove.bind(this);
+        this.binding.keyUpEsc = this.onKeyUpEsc.bind(this);
 
         Mouse.onMouseMove(this.binding.mouseMove);
 
@@ -69,13 +71,25 @@ export default class Placing{
          */
         let _this = this;
         setTimeout(function () {
+            document.addEventListener('pointerlockchange', _this.binding.keyUpEsc, false);
             Mouse.onMouseClick(_this.binding.mouseClick);
         }, 500);
     }
 
-    onMouseClick(){
+    unbind(){
         Mouse.removeOnMouseClick(this.binding.mouseClick);
         Mouse.removeOnMouseMove(this.binding.mouseMove);
+        document.removeEventListener('pointerlockchange', this.binding.keyUpEsc);
+    }
+
+    onKeyUpEsc(){
+        this.unbind();
+        this.sceneInfo.scene.remove(this.node.getMesh());
+        this.onPlaceCallback(null);
+    }
+
+    onMouseClick(){
+        this.unbind();
 
         this.node.entity.props.position = this.node.getMesh().position.clone();
         this.node.position = this.node.getMesh().position.clone();
@@ -97,7 +111,7 @@ export default class Placing{
             nodeMesh.lookAt( intersects[ 0 ].face.normal );
 
             nodeMesh.position.copy( intersects[ 0 ].point );
-            nodeMesh.position.y += 1;
+            nodeMesh.position.y += 0.5;
         }
     }
 

@@ -35,6 +35,24 @@ export default class Route{
 
     /**
      *
+     * @param area {Area}
+     * @returns {boolean}
+     */
+    isRouteNodeInArea(area){
+        let _this = this;
+        let found = false;
+        area.children.forEach(function (node) {
+            if (found === true) return;
+
+            if (_this.children.indexOf(node) !== -1)
+                found = true;
+        });
+
+        return found;
+    }
+
+    /**
+     *
      * @returns {Line}
      */
     getMesh(){
@@ -84,6 +102,15 @@ export default class Route{
         this.children.forEach(function (node) {
             node.highlight(state);
         });
+    }
+
+    remove(){
+        let mesh = this.getMesh();
+        let scene = mesh.parent;
+        if(scene !== null)
+            scene.remove(mesh);
+
+        this.children = [];
     }
 
 }
