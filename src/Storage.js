@@ -14,6 +14,9 @@ export default class Storage{
      */
     static add(result){
 
+        if(result.name === "")
+            console.error('[Storage] Result has no name!', result);
+
         Storage.count++;
 
         let index = `S_${result.type}_${result.level}_${result.gameId}_${result.name}`;
@@ -28,11 +31,14 @@ export default class Storage{
      * @param result {Result}
      */
     static remove(result){
-
         Storage.count--;
 
         let index = `S_${result.type}_${result.level}_${result.gameId}_${result.name}`;
-        delete Storage.byTypeGameName[ index ];
+
+        if (Storage.byTypeGameName[ index ] === undefined)
+            console.error('[Storage] Result not in storage!', result);
+        else
+            delete Storage.byTypeGameName[ index ];
 
         Storage.storage.splice( Storage.storage.indexOf(result), 1);
     }

@@ -28,6 +28,7 @@ export default class StopperPlacing{
     binding = {
         mouseClick: null,
         mouseMove: null,
+        keyUpEsc: null
     };
 
     /**
@@ -49,6 +50,7 @@ export default class StopperPlacing{
 
         this.binding.mouseClick = this.onMouseClick.bind(this);
         this.binding.mouseMove = this.onMouseMove.bind(this);
+        this.binding.keyUpEsc = this.onKeyUpEsc.bind(this);
 
         Mouse.onMouseMove(this.binding.mouseMove);
 
@@ -58,13 +60,26 @@ export default class StopperPlacing{
          */
         let _this = this;
         setTimeout(function () {
+            document.addEventListener('pointerlockchange', _this.binding.keyUpEsc, false);
             Mouse.onMouseClick(_this.binding.mouseClick);
         }, 500);
     }
 
-    onMouseClick(){
+
+    unbind(){
         Mouse.removeOnMouseClick(this.binding.mouseClick);
         Mouse.removeOnMouseMove(this.binding.mouseMove);
+        document.removeEventListener('pointerlockchange', this.binding.keyUpEsc);
+    }
+
+    onKeyUpEsc(){
+        this.unbind();
+        this.sceneInfo.scene.remove(this.getMesh());
+        this.onPlaceCallback(null);
+    }
+
+    onMouseClick(){
+        this.unbind();
 
         /**
          *

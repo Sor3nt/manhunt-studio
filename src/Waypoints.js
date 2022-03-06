@@ -75,7 +75,6 @@ export default class Waypoints{
         this.loadMeshesForRaycast();
 
         let test = Studio.menu.getById('waypoint');
-        console.log("hhh",test);
         test.enable();
 
     }
@@ -176,8 +175,10 @@ export default class Waypoints{
             this.routes = [];
 
             this.nextNodeId = 0;
-        }else{
 
+            this.nodeByNodeId = {};
+        }else{
+            let _this = this;
             let area = this.getAreaByName(areaName);
 
             this.routes = this.routes.filter(function (route) {
@@ -186,6 +187,10 @@ export default class Waypoints{
                     route.remove();
 
                 return !nodeInArea;
+            });
+
+            area.children.forEach(function (node) {
+                delete _this.nodeByNodeId[node.id];
             });
 
             area.clear();
@@ -225,14 +230,14 @@ export default class Waypoints{
             position: position,
             game: this.game,
             level: this.level,
-            callback: function (lastNodeId, nodes) {
+            callback: function (nextNodeId, nodes) {
 
 
                 nodes.forEach(function (node) {
                     _this.nodeByNodeId[node.id] = node;
                 });
 
-                _this.nextNodeId = lastNodeId + 1;
+                _this.nextNodeId = nextNodeId;
 
                 _this.generateRoutes();
                 _this.createNodeRelations(area);
@@ -277,6 +282,9 @@ export default class Waypoints{
         new StopperPlacing({
             sceneInfo: this.sceneMap.sceneInfo,
             onPlaceCallback: function (mesh) {
+                if (mesh === null)
+                    return;
+
                 let areaBlocker = new Result(
                     Studio.WAYPOINT_STOPPER,
                     'stopper',
@@ -469,11 +477,11 @@ export default class Waypoints{
         //     waypoint.props.waypoints = [];
         // });
 
-
         waypoints.forEach(function (waypointOuter) {
             // let tmpLow = 10000000;
             waypoints.forEach(function (waypointInner) {
                 if (waypointInner === waypointOuter) return;
+
 
                 let dist = waypointOuter.mesh.position.distanceTo(waypointInner.mesh.position);
                 if (dist <= 3.05){
@@ -495,6 +503,13 @@ export default class Waypoints{
                     });
 
                     if (found === false){
+
+                        waypointInner.props.waypoints.push({
+                            linkId: waypointOuter.props.id,
+                            type: 3,
+                            relation: []
+                        });
+
                         waypointOuter.props.waypoints.push({
                             linkId: waypointInner.props.id,
                             type: 3,

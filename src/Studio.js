@@ -12,6 +12,7 @@ import SceneMap from "./Scene/SceneMap.js";
 import ActionType from "./Menu/Types/ActionType.js";
 import Keyboard from "./Keyboard.js";
 import Mouse from "./Mouse.js";
+import Storage from "./Storage.js";
 import Games from "./Plugin/Games.js";
 import Grf from "./Plugin/Builder/Game/ManhuntGeneric/Grf.js";
 
@@ -245,6 +246,13 @@ export default class Studio{
                             label: 'Create stopper',
                             callback: function (states) {
                                 waypoints.placeStopper();
+                                /**
+                                 * @type {Walk}
+                                 */
+                                let control = studioSceneInfo.control;
+                                if (control.mode !== 'fly')
+                                    control.setMode('fly');
+
                                 document.body.requestPointerLock();
 
                                 Studio.menu.closeAll();
@@ -294,11 +302,11 @@ export default class Studio{
                                     /**
                                      * Look at the first node in the area
                                      */
-                                    if (area.children.length > 0){
-                                        let node = area.children[0];
-                                        studioSceneInfo.control.playerCollider.end.copy(node.position);
-                                        studioSceneInfo.camera.position.copy(node.position);
-                                    }
+                                    // if (area.children.length > 0){
+                                    //     let node = area.children[0];
+                                    //     studioSceneInfo.control.playerCollider.end.copy(node.position);
+                                    //     studioSceneInfo.camera.position.copy(node.position);
+                                    // }
 
                                     requestAnimationFrame(function () {
                                         waypoints.placeNewNode(area.name);
@@ -324,14 +332,26 @@ export default class Studio{
                                     }
 
                                     /**
-                                     * Look at the first node in the area
+                                     * @type {Walk}
                                      */
-                                    if (area.children.length > 0){
-                                        let node = area.children[0];
+                                    let control = studioSceneInfo.control;
+                                    if (control.mode === "transform"){
+                                        waypoints.nodeGenerate(area, control.object.position);
 
-                                        waypoints.nodeGenerate(area, node.getMesh().position);
+                                    }else{
 
+
+                                        /**
+                                         * Look at the first node in the area
+                                         */
+                                        if (area.children.length > 0){
+                                            let node = area.children[0];
+
+                                            waypoints.nodeGenerate(area, node.getMesh().position);
+
+                                        }
                                     }
+
 
 
                                     Studio.menu.closeAll();
@@ -377,6 +397,9 @@ export default class Studio{
             label: 'Clear anything',
             callback: function (states) {
 
+                if (!confirm('Clear all Nodes and Routes?'))
+                    return;
+
                 let studioSceneInfo = StudioScene.getStudioSceneInfo();
                 if (studioSceneInfo === null)
                     return;
@@ -386,6 +409,7 @@ export default class Studio{
 
                     let waypoints = studioScene.waypoints;
                     waypoints.clear();
+
                 }
             }
         }));

@@ -78,6 +78,21 @@ console.log("CLICK", entry);
                 });
 
                 result.push({
+                    label: 'Node Id',
+                    value: `<input value="${entry.props.id}" />`,
+                    /**
+                     * @param element {jQuery}
+                     */
+                    postprocess: function ( element ) {
+                        element.find('input').keyup(function (e) {
+                            entry.props.id = jQuery(e.target).val();
+                        });
+
+                    }
+                });
+
+
+                result.push({
                     label: 'Node name',
                     value: `<input value="${entry.props.nodeName}" />`,
                     /**

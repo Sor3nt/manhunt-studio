@@ -1,5 +1,8 @@
+import {MathUtils} from "../../Vendor/three.module.js";
 
 export default class Result{
+
+    uuid = "";
 
     /**  @type {string} */
     file = "";
@@ -40,6 +43,8 @@ export default class Result{
      */
     constructor(type, name, binary, offset, props, getData){
 //TODO: change to "props" handling....
+
+        this.uuid = MathUtils.generateUUID();
         this.type = type;
         this.name = name;
         this.binary = binary;

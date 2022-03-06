@@ -2,7 +2,7 @@ import Mouse from "../Mouse.js";
 import Result from "../Plugin/Loader/Result.js";
 import Studio from "../Studio.js";
 import Node from "./Node.js";
-import {Raycaster, Vector2, Vector3} from "../Vendor/three.module.js";
+import {MathUtils, Raycaster, Vector2, Vector3} from "../Vendor/three.module.js";
 
 export default class Placing{
 
@@ -89,6 +89,9 @@ export default class Placing{
     }
 
     onMouseClick(){
+        if (document.pointerLockElement !== document.body)
+            return this.onKeyUpEsc();
+
         this.unbind();
 
         this.node.entity.props.position = this.node.getMesh().position.clone();
@@ -120,7 +123,7 @@ export default class Placing{
 
         let areaLocation = new Result(
             Studio.AREA_LOCATION,
-            `new_node_${this.nextNodeId}`,
+            `node_${MathUtils.generateUUID()}`,
             new ArrayBuffer(0),
             0,
             {

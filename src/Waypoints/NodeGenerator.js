@@ -1,4 +1,4 @@
-import {Raycaster, Vector3} from "../Vendor/three.module.js";
+import {MathUtils, Raycaster, Vector3} from "../Vendor/three.module.js";
 import Result from "../Plugin/Loader/Result.js";
 import Node from "./Node.js";
 import Studio from "../Studio.js";
@@ -79,23 +79,40 @@ export default class NodeGenerator{
         this.game = props.game;
         this.callback = props.callback;
 
-        this.generateFromPosition(props.position);
-
         let _this = this;
+
+        this.generateFromPosition(props.position, props.position);
+        //
+        //
+        // let points = [];
+        // this.generatedPoints.forEach(function (pointA, indexA) {
+        //     let toNear = false;
+        //     _this.generatedPoints.forEach(function (pointB, indexB) {
+        //         if (indexA === indexB) return;
+        //
+        //         if (pointA.distanceTo(pointB) < 0.5)
+        //             toNear = true;
+        //     });
+        //
+        //     if (toNear === false)
+        //         points.push(pointA)
+        // });
+        //
+
         this.generatedPoints.forEach(function (position) {
 
-            let adjustedPosition = position.clone();
-            _this.adjustPosition(adjustedPosition);
+            // let adjustedPosition = position.clone();
+            // _this.adjustPosition(adjustedPosition);
 
             let areaLocation = new Result(
                 Studio.AREA_LOCATION,
-                `pos_${position.x}_${position.y}_${position.z}`,
+                `node_${MathUtils.generateUUID()}`,
                 new ArrayBuffer(0),
                 0,
                 {
                     id: _this.nextNodeId,
                     areaName: _this.area.name,
-                    position: adjustedPosition,
+                    position: position,
                     radius: 0.5,
                     name: "",
                     nodeName: "",
@@ -123,12 +140,12 @@ export default class NodeGenerator{
         this.callback(this.nextNodeId, this.children);
     }
 
-    tmpBreak = 0;
+    // tmpBreak = 0;
 
-    generateFromPosition(position){
-        this.tmpBreak++;
-        if (this.tmpBreak > 500)
-            return;
+    generateFromPosition(initPosition, position){
+        // this.tmpBreak++;
+        // if (this.tmpBreak > 500)
+        //     return;
 
         let _this = this;
         let ogPos = position.clone();
@@ -147,29 +164,47 @@ export default class NodeGenerator{
             }
 
             let newPos = ogPos.clone();
+            let range = 1.0;
 
-            for(let i = 0; i <= boxes; i++){
+            for(let i = 1; i <= boxes; i++){
+
+                //give some space to next mesh
+                if (nearBy[side] < range) {
+                    if (side === "left") newPos.z -= nearBy[side] - range;
+                    if (side === "right") newPos.z += nearBy[side] - range;
+                    if (side === "front") newPos.x += nearBy[side] - range;
+                    if (side === "back") newPos.x -= nearBy[side] - range;
+                }
 
                 if (side === "left" ) newPos.z = ogPos.z - (i * 2);
                 if (side === "right") newPos.z = ogPos.z + (i * 2);
                 if (side === "front") newPos.x = ogPos.x + (i * 2);
                 if (side === "back" ) newPos.x = ogPos.x - (i * 2);
 
-                let distBottom = _this.getDistanceToBottomMesh(newPos);
-
-                //its going down, stop here
-                if (distBottom > 2.5) return;
-
-                newPos.y -= distBottom;
-                newPos.y += .5;
 
                 if (ogPos.x + '_' + ogPos.z === newPos.x + '_' + newPos.z)
                     continue;
 
-                let posString = newPos.x + '_'  + newPos.z;
+                let distBottom = _this.getDistanceToBottomMesh(newPos);
+                if (distBottom === false) return;
+
+                //its going down, stop here
+                if (distBottom > 1.5) return;
+                if (distBottom < 0.2) return;
+
+                newPos.y -= distBottom;
+                newPos.y += .5;
+
+                //avoid to duplicate the start point
+                if (initPosition.distanceTo(newPos) < 0.1)
+                    continue;
+
+                let posString = 'pos_' + newPos.x.toFixed(2) + '_' + newPos.y.toFixed(2) + '_'  + newPos.z.toFixed(2);
 
                 if (_this.generatedPointsCache[posString] === true)
                     continue;
+
+
 
                 _this.generatedPointsCache[posString] = true;
                 _this.generatedPoints.push(newPos.clone());
@@ -180,7 +215,7 @@ export default class NodeGenerator{
 
         //
         newPoints.forEach(function (pos) {
-            _this.generateFromPosition(pos);
+            _this.generateFromPosition(initPosition, pos);
         });
     }
 
@@ -190,6 +225,7 @@ export default class NodeGenerator{
      * @param position {Vector3}
      */
     adjustPosition(position){
+
         let nearBy = this.getDistanceToMesh(position);
         let range = 1.0;
 

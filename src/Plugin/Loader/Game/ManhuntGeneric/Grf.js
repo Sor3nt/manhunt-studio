@@ -3,8 +3,7 @@ import Result from "../../Result.js";
 import NBinary from "../../../../NBinary.js";
 import Studio from "../../../../Studio.js";
 import Games from "../../../../Plugin/Games.js";
-import Config from "../../../../Config.js";
-import Game from "../../../Game.js";
+import {MathUtils} from "../../../../Vendor/three.module.js";
 
 export default class Grf extends AbstractLoader{
     static name = "Waypoints (Manhunt 1/2)";
@@ -59,7 +58,7 @@ export default class Grf extends AbstractLoader{
         area.forEach(function (location) {
             let result = new Result(
                 Studio.AREA_LOCATION,
-                location.name,
+                `node_${MathUtils.generateUUID()}`,
                 "",
                 0,
                 location,

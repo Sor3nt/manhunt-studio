@@ -33,7 +33,7 @@ export default class Node{
      * @type {Result|null}
      */
     entity = null;
-    
+
     /**
      *
      * @type {Vector3}
@@ -66,12 +66,12 @@ export default class Node{
     getMesh(){
        if (this.entity.mesh !== null)
            return this.entity.mesh;
-       
+
         const geometry = new BoxGeometry(0.25, 0.25, 0.25);
         const material = new MeshBasicMaterial({color: this.color});
         // material.opacity = 0.5;
         // material.transparent = true;
-        
+
         const cube = new Mesh(geometry, material);
         cube.name = this.name;
 
@@ -199,7 +199,6 @@ export default class Node{
         }
 
         this.children = [];
-
         Storage.remove(this.entity);
     }
 
