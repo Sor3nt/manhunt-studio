@@ -15,12 +15,6 @@ export default class Node{
      */
     children = [];
 
-    /**
-     *
-     * @type {Line[]}
-     */
-    lines = [];
-
 
     /**
      *
@@ -91,18 +85,14 @@ export default class Node{
      * @param node {Node}
      */
     addRelation(node){
+// console.log("ADD rel", node, this);
+        //we can not add our self
+        if(node === this) return;
 
-        if(node === this)
-            return;
-
-        if (this.children[node.id] !== undefined)
-            return;
-
-
+        //node already added
+        if (this.children[node.id] !== undefined) return;
 
         let material = new LineBasicMaterial({color: 0x00ff00});
-        // material.opacity = 0.2;
-        // material.transparent = true;
 
         let geometry = new Geometry();
         geometry.verticesNeedUpdate = true;
@@ -114,13 +104,21 @@ export default class Node{
         let line = new Line(geometry, material);
         line.name = `${this.name}_to_${node.name}`;
 
-        this.lines.push(line);
         this.children[node.id] = {
             node: node,
             line: line
         };
 
         this.getMesh().parent.add(line);
+        //
+        // this.entity.props.waypoints.push({
+        //     linkId: node.id,
+        //     type: 3,
+        //     relation: []
+        // });
+        //
+        // node.addRelation(this)
+
     }
 
     /**
@@ -151,8 +149,8 @@ export default class Node{
      * @param state {int}
      */
     relationsVisible(state){
-        this.lines.forEach(function (line) {
-            line.visible = state;
+        this.children.forEach(function (child) {
+            child.line.visible = state;
         })
     }
 
@@ -186,8 +184,8 @@ export default class Node{
             scene.remove(mesh);
 
             //remove relation lines
-            this.lines.forEach(function (line) {
-                scene.remove(line);
+            this.children.forEach(function (child) {
+                scene.remove(child.line);
             });
         }
 

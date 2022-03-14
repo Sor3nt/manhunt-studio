@@ -68,6 +68,7 @@ export default class Game{
     addToStorage(result){
         result.gameId = this.gameId;
         Storage.add(result);
+        console.log("added to storage", result);
     }
 
     /**

@@ -25,6 +25,9 @@ export default class Grf extends AbstractBuilder{
             type: Studio.WAYPOINT_ROUTE
         });
 
+        Grf.reorder(areaLocations, waypointRoutes);
+console.log("REORDER", areaLocations, waypointRoutes);
+
         let binary = new NBinary(new ArrayBuffer(1024 * 1024));
 
         if (game.game === Games.GAMES.MANHUNT_2){
@@ -41,6 +44,70 @@ export default class Grf extends AbstractBuilder{
         binary.end();
 
         return binary;
+    }
+
+    /**
+     *
+     * @param areaLocations {Result[]}
+     * @param waypointRoutes {Result[]}
+     */
+    static reorder(areaLocations, waypointRoutes) {
+
+        function getLocationById(id){
+            let result = false;
+            areaLocations.forEach(function (areaLocation) {
+                if (areaLocation.props.id === id)
+                    result = areaLocation;
+            });
+
+            return result;
+        }
+
+        //flag anything to reorder
+        areaLocations.forEach(function (areaLocation) {
+            areaLocation.props.id = areaLocation.props.id + '_reorder';
+            areaLocation.props.waypoints.forEach(function (waypoint) {
+                waypoint.linkId = waypoint.linkId + '_reorder';
+
+            });
+        });
+
+
+        let currentId = 0;
+        areaLocations.forEach(function (areaLocation) {
+
+            let oldId = areaLocation.props.id;
+            areaLocation.props.id = currentId;
+
+            //update all related nodes
+            areaLocation.props.waypoints.forEach(function (waypoint) {
+
+                let relLocation = getLocationById(waypoint.linkId);
+                if (relLocation === false){
+                    console.error('Location could not be found');
+                    return;
+                }
+
+                relLocation.props.waypoints.forEach(function (relWaypoint) {
+                    if (relWaypoint.linkId === oldId )
+                        relWaypoint.linkId = currentId;
+                });
+
+            });
+
+            waypointRoutes.forEach(function (route) {
+                let newIds = [];
+                route.props.entries.forEach(function (nodeId) {
+                    if (nodeId === oldId)
+                        newIds.push(currentId);
+                    else
+                        newIds.push(nodeId);
+                });
+                route.props.entries = newIds;
+            });
+
+            currentId++;
+        });
     }
 
     /**

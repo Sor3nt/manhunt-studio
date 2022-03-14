@@ -169,34 +169,37 @@ export default class NodeGenerator{
             for(let i = 1; i <= boxes; i++){
 
                 //give some space to next mesh
-                if (nearBy[side] < range) {
-                    if (side === "left") newPos.z -= nearBy[side] - range;
-                    if (side === "right") newPos.z += nearBy[side] - range;
-                    if (side === "front") newPos.x += nearBy[side] - range;
-                    if (side === "back") newPos.x -= nearBy[side] - range;
-                }
+                // if (nearBy[side] < range) {
+                //     if (side === "left") newPos.z -= nearBy[side] - range;
+                //     if (side === "right") newPos.z += nearBy[side] - range;
+                //     if (side === "front") newPos.x += nearBy[side] - range;
+                //     if (side === "back") newPos.x -= nearBy[side] - range;
+                // }else{
+                    if (side === "left" ) newPos.z = ogPos.z - (i * 2);
+                    if (side === "right") newPos.z = ogPos.z + (i * 2);
+                    if (side === "front") newPos.x = ogPos.x + (i * 2);
+                    if (side === "back" ) newPos.x = ogPos.x - (i * 2);
 
-                if (side === "left" ) newPos.z = ogPos.z - (i * 2);
-                if (side === "right") newPos.z = ogPos.z + (i * 2);
-                if (side === "front") newPos.x = ogPos.x + (i * 2);
-                if (side === "back" ) newPos.x = ogPos.x - (i * 2);
+                // }
 
-
-                if (ogPos.x + '_' + ogPos.z === newPos.x + '_' + newPos.z)
-                    continue;
+                //
+                //
+                // if (ogPos.x.toFixed(2) + '_' + ogPos.z.toFixed(2) === newPos.x.toFixed(2) + '_' + newPos.z.toFixed(2))
+                //     continue;
 
                 let distBottom = _this.getDistanceToBottomMesh(newPos);
-                if (distBottom === false) return;
+                if (distBottom === false) return; //bottom found
 
                 //its going down, stop here
-                if (distBottom > 1.5) return;
-                if (distBottom < 0.2) return;
+                if (distBottom.distance > 2.5) return;
+                if (distBottom.distance < 0.2) return;
+                newPos.y = distBottom.point.y;
 
-                newPos.y -= distBottom;
-                newPos.y += .5;
+                // newPos.y -= distBottom;
+                newPos.y += 0.5 ;
 
                 //avoid to duplicate the start point
-                if (initPosition.distanceTo(newPos) < 0.1)
+                if (initPosition.distanceTo(newPos) < 0.5)
                     continue;
 
                 let posString = 'pos_' + newPos.x.toFixed(2) + '_' + newPos.y.toFixed(2) + '_'  + newPos.z.toFixed(2);
@@ -244,9 +247,9 @@ export default class NodeGenerator{
         let ray = new Raycaster( position.clone(), new Vector3(0,-1, 0) );
         let collisionResults = ray.intersectObjects( this.worldMeshes );
 
-        if (collisionResults.length === 0) return 0;
+        if (collisionResults.length === 0) return false;
 
-        return collisionResults[0].distance;
+        return collisionResults[0];
     }
 
 

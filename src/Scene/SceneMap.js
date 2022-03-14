@@ -84,6 +84,10 @@ export default class SceneMap extends SceneAbstract{
             }
 
             if (len - i - 1 === 0){
+                this.waypoints = new Waypoints(this);
+                this.waypoints.nodeVisible(false);
+                this.waypoints.lineVisible(false);
+                this.waypoints.routeVisible(false);
 
                 StudioScene.changeScene(this.mapComponent.studioScene.name);
 
@@ -102,10 +106,6 @@ export default class SceneMap extends SceneAbstract{
 
 
     #setup(){
-        this.waypoints = new Waypoints(this);
-        this.waypoints.nodeVisible(false);
-        this.waypoints.lineVisible(false);
-        this.waypoints.routeVisible(false);
 
         let game = Games.getGame(this.mapEntry.gameId);
         this.entitiesToProcess = game.findBy({

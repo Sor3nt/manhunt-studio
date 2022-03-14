@@ -9,6 +9,8 @@ import RouteSelection from "./Waypoints/RouteSelection.js";
 import {Vector3, Raycaster} from "./Vendor/three.module.js";
 import StopperPlacing from "./Waypoints/StopperPlacing.js";
 import Result from "./Plugin/Loader/Result.js";
+import {Geometry, Line, LineBasicMaterial} from "./Vendor/three.module.js";
+import WebGL from "./WebGL.js";
 
 
 export default class Waypoints{
@@ -93,7 +95,6 @@ export default class Waypoints{
             _this.meshesForRaycast.push(stopper.mesh.children[0]);
         });
 
-
         let entities = this.game.findBy({
             type: Studio.ENTITY,
             level: this.level,
@@ -102,10 +103,10 @@ export default class Waypoints{
         entities.forEach(function (result) {
             if (result.mesh === null)
                 return;
+
+            //We want only real objects, no hunters or triggers...
             if (result.props.className !== "Base_Inst")
                 return;
-
-            // console.log(result);
 
             _this.meshesForRaycast.push(result.mesh.children[0]);
         });
@@ -235,9 +236,12 @@ export default class Waypoints{
 
                 nodes.forEach(function (node) {
                     _this.nodeByNodeId[node.id] = node;
+                    // _this.meshesForRaycast.push(node.getMesh().children[0]);
                 });
 
                 _this.nextNodeId = nextNodeId;
+
+                // WebGL.render(true);
 
                 _this.generateRoutes();
                 _this.createNodeRelations(area);
@@ -271,6 +275,9 @@ export default class Waypoints{
                 _this.nextNodeId++;
 
                 _this.placeNewNode(areaName);
+
+                // _this.meshesForRaycast.push(areaNode.getMesh().children[0]);
+
             }
         });
     }
@@ -429,35 +436,69 @@ export default class Waypoints{
         });
 
         waypoints.forEach(function (waypointOuter) {
-            if (node === waypointOuter) return;
-
+            if (waypointOuter.props.id === node.id)
+                return;
 
             let dist = waypointOuter.mesh.position.distanceTo(node.entity.mesh.position);
             if (dist <= 3.05){
+                console.log("raycastt", _this.meshesForRaycast);
 
                 let dir = new Vector3();
-                dir.subVectors( node.entity.mesh.position, waypointOuter.mesh.position ).normalize();
+                dir.subVectors( waypointOuter.mesh.position, node.entity.mesh.position ).normalize();
 
                 let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.meshesForRaycast );
 
+if(collisions.length === 0){
+    console.log("no collisions");
+    return;
+}else {
+    console.log("collided with", collisions);
+}
+
+
+
+
+
+
+                let material = new LineBasicMaterial({color: 0xff0000});
+
+                let geometry = new Geometry();
+                geometry.verticesNeedUpdate = true;
+                geometry.dynamic = true;
+
+                geometry.vertices.push(node.entity.mesh.position);
+                geometry.vertices.push(collisions[0].point);
+
+                let line = new Line(geometry, material);
+                node.entity.mesh.parent.add(line);
+
+
+
+                console.log(collisions[0] );
+                console.log("current dist", dist);
+
+
+
+
+
                 if (collisions.length === 0) return;
                 // console.log(collisions[0].distance );
-                if (collisions[0].distance < 3.05) return;
+                if (collisions[0].distance < dist) return;
 
-                let found = false;
-                waypointOuter.props.waypoints.forEach(function (link) {
-                    if (link.linkId === node.id)
-                        found = true;
+                console.log("node", node, 'related to ', waypointOuter.props);
+
+                waypointOuter.props.waypoints.push({
+                    linkId: node.id,
+                    type: 3,
+                    relation: []
                 });
 
-                if (found === false){
-                    waypointOuter.props.waypoints.push({
-                        linkId: node.id,
-                        type: 3,
-                        relation: []
-                    });
+                node.entity.props.waypoints.push({
+                    linkId: waypointOuter.props.id,
+                    type: 3,
+                    relation: []
+                });
 
-                }
 
             }
 
@@ -472,13 +513,18 @@ export default class Waypoints{
             level: this.level,
             type: Studio.AREA_LOCATION
         });
-        //
-        // waypoints.forEach(function (waypoint) {
-        //     waypoint.props.waypoints = [];
-        // });
+
+
+        let nodeMeshes = [];
+        waypoints.forEach(function (waypoint) {
+            waypoint.mesh.updateMatrixWorld(true);
+            waypoint.mesh.children[0].updateMatrixWorld(true);
+            // test.push(waypoint.mesh);
+            nodeMeshes.push(waypoint.mesh.children[0]);
+
+        });
 
         waypoints.forEach(function (waypointOuter) {
-            // let tmpLow = 10000000;
             waypoints.forEach(function (waypointInner) {
                 if (waypointInner === waypointOuter) return;
 
@@ -486,37 +532,21 @@ export default class Waypoints{
                 let dist = waypointOuter.mesh.position.distanceTo(waypointInner.mesh.position);
                 if (dist <= 3.05){
 
-
                     let dir = new Vector3();
                     dir.subVectors( waypointInner.mesh.position, waypointOuter.mesh.position ).normalize();
 
-                    let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.meshesForRaycast );
-
+                    let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( [..._this.meshesForRaycast, ...nodeMeshes] );
                     if (collisions.length === 0) return;
-                    // console.log(collisions[0].distance );
-                    if (collisions[0].distance < 3.05) return;
+                    if (collisions[0].object.name === undefined) return;
 
-                    let found = false;
-                    waypointOuter.props.waypoints.forEach(function (link) {
-                        if (link.linkId === waypointInner.props.id)
-                            found = true;
+                    if (collisions[0].object.name.substr(0, 5) !== "node_")
+                        return;
+
+                    waypointOuter.props.waypoints.push({
+                        linkId: waypointInner.props.id,
+                        type: 3,
+                        relation: []
                     });
-
-                    if (found === false){
-
-                        waypointInner.props.waypoints.push({
-                            linkId: waypointOuter.props.id,
-                            type: 3,
-                            relation: []
-                        });
-
-                        waypointOuter.props.waypoints.push({
-                            linkId: waypointInner.props.id,
-                            type: 3,
-                            relation: []
-                        });
-
-                    }
 
                 }
 
