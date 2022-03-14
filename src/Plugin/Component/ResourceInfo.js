@@ -131,8 +131,8 @@ console.log("CLICK", entry);
                             /**
                              * @type {Node}
                              */
-                            let node = studioScene.waypoints.nodeByNodeId[entry.props.id];
-                            node.remove();
+                            studioScene.waypoints.removeNodeId(entry.props.id);
+
                             /**
                              * @type {Walk}
                              */

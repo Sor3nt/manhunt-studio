@@ -109,6 +109,10 @@ export default class Node{
             line: line
         };
 
+        console.log("parent", this.getMesh().parent);
+        console.log("this", this);
+        console.log("line", line);
+
         this.getMesh().parent.add(line);
         //
         // this.entity.props.waypoints.push({

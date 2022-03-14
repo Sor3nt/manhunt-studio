@@ -249,6 +249,21 @@ export default class Waypoints{
         });
     }
 
+    removeNodeId(id){
+        if (this.nodeByNodeId[id] === undefined){
+            console.error('Unable to find node Id', id);
+            return;
+        }
+
+        let node = this.nodeByNodeId[id];
+
+        let area = this.getCreateArea(node.entity.props.areaName);
+        area.removeNode(node);
+
+        delete this.nodeByNodeId[entry.props.id];
+
+    }
+
     placeNewNode(areaName){
 
         let _this = this;

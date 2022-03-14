@@ -58,15 +58,15 @@ export default class SemanticallyTree {
 
 
 
-
-        let waypoints = game.findBy({
-            type: Studio.WAYPOINT_ROUTE
-        });
-
-        waypoints.forEach(function (waypoint) {
-            tree.addWaypointRoute(waypoint);
-        });
-
+        //
+        // let waypoints = game.findBy({
+        //     type: Studio.WAYPOINT_ROUTE
+        // });
+        //
+        // waypoints.forEach(function (waypoint) {
+        //     tree.addWaypointRoute(waypoint);
+        // });
+        //
 
 
         this.section.tabNavigation.add({

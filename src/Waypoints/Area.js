@@ -25,6 +25,19 @@ export default class Area{
         this.color = Helper.getRandomColor();
     }
 
+    removeNode(node){
+        if (this.children.indexOf(node) === -1){
+            console.error('Unable to find node', node);
+            return;
+        }
+
+
+        this.children.splice(this.children.indexOf(node), 1);
+
+        node.remove();
+
+    }
+
     /**
      *
      * @param node {Node}
