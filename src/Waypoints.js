@@ -243,7 +243,7 @@ export default class Waypoints{
 
                 // WebGL.render(true);
 
-                _this.generateRoutes();
+                _this.generateAllRelations();
                 _this.createNodeRelations(area);
             }
         });
@@ -269,7 +269,7 @@ export default class Waypoints{
                 areaNode.entity.level = _this.level;
                 _this.game.addToStorage(areaNode.entity);
 
-                _this.generateNearByRoute(areaNode);
+                _this.generateNearByRelation(areaNode);
                 _this.createNodeRelations(area);
 
                 _this.nextNodeId++;
@@ -425,9 +425,57 @@ export default class Waypoints{
 
     /**
      *
+     * @param nodeA {Result}
+     * @param nodeB {Result}
+     */
+    generateSingleRelation(nodeA, nodeB){
+        let dist = nodeA.mesh.position.distanceTo(nodeB.mesh.position);
+        if (dist <= 3.05){
+
+            let dir = new Vector3();
+            dir.subVectors( nodeB.mesh.position, nodeA.mesh.position ).normalize();
+
+            //take sure the raycast detects it
+            nodeB.mesh.updateMatrixWorld(true);
+            nodeB.mesh.children[0].updateMatrixWorld(true);
+
+
+            //we assume to collide with our nodeB
+            let collisions =
+                (new Raycaster( nodeA.mesh.position, dir ))
+                .intersectObjects(
+                    [...this.meshesForRaycast, ...[nodeB.mesh.children[0]]]
+                );
+
+            if (collisions.length === 0) return false;
+
+            //we collided with something unknown, stop
+            if (collisions[0].object.name === undefined) return false;
+
+            //we collided with something else, stop
+            if (collisions[0].object.name.substr(0, 5) !== "node_")
+                return false;
+
+            //create relation
+            nodeA.props.waypoints.push({
+                linkId: nodeB.props.id,
+                type: 3,
+                relation: []
+            });
+
+            return true;
+        }
+
+        return false;
+
+    }
+
+
+    /**
+     *
      * @param node {Node}
      */
-    generateNearByRoute(node){
+    generateNearByRelation(node){
 
         let _this = this;
         let waypoints = this.game.findBy({
@@ -439,74 +487,22 @@ export default class Waypoints{
             if (waypointOuter.props.id === node.id)
                 return;
 
-            let dist = waypointOuter.mesh.position.distanceTo(node.entity.mesh.position);
-            if (dist <= 3.05){
-                console.log("raycastt", _this.meshesForRaycast);
+            let status = _this.generateSingleRelation(waypointOuter, node.entity);
 
-                let dir = new Vector3();
-                dir.subVectors( waypointOuter.mesh.position, node.entity.mesh.position ).normalize();
-
-                let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( _this.meshesForRaycast );
-
-if(collisions.length === 0){
-    console.log("no collisions");
-    return;
-}else {
-    console.log("collided with", collisions);
-}
-
-
-
-
-
-
-                let material = new LineBasicMaterial({color: 0xff0000});
-
-                let geometry = new Geometry();
-                geometry.verticesNeedUpdate = true;
-                geometry.dynamic = true;
-
-                geometry.vertices.push(node.entity.mesh.position);
-                geometry.vertices.push(collisions[0].point);
-
-                let line = new Line(geometry, material);
-                node.entity.mesh.parent.add(line);
-
-
-
-                console.log(collisions[0] );
-                console.log("current dist", dist);
-
-
-
-
-
-                if (collisions.length === 0) return;
-                // console.log(collisions[0].distance );
-                if (collisions[0].distance < dist) return;
-
-                console.log("node", node, 'related to ', waypointOuter.props);
-
-                waypointOuter.props.waypoints.push({
-                    linkId: node.id,
-                    type: 3,
-                    relation: []
-                });
-
+            //relation {waypointOuter} to {node} was created
+            if (status === true){
+                //create reverse relation
                 node.entity.props.waypoints.push({
                     linkId: waypointOuter.props.id,
                     type: 3,
                     relation: []
                 });
-
-
             }
-
         });
 
     }
 
-    generateRoutes(){
+    generateAllRelations(){
         let _this = this;
 
         let waypoints = this.game.findBy({
@@ -514,42 +510,10 @@ if(collisions.length === 0){
             type: Studio.AREA_LOCATION
         });
 
-
-        let nodeMeshes = [];
-        waypoints.forEach(function (waypoint) {
-            waypoint.mesh.updateMatrixWorld(true);
-            waypoint.mesh.children[0].updateMatrixWorld(true);
-            // test.push(waypoint.mesh);
-            nodeMeshes.push(waypoint.mesh.children[0]);
-
-        });
-
         waypoints.forEach(function (waypointOuter) {
             waypoints.forEach(function (waypointInner) {
                 if (waypointInner === waypointOuter) return;
-
-
-                let dist = waypointOuter.mesh.position.distanceTo(waypointInner.mesh.position);
-                if (dist <= 3.05){
-
-                    let dir = new Vector3();
-                    dir.subVectors( waypointInner.mesh.position, waypointOuter.mesh.position ).normalize();
-
-                    let collisions = (new Raycaster( waypointOuter.mesh.position, dir )).intersectObjects( [..._this.meshesForRaycast, ...nodeMeshes] );
-                    if (collisions.length === 0) return;
-                    if (collisions[0].object.name === undefined) return;
-
-                    if (collisions[0].object.name.substr(0, 5) !== "node_")
-                        return;
-
-                    waypointOuter.props.waypoints.push({
-                        linkId: waypointInner.props.id,
-                        type: 3,
-                        relation: []
-                    });
-
-                }
-
+                _this.generateSingleRelation(waypointOuter, waypointInner);
             });
 
         });
