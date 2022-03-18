@@ -11,7 +11,7 @@ export default class Node{
 
     /**
      *
-     * @type {{{node:Node, line:line}}}
+     * @type {{node:Node, line:Line}[]}
      */
     children = [];
 
@@ -42,6 +42,12 @@ export default class Node{
 
     /**
      *
+     * @type {int}
+     */
+    highlightColor = 0xff0000;
+
+    /**
+     *
      * @param entity {Result}
      */
     constructor(entity){
@@ -51,6 +57,14 @@ export default class Node{
 
         if(entity.props.position !== undefined)
             this.position = entity.props.position;
+    }
+
+    setHighlightColor(color) {
+        this.highlightColor = color;
+    }
+
+    setColor(color){
+        this.color = color;
     }
 
     /**
@@ -63,8 +77,6 @@ export default class Node{
 
         const geometry = new BoxGeometry(0.25, 0.25, 0.25);
         const material = new MeshBasicMaterial({color: this.color});
-        // material.opacity = 0.5;
-        // material.transparent = true;
 
         const cube = new Mesh(geometry, material);
         cube.name = this.name;
@@ -76,7 +88,6 @@ export default class Node{
         group.add(cube);
 
         this.entity.mesh = group;
-
         return this.entity.mesh;
     }
 
@@ -85,14 +96,13 @@ export default class Node{
      * @param node {Node}
      */
     addRelation(node){
-// console.log("ADD rel", node, this);
         //we can not add our self
         if(node === this) return;
 
         //node already added
         if (this.children[node.id] !== undefined) return;
 
-        let material = new LineBasicMaterial({color: 0x00ff00});
+        let material = new LineBasicMaterial({color: this.color});
 
         let geometry = new Geometry();
         geometry.verticesNeedUpdate = true;
@@ -109,20 +119,7 @@ export default class Node{
             line: line
         };
 
-        console.log("parent", this.getMesh().parent);
-        console.log("this", this);
-        console.log("line", line);
-
         this.getMesh().parent.add(line);
-        //
-        // this.entity.props.waypoints.push({
-        //     linkId: node.id,
-        //     type: 3,
-        //     relation: []
-        // });
-        //
-        // node.addRelation(this)
-
     }
 
     /**
@@ -130,7 +127,6 @@ export default class Node{
      * @param node {Node}
      */
     removeRelation(node){
-
         let relNode = this.children[node.id];
         if (relNode === undefined) return;
 
@@ -143,9 +139,7 @@ export default class Node{
             return !(waypoint.linkId === relNode.node.id);
         });
 
-
         delete this.children[node.id];
-
     }
 
     /**
@@ -170,13 +164,12 @@ export default class Node{
 
     /**
      *
-     * @param state {int}
+     * @param state {boolean}
      */
     highlight(state){
+
         let mesh = this.getMesh().children[0];
-        mesh.material.color.set(state ? 0xff0000 : this.color);
-        // mesh.material.opacity = state ? 1 : 0.2;
-        mesh.material.transparent = !state;
+        mesh.material.color.set(state ? this.highlightColor : this.color);
         mesh.material.needsUpdate = true;
     }
 

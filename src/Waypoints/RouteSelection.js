@@ -1,6 +1,7 @@
 import Mouse from "../Mouse.js";
 import {Raycaster, Vector2} from "../Vendor/three.module.js";
 import WebGL from "../WebGL.js";
+import Keyboard from "../Keyboard.js";
 
 export default class RouteSelection{
 
@@ -17,7 +18,8 @@ export default class RouteSelection{
     pointer = new Vector2(0, 0);
 
     binding = {
-        mouseClick: null
+        mouseClick: null,
+        keyUpEsc: null
     };
 
     /**
@@ -39,14 +41,6 @@ export default class RouteSelection{
      */
     meshes = [];
 
-
-    /**
-     *
-     * @type {Node}
-     */
-    firstNode = null;
-
-
     /**
      *
      * @type {Route}
@@ -65,6 +59,7 @@ export default class RouteSelection{
         this.onPlaceCallback = props.onPlaceCallback;
 
         this.binding.mouseClick = this.onMouseClick.bind(this);
+        this.binding.keyUpEsc = this.onKeyUpEsc.bind(this);
 
         let _this = this;
         this.waypoints.children.forEach(function (area) {
@@ -73,7 +68,6 @@ export default class RouteSelection{
 
             });
         });
-        console.log("googog");
 
         /**
          * We need to delay the registration a little bit
@@ -81,15 +75,27 @@ export default class RouteSelection{
          */
         setTimeout(function () {
             Mouse.onMouseClick(_this.binding.mouseClick);
+            Keyboard.onKeyUp('Escape', _this.binding.keyUpEsc);
         }, 500);
     }
 
+
+    unbind(){
+        Mouse.removeOnMouseClick(this.binding.mouseClick);
+        Keyboard.removeOnKeyUp('Escape', this.binding.keyUpEsc);
+
+        this.onPlaceCallback(this.route);
+    }
+
+
+    onKeyUpEsc(){
+        this.unbind();
+    }
+
     hackGetNodeByMesh(mesh){
-        let _this = this;
         let found = false;
         this.waypoints.children.forEach(function (area) {
             area.children.forEach(function (node) {
-console.log(node.getMesh().children[0], mesh);
                 if (node.getMesh().children[0] === mesh)
                     found = node;
 
@@ -97,13 +103,11 @@ console.log(node.getMesh().children[0], mesh);
         });
 
         return found;
-
     }
 
     onMouseClick(event){
         let domElement = WebGL.renderer.domElement;
         let rect = domElement.getBoundingClientRect();
-        // Mouse.removeOnMouseClick(this.binding.mouseClick);
 
         this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -114,26 +118,11 @@ console.log(node.getMesh().children[0], mesh);
 
         if (intersects.length === 1){
             let nodeMesh = intersects[0].object;
+            if (nodeMesh.name.substr(0, 5) !== "node_")
+                return;
 
-            if (this.firstNode === null) {
-                this.firstNode = this.hackGetNodeByMesh(nodeMesh);
-                console.log(this.firstNode);
-            }else{
-
-                let node = this.hackGetNodeByMesh(nodeMesh);
-                if (this.firstNode === node)
-                    return;
-
-                this.route.addNode(this.firstNode);
-
-                this.firstNode = node;
-
-            }
-
+            let node = this.hackGetNodeByMesh(nodeMesh);
+            this.route.addNode(node);
         }
-
     }
-
-
-
 }

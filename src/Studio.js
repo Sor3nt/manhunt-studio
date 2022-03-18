@@ -12,9 +12,11 @@ import SceneMap from "./Scene/SceneMap.js";
 import ActionType from "./Menu/Types/ActionType.js";
 import Keyboard from "./Keyboard.js";
 import Mouse from "./Mouse.js";
-import Storage from "./Storage.js";
 import Games from "./Plugin/Games.js";
 import Grf from "./Plugin/Builder/Game/ManhuntGeneric/Grf.js";
+import Route from "./Waypoints/Route.js";
+import Result from "./Plugin/Loader/Result.js";
+import Waypoints from "./Waypoints.js";
 
 export default class Studio{
 
@@ -115,9 +117,38 @@ export default class Studio{
             enabled: false
         });
 
+        catWaypoint.addType(new ActionType({
+            id: 'waypoint-load-nodes',
+            label: 'Load Waypoints',
+            callback: function (states) {
+                let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                if (studioScene instanceof SceneMap){
+
+                    studioScene.waypoints = new Waypoints(studioScene);
+                    // studioScene.waypoints.nodeVisible(true);
+                    // studioScene.waypoints.lineVisible(true);
+                    // studioScene.waypoints.routeVisible(true);
+
+                    Studio.menu.getById('waypoint-load-nodes').disable();
+
+                    Studio.menu.getById('waypoint-show-nodes').enable();
+                    Studio.menu.getById('waypoint-show-relations').enable();
+                    Studio.menu.getById('waypoint-show-routes').enable();
+                    Studio.menu.getById('waypoint-show-nodes').triggerClick();
+                    Studio.menu.getById('waypoint-show-relations').triggerClick();
+                    Studio.menu.getById('waypoint-show-routes').triggerClick();
+                    Studio.menu.getById('waypoint-routes').enable();
+                    Studio.menu.getById('waypoint-areas').enable();
+                    Studio.menu.getById('waypoint-clear').enable();
+
+                }
+            }
+        }));
+
         catWaypoint.addType(new CheckboxType({
             id: 'waypoint-show-nodes',
             label: 'Show nodes',
+            enabled: false,
             callback: function (states) {
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                 if (studioScene instanceof SceneMap){
@@ -142,6 +173,7 @@ export default class Studio{
         catWaypoint.addType(new CheckboxType({
             id: 'waypoint-show-relations',
             label: 'Show relations',
+            enabled: false,
             callback: function (states) {
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                 if (studioScene instanceof SceneMap){
@@ -153,6 +185,7 @@ export default class Studio{
         catWaypoint.addType(new CheckboxType({
             id: 'waypoint-show-routes',
             label: 'Show routes',
+            enabled: false,
             callback: function (states) {
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                 if (studioScene instanceof SceneMap){
@@ -166,60 +199,168 @@ export default class Studio{
         /**
          * Waypoint => Routes
          */
-        // let catWaypointRoutes = new Category({
-        //     id: 'waypoint-routes',
-        //     label: 'Routes',
-        //     callback: function (states) {
-        //         catWaypointRoutes.clear();
-        //
-        //         let studioSceneInfo = StudioScene.getStudioSceneInfo();
-        //         if (studioSceneInfo === null)
-        //             return;
-        //
-        //         let studioScene = studioSceneInfo.studioScene;
-        //         if (studioScene instanceof SceneMap) {
-        //
-        //             let waypoints = studioScene.waypoints;
-        //             waypoints.routes.forEach(function (route) {
-        //
-        //                 let catWaypointRouteEntry = new Category({
-        //                     id: 'waypoint-route-' + route.name,
-        //                     label: route.name,
-        //                     callback: function (states) {
-        //
-        //
-        //
-        //                     }
-        //                 });
-        //
-        //
-        //                 catWaypointRouteEntry.addType(new ActionType({
-        //                     id: 'waypoint-route-route-' + route.name,
-        //                     label: 'Add node',
-        //                     callback: function (states) {
-        //                         waypoints.routeVisible(false);
-        //                         waypoints.routeHighlight(false);
-        //                         route.setVisible(true);
-        //                         route.highlight(true);
-        //
-        //                         /**
-        //                          * @type {Walk}
-        //                          */
-        //                         let control = studioSceneInfo.control;
-        //                         control.setMode('route-selection');
-        //
-        //                         waypoints.routeSelection(route);
-        //                     }
-        //                 }));
-        //
-        //
-        //                 catWaypointRoutes.addSubCategory(catWaypointRouteEntry);
-        //
-        //             });
-        //         }
-        //     }
-        // });
-        // catWaypoint.addSubCategory(catWaypointRoutes);
+        let catWaypointRoutes = new Category({
+            id: 'waypoint-routes',
+            label: 'Routes',
+            enabled: false,
+            callback: function (states) {
+                catWaypointRoutes.clear();
+
+                let studioSceneInfo = StudioScene.getStudioSceneInfo();
+                if (studioSceneInfo === null)
+                    return;
+
+                let studioScene = studioSceneInfo.studioScene;
+                if (studioScene instanceof SceneMap) {
+
+                    catWaypointRoutes.addType(new ActionType({
+                        id: 'waypoint-route-create',
+                        label: 'Create route',
+                        callback: function (states) {
+
+                            let name = prompt('New Route Name', '');
+                            if (name === null || name === '')
+                                return;
+
+                            /**
+                             * We need to take sure the nodes are showed
+                             */
+                            let showNodesType = Studio.menu.getById('waypoint-show-nodes');
+                            if (showNodesType.states.active === false){
+                                showNodesType.triggerClick();
+                            }
+
+                            /**
+                             * We need to take sure the nodes relations are showed
+                             */
+                            let showNodesRelType = Studio.menu.getById('waypoint-show-relations');
+                            if (showNodesRelType.states.active === false){
+                                showNodesRelType.triggerClick();
+                            }
+
+                            let game = Games.getGame(studioScene.mapEntry.gameId);
+
+
+                            /**
+                             * @type {Walk}
+                             */
+                            let control = studioSceneInfo.control;
+                            control.setMode('route-selection');
+
+                            let route = new Route(name, null);
+                            studioScene.sceneInfo.scene.add(route.getMesh());
+                            route.setVisible(true);
+                            route.highlight(true);
+
+                            let routeData = {
+                                name: name,
+                                entries: [],
+                                locations: []
+                            };
+
+                            let result = new Result(
+                                Studio.WAYPOINT_ROUTE,
+                                route.name,
+                                "",
+                                0,
+                                routeData,
+                                function(){
+                                    return routeData;
+                                }
+                            );
+
+                            result.level = studioScene.mapEntry.level;
+                            route.entity = result;
+
+                            game.addToStorage(result);
+                            waypoints.routes.push(route);
+
+                            waypoints.routeSelection(route);
+                            Studio.menu.closeAll();
+                        }
+                    }));
+
+                    let waypoints = studioScene.waypoints;
+                    waypoints.routes.forEach(function (route) {
+
+
+                        let catWaypointRouteEntry = new Category({
+                            id: 'waypoint-route-' + route.name,
+                            label: route.name,
+                            callback: function (states) {  }
+                        });
+
+
+                        catWaypointRouteEntry.addType(new ActionType({
+                            id: 'waypoint-route-remove-' + route.name,
+                            label: 'Remove',
+                            callback: function (states) {
+
+                                if (!confirm(`Delete route ${route.name}?`))
+                                    return;
+
+                                let game = Games.getGame(studioScene.mapEntry.gameId);
+
+                                let entity = game.findOneBy({
+                                    level: studioScene.mapEntry.level,
+                                    type: Studio.WAYPOINT_ROUTE,
+                                    name: route.name
+                                });
+
+                                game.removeFromStorage(entity);
+
+                                route.setVisible(false);
+                                route.highlight(false);
+
+                                waypoints.routes.splice(waypoints.routes.indexOf(route), 1);
+
+                                Studio.menu.closeAll();
+
+
+                            }
+                        }));
+
+                        catWaypointRouteEntry.addType(new ActionType({
+                            id: 'waypoint-route-route-' + route.name,
+                            label: 'Edit',
+                            callback: function (states) {
+                                waypoints.routeVisible(false);
+                                waypoints.routeHighlight(false);
+                                route.setVisible(true);
+                                route.highlight(true);
+
+                                /**
+                                 * @type {Walk}
+                                 */
+                                let control = studioSceneInfo.control;
+                                control.setMode('route-selection');
+
+                                waypoints.routeSelection(route);
+                                Studio.menu.closeAll();
+
+                            }
+                        }));
+
+                        catWaypointRouteEntry.addType(new ActionType({
+                            id: 'waypoint-route-route-' + route.name,
+                            label: 'Clear',
+                            callback: function (states) {
+
+                                route.highlight(false);
+                                route.clear();
+                                Studio.menu.closeAll();
+
+                            }
+                        }));
+
+
+                        catWaypointRoutes.addSubCategory(catWaypointRouteEntry);
+
+                    });
+                }
+            }
+        });
+        catWaypoint.addSubCategory(catWaypointRoutes);
 
         /**
          * Waypoint => Area
@@ -227,6 +368,7 @@ export default class Studio{
         let catWaypointArea = new Category({
             id: 'waypoint-areas',
             label: 'Areas',
+            enabled: false,
             callback: function (states) {
                 if (states.open){
                     catWaypointArea.clear();
@@ -394,10 +536,11 @@ export default class Studio{
         catWaypoint.addSubCategory(catWaypointArea);
         catWaypoint.addType(new ActionType({
             id: 'waypoint-clear',
-            label: 'Clear anything',
+            label: 'Clear everything',
+            enabled: false,
             callback: function (states) {
 
-                if (!confirm('Clear all Nodes and Routes?'))
+                if (!confirm('Clear all Areas and Routes?'))
                     return;
 
                 let studioSceneInfo = StudioScene.getStudioSceneInfo();
@@ -408,8 +551,11 @@ export default class Studio{
                 if (studioScene instanceof SceneMap) {
 
                     let waypoints = studioScene.waypoints;
-                    waypoints.clear();
+                    waypoints.routes.forEach(function (route) {
+                        route.clear();
+                    });
 
+                    waypoints.clear();
                 }
             }
         }));

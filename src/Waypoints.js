@@ -76,9 +76,6 @@ export default class Waypoints{
         this.createRoutes();
         this.loadMeshesForRaycast();
 
-        let test = Studio.menu.getById('waypoint');
-        test.enable();
-
     }
 
     loadMeshesForRaycast(){
@@ -209,7 +206,7 @@ export default class Waypoints{
             sceneInfo: this.sceneMap.sceneInfo,
             waypoints: this,
             route: route,
-            onPlaceCallback: function () {
+            onPlaceCallback: function (route) {
 
             }
         });
@@ -405,7 +402,7 @@ export default class Waypoints{
         });
 
         areaRoutes.forEach(function (areaRoute) {
-            let route = new Route(areaRoute.name);
+            let route = new Route(areaRoute.name, areaRoute);
             areaRoute.props.entries.forEach(function (nodeId) {
                 let node = _this.nodeByNodeId[nodeId];
                 route.addNode(node);

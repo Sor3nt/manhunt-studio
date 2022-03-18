@@ -84,10 +84,10 @@ export default class SceneMap extends SceneAbstract{
             }
 
             if (len - i - 1 === 0){
-                this.waypoints = new Waypoints(this);
-                this.waypoints.nodeVisible(false);
-                this.waypoints.lineVisible(false);
-                this.waypoints.routeVisible(false);
+
+
+                //todo check if mapai.grf is there...
+                Studio.menu.getById('waypoint').enable();
 
                 StudioScene.changeScene(this.mapComponent.studioScene.name);
 

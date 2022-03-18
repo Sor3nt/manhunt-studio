@@ -44,4 +44,5 @@ export default class AbstractType{
         this.enabled = false;
     }
 
+
 }

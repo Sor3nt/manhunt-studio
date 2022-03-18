@@ -124,7 +124,6 @@ export default class Grf extends AbstractLoader{
         let results = [];
         for(let i = 0; i < count; i++){
             results.push({
-                'order' :  i,
                 'name' :  binary.getString(0, true),
                 'entries' :  Grf.parseBlock(binary)
             });

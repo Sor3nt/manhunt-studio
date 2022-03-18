@@ -26,7 +26,6 @@ export default class Grf extends AbstractBuilder{
         });
 
         Grf.reorder(areaLocations, waypointRoutes);
-console.log("REORDER", areaLocations, waypointRoutes);
 
         let binary = new NBinary(new ArrayBuffer(1024 * 1024));
 

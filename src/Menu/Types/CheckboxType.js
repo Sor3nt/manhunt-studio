@@ -62,4 +62,5 @@ export default class CheckboxType extends AbstractType{
         this.setState(!this.states.active);
     }
 
+
 }

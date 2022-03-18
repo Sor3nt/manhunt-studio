@@ -7,6 +7,11 @@
     cursor: not-allowed;
 }
 
+.menu li .disabled{
+    color: #727070;
+    cursor: not-allowed;
+}
+
 .menu li{
     float: left;
     margin-right: 15px;

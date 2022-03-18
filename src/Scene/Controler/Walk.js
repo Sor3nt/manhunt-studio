@@ -79,7 +79,12 @@ export default class Walk {
             // if (event.code === 'KeyH')
             //     this.highlightModelsInRange(10);
 
-            // if (event.code === 'Escape') {
+            if (event.code === 'Escape') {
+                if (this.mode === "route-selection"){
+                    this.setMode("fly");
+                    document.exitPointerLock();
+                }
+            }
             //
 
             //     _this.keyStates.modeSelectObject = false;
@@ -104,12 +109,12 @@ export default class Walk {
         });
 
         WebGL.renderer.domElement.addEventListener('mousedown', () => {
-            if (this.mode === "fly" || this.mode === "transform" || this.mode === "route-selection")
+            if (this.mode === "fly" || this.mode === "transform")
                 document.body.requestPointerLock();
         });
 
         document.body.addEventListener('mousemove', (event) => {
-            if (document.pointerLockElement === document.body && (_this.mode === "fly" || _this.mode === "select" || _this.mode === "route-selection")) {
+            if ( (document.pointerLockElement === document.body && _this.mode === "fly" || _this.mode === "select") || _this.mode === "route-selection" ) {
                 sceneInfo.camera.rotation.y -= event.movementX / 500;
                 sceneInfo.camera.rotation.x -= event.movementY / 500;
             }
@@ -295,7 +300,7 @@ console.error("TODO");
 
     update(delta) {
 
-        if ((this.mode === "fly" || this.mode === "route-selection" ) && document.pointerLockElement === document.body) {
+        if ((this.mode === "fly" && document.pointerLockElement === document.body) || this.mode === "route-selection" ) {
             this.flyControls(delta);
 
             const damping = Math.exp(-3 * delta) - 1;
