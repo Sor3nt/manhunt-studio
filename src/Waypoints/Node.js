@@ -192,6 +192,7 @@ export default class Node{
         }
 
         this.children = [];
+
         Storage.remove(this.entity);
     }
 

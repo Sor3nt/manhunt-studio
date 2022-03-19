@@ -8,7 +8,6 @@ export default class ObjectAnimation{
     }
 
     playClip( clip ){
-        console.log("PLAY", clip, this.model);
         this.stop();
         this._mixer.timeScale = 1;
         this._mixer.clipAction( clip ).play();

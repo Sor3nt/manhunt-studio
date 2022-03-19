@@ -94,7 +94,6 @@ export default class Mouse{
      */
     static removeOnMouseClick(callback){
         let index = Mouse.clickCallbacks.indexOf(callback);
-        console.log("rempve", index);
         Mouse.clickCallbacks.splice(index, 1);
     }
 

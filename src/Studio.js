@@ -87,7 +87,7 @@ export default class Studio{
 
         catSave.addType(new ActionType({
             id: 'save-waypoint',
-            label: 'Waypoint',
+            label: 'mapAI.grf (Waypoint)',
             // enabled: false,
             callback: function (states) {
 
@@ -102,6 +102,15 @@ export default class Studio{
                     Studio.menu.closeAll();
                 }
 
+            }
+        }));
+
+        catSave.addType(new ActionType({
+            id: 'save-entity',
+            label: 'entity.inst',
+            // enabled: false,
+            callback: function (states) {
+                alert("Temporary disabled");
             }
         }));
 

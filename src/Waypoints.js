@@ -241,10 +241,6 @@ export default class Waypoints{
 
                 _this.generateAllRelations();
                 _this.createNodeRelations(area);
-
-
-                console.log("GENNED NODES", nodes);
-
             }
         });
     }

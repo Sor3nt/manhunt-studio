@@ -49,7 +49,7 @@ export default class StudioScene{
 
     static changeScene(name){
 
-console.log("change scene to ", name);
+// console.log("change scene to ", name);
         StudioScene.activeSceneInfo = StudioScene.getStudioSceneInfo(name);
         WebGL.resize();
     }

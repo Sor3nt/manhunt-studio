@@ -104,7 +104,7 @@ export default class Walk {
             }
             if (event.code === 'KeyO') {
 
-                console.log("cilds",sceneInfo.scene);
+                // console.log("cilds",sceneInfo.scene);
             }
         });
 
@@ -225,7 +225,7 @@ export default class Walk {
         });
 
         if (clickedGroups.length > 0) {
-            console.log("RayCast Object", clickedGroups[0]);
+            // console.log("RayCast Object", clickedGroups[0]);
 
             if (Config.outlineActiveObject)
                 this.outlinePass.selectedObjects = [clickedGroups[0].children[0]];
@@ -350,7 +350,7 @@ export default class Walk {
 
     setMode(mode) {
 
-        console.log("current mode", this.mode, "new mode", mode);
+        // console.log("current mode", this.mode, "new mode", mode);
 
         if (this.mode === "transform" && mode !== "transform") {
             this.transform.detach();

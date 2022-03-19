@@ -100,7 +100,6 @@ export default class VertexFormat extends Chunk{
                     if (tmpI >= 1000){
                         die;
                     }
-                    console.log(chunk8[3], binary.current());
                     // die;
                     // rw.read((char *) chunk8, 0x10);
                     switch (chunk8[3]) {
@@ -276,7 +275,7 @@ die;
                 /* Vertex colors */
             } case 0x6D00C002: {
                 size = 8;
-                
+
                 for (let j = 0; j < vertexCount; j++) {
                     vertexColors.push(binary.consume(1, 'uint8'));
                     nightColors.push(binary.consume(1, 'uint8'));
@@ -353,8 +352,6 @@ die;
         if (vertexCount*size & 0xF)
             binary.seek(0x10 - (vertexCount*size & 0xF));
 
-
-        console.log("vertices", vertices);
     }
 
 }

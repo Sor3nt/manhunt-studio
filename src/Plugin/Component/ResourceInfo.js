@@ -38,7 +38,7 @@ export default class ResourceInfo extends AbstractComponent{
 
         if (entry === null)
             return;
-console.log("CLICK", entry);
+
         let result = [];
         let object;
         let materialInfo;
@@ -128,6 +128,12 @@ console.log("CLICK", entry);
                     onClick: function (  ) {
                         let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                         if (studioScene instanceof SceneMap){
+
+
+                            if (entry.props.waypoints.length === 0){
+                                alert("BUG: Unable to remove node without waypoint relations");
+                                return;
+                            }
                             /**
                              * @type {Node}
                              */

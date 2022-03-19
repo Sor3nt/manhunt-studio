@@ -62,8 +62,6 @@ export default class StudioSceneInfo{
         let animationGame = Games.getGame(animEntry.gameId);
         let modelGame = Games.getGame(this.lookAt.gameId);
 
-        console.log(this.lookAt, modelGame);
-
         animEntry.props.game = animationGame.game;
         if (animationGame.game !== modelGame.game)
             animEntry.props.convert = true;

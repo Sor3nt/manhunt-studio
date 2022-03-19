@@ -55,7 +55,6 @@ export default class Status{
 
     static set(msg){
 
-        console.log(msg, "last duration", +new Date() - Status.setAt);
         Status.element.html(msg);
         Status.setAt = +new Date();
 

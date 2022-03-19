@@ -112,6 +112,9 @@
 underline">Current Features</h5>
                                 <ul style="color: #fff; font-size: 10px;float: right;">
                                     <li>
+                                        Waypoint Editor <i class="fas fa-check"></i>️
+                                    </li>
+                                    <li>
                                         Level Entity Handler <i class="fas fa-check"></i>️
                                     </li>
                                     <li>
@@ -153,6 +156,7 @@ underline">Supported Formats</h6>
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
 underline">Changelog</h5>
                                 <ul style="color: #fff; font-size: 10px">
+                                    <li><b>19-03-2022</b>: Waypoint Editor</li>
                                     <li><b>07-11-2021</b>: Animation player</li>
                                     <li><b>23-08-2021</b>: Manhunt 2 Support, Semantic Entity View, Speed modifier,<br/> Transparence fixes, navigation fixes and much more</li>
                                     <li><b>07-08-2021</b>: Search feature & Bugfixes</li>
@@ -172,7 +176,7 @@ underline">Changelog</h5>
 
             </div>
 
-            <div class="row" style="margin-top: 20px">
+            <div class="row" style="margin-top: 40px">
                 <div class="col-12" style="text-align: center;">
 
                     <h6 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:

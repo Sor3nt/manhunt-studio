@@ -8,7 +8,7 @@ import Scan from "../../../Renderware/Utils/Scan.js";
 
 export default class Model extends AbstractLoader{
     static name = "Model (Manhunt 2 PC)";
-    
+
     static allBones = [];
     static meshBone = {};
     static normals = [];
@@ -75,7 +75,7 @@ export default class Model extends AbstractLoader{
                                 //
                                 // binary.setCurrent(0);
                                 // let scanner = new Scan(binary);
-                                console.log("Scan", this);
+                                // console.log("Scan", this);
 
                                 return false;
                             }
