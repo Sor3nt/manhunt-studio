@@ -124,7 +124,7 @@ export default class NormalizeModel{
                 if (requiredMaterials.indexOf(matId) !== -1) return;
                 requiredMaterials.push(matId);
 
-                if (_this.data.material.length > 0)
+                if (_this.data.material !== undefined)
                     mesh.material.push({
                         diffuse: _this.data.materials[matId].rgba,
                         textureName: _this.data.material.shift(), //shift hack to get the correct texturename
