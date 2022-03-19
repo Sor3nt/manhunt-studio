@@ -188,7 +188,7 @@ export default class Waypoints{
             });
 
             area.children.forEach(function (node) {
-                delete _this.nodeByNodeId[node.id];
+                delete _this.nodeByNodeId[node.getId()];
             });
 
             area.clear();
@@ -230,18 +230,21 @@ export default class Waypoints{
             level: this.level,
             callback: function (nextNodeId, nodes) {
 
-
                 nodes.forEach(function (node) {
-                    _this.nodeByNodeId[node.id] = node;
-                    // _this.meshesForRaycast.push(node.getMesh().children[0]);
+                    if (_this.nodeByNodeId[node.getId()] !== undefined)
+                        console.error("Waypoint node already existent", node);
+
+                    _this.nodeByNodeId[node.getId()] = node;
                 });
 
                 _this.nextNodeId = nextNodeId;
 
-                // WebGL.render(true);
-
                 _this.generateAllRelations();
                 _this.createNodeRelations(area);
+
+
+                console.log("GENNED NODES", nodes);
+
             }
         });
     }
@@ -253,11 +256,10 @@ export default class Waypoints{
         }
 
         let node = this.nodeByNodeId[id];
-
         let area = this.getCreateArea(node.entity.props.areaName);
         area.removeNode(node);
 
-        delete this.nodeByNodeId[entry.props.id];
+        delete this.nodeByNodeId[id];
 
     }
 
@@ -429,7 +431,7 @@ export default class Waypoints{
                 if (relNode !== undefined)
                     node.addRelation(relNode);
                 else
-                    console.error(`[Waypoints] Invalid Waypoint ID ${waypoint.linkId} in node ${node.id}`)
+                    console.error(`[Waypoints] Invalid Waypoint ID ${waypoint.linkId} in node ${node.getId()})`)
             })
         });
     }
@@ -496,7 +498,7 @@ export default class Waypoints{
         });
 
         waypoints.forEach(function (waypointOuter) {
-            if (waypointOuter.props.id === node.id)
+            if (waypointOuter.props.id === node.getId())
                 return;
 
             let status = _this.generateSingleRelation(waypointOuter, node.entity);

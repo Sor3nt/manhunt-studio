@@ -50,7 +50,8 @@ export default class Route{
     clear(){
 
         let mesh = this.getMesh();
-        mesh.parent.remove(mesh);
+        if (mesh.parent !== null)
+            mesh.parent.remove(mesh);
 
         this.children = [];
         this.entity.props.entries = [];
@@ -66,8 +67,8 @@ export default class Route{
         if (this.children.indexOf(node) === -1){
             this.children.push(node);
 
-            if (this.entity.props.entries.indexOf(node.id) === -1){
-                this.entity.props.entries.push(node.id);
+            if (this.entity.props.entries.indexOf(node.getId()) === -1){
+                this.entity.props.entries.push(node.getId());
                 this.entity.props.locations.push(node.entity);
             }
         }

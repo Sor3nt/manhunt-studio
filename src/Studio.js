@@ -515,7 +515,32 @@ export default class Studio{
 
                                         let waypoints = studioScene.waypoints;
                                         waypoints.clear(area.name);
+                                        Studio.menu.closeAll();
+
+
                                     }
+                                }
+                            }));
+
+
+                            catWaypointAreaEntry.addType(new ActionType({
+                                id: `waypoint-area-${area.name}-remove`,
+                                label: 'Remove',
+                                callback: function (states) {
+
+                                    let studioSceneInfo = StudioScene.getStudioSceneInfo();
+                                    if (studioSceneInfo === null)
+                                        return;
+
+                                    let studioScene = studioSceneInfo.studioScene;
+                                    if (studioScene instanceof SceneMap) {
+
+                                        area.clear();
+                                        waypoints.children.splice(waypoints.children.indexOf(area), 1);
+                                    }
+
+                                    Studio.menu.closeAll();
+
                                 }
                             }));
 

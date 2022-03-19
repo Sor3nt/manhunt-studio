@@ -45,12 +45,59 @@ export default class Grf extends AbstractBuilder{
         return binary;
     }
 
+
+    /**
+     *
+     * @param areaLocations {Result[]}
+     * @param waypointRoutes {Result[]}
+     */
+    static validate(areaLocations, waypointRoutes){
+
+        function getLocationById(id){
+            let result = false;
+            areaLocations.forEach(function (areaLocation) {
+                if (areaLocation.props.id === id)
+                    result = areaLocation;
+            });
+
+            return result;
+        }
+
+
+        let result = true;
+
+        areaLocations.forEach(function (areaLocation) {
+
+
+            areaLocation.props.waypoints.forEach(function (waypoint) {
+                let relLocation = getLocationById(waypoint.linkId);
+                if (relLocation === false){
+                    console.error(`Location ID ${waypoint.linkId} was not found!`);
+                    // debugger;
+                    result = false;
+                }
+            });
+
+
+        });
+
+
+    }
+
     /**
      *
      * @param areaLocations {Result[]}
      * @param waypointRoutes {Result[]}
      */
     static reorder(areaLocations, waypointRoutes) {
+
+        if (Grf.validate(areaLocations, waypointRoutes) === false){
+            alert("Map Invalid");
+            return;
+        }
+        //
+        // console.log(areaLocations);
+        // debugger;
 
         function getLocationById(id){
             let result = false;
@@ -76,23 +123,20 @@ export default class Grf extends AbstractBuilder{
         areaLocations.forEach(function (areaLocation) {
 
             let oldId = areaLocation.props.id;
-            areaLocation.props.id = currentId;
 
-            //update all related nodes
-            areaLocation.props.waypoints.forEach(function (waypoint) {
 
-                let relLocation = getLocationById(waypoint.linkId);
-                if (relLocation === false){
-                    console.error('Location could not be found');
-                    return;
-                }
 
-                relLocation.props.waypoints.forEach(function (relWaypoint) {
-                    if (relWaypoint.linkId === oldId )
-                        relWaypoint.linkId = currentId;
+            areaLocations.forEach(function (_areaLocation) {
+                if (_areaLocation === areaLocation) return;
+
+                _areaLocation.props.waypoints.forEach(function (_waypoint) {
+                    if (_waypoint.linkId === oldId ){
+                        _waypoint.linkId = currentId;
+                    }
+
                 });
-
             });
+
 
             waypointRoutes.forEach(function (route) {
                 let newIds = [];
@@ -107,6 +151,15 @@ export default class Grf extends AbstractBuilder{
 
             currentId++;
         });
+
+        currentId = 0;
+        areaLocations.forEach(function (areaLocation) {
+            areaLocation.props.id = currentId;
+            currentId++;
+        });
+
+
+        console.log("final", areaLocations);
     }
 
     /**

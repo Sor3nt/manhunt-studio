@@ -161,8 +161,9 @@ export default class Walk {
             return;
 
         if (this.object.userData.entity.type === Studio.AREA_LOCATION){
-console.error("TODO");
+//not required, the position is readed from the  mesh
         }else{
+            //todo: see area_location... change also here the logic
             this.object.userData.entity.props.instance.setData({
                 position: {
                     x: this.object.position.x,

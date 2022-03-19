@@ -3,11 +3,6 @@ import Storage from "../Storage.js";
 
 export default class Node{
 
-    /**
-     *
-     * @type {int}
-     */
-    id = 0;
 
     /**
      *
@@ -51,7 +46,6 @@ export default class Node{
      * @param entity {Result}
      */
     constructor(entity){
-        this.id = entity.props.id;
         this.entity = entity;
         this.name = entity.name || 'newNode';
 
@@ -65,6 +59,10 @@ export default class Node{
 
     setColor(color){
         this.color = color;
+    }
+
+    getId(){
+        return this.entity.props.id;
     }
 
     /**
@@ -100,7 +98,7 @@ export default class Node{
         if(node === this) return;
 
         //node already added
-        if (this.children[node.id] !== undefined) return;
+        if (this.children[node.getId()] !== undefined) return;
 
         let material = new LineBasicMaterial({color: this.color});
 
@@ -114,7 +112,7 @@ export default class Node{
         let line = new Line(geometry, material);
         line.name = `${this.name}_to_${node.name}`;
 
-        this.children[node.id] = {
+        this.children[node.getId()] = {
             node: node,
             line: line
         };
@@ -127,7 +125,7 @@ export default class Node{
      * @param node {Node}
      */
     removeRelation(node){
-        let relNode = this.children[node.id];
+        let relNode = this.children[node.getId()];
         if (relNode === undefined) return;
 
         let mesh = this.getMesh();
@@ -136,10 +134,10 @@ export default class Node{
             scene.remove(relNode.line);
 
         this.entity.props.waypoints = this.entity.props.waypoints.filter(function (waypoint) {
-            return !(waypoint.linkId === relNode.node.id);
+            return !(waypoint.linkId === relNode.node.getId());
         });
 
-        delete this.children[node.id];
+        delete this.children[node.getId()];
     }
 
     /**

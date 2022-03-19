@@ -101,8 +101,8 @@ export default class NodeGenerator{
 
         this.generatedPoints.forEach(function (position) {
 
-            // let adjustedPosition = position.clone();
-            // _this.adjustPosition(adjustedPosition);
+            let adjustedPosition = position.clone();
+            _this.adjustPosition(adjustedPosition);
 
             let areaLocation = new Result(
                 Studio.AREA_LOCATION,
@@ -112,7 +112,7 @@ export default class NodeGenerator{
                 {
                     id: _this.nextNodeId,
                     areaName: _this.area.name,
-                    position: position,
+                    position: adjustedPosition,
                     radius: 0.5,
                     name: "",
                     nodeName: "",
@@ -164,34 +164,19 @@ export default class NodeGenerator{
             }
 
             let newPos = ogPos.clone();
-            let range = 1.0;
 
             for(let i = 1; i <= boxes; i++){
 
-                //give some space to next mesh
-                // if (nearBy[side] < range) {
-                //     if (side === "left") newPos.z -= nearBy[side] - range;
-                //     if (side === "right") newPos.z += nearBy[side] - range;
-                //     if (side === "front") newPos.x += nearBy[side] - range;
-                //     if (side === "back") newPos.x -= nearBy[side] - range;
-                // }else{
-                    if (side === "left" ) newPos.z = ogPos.z - (i * 2);
-                    if (side === "right") newPos.z = ogPos.z + (i * 2);
-                    if (side === "front") newPos.x = ogPos.x + (i * 2);
-                    if (side === "back" ) newPos.x = ogPos.x - (i * 2);
-
-                // }
-
-                //
-                //
-                // if (ogPos.x.toFixed(2) + '_' + ogPos.z.toFixed(2) === newPos.x.toFixed(2) + '_' + newPos.z.toFixed(2))
-                //     continue;
+                if (side === "left" ) newPos.z = ogPos.z - (i * 2);
+                if (side === "right") newPos.z = ogPos.z + (i * 2);
+                if (side === "front") newPos.x = ogPos.x + (i * 2);
+                if (side === "back" ) newPos.x = ogPos.x - (i * 2);
 
                 let distBottom = _this.getDistanceToBottomMesh(newPos);
                 if (distBottom === false) return; //bottom found
 
                 //its going down, stop here
-                if (distBottom.distance > 2.5) return;
+                if (distBottom.distance > 1.5) return;
                 if (distBottom.distance < 0.2) return;
                 newPos.y = distBottom.point.y;
 
