@@ -124,11 +124,12 @@ export default class NormalizeModel{
                 if (requiredMaterials.indexOf(matId) !== -1) return;
                 requiredMaterials.push(matId);
 
-                mesh.material.push({
-                    diffuse: _this.data.materials[matId].rgba,
-                    textureName: _this.data.material.shift(), //shift hack to get the correct texturename
-                    opacitymap: null,
-                });
+                if (_this.data.material.length > 0)
+                    mesh.material.push({
+                        diffuse: _this.data.materials[matId].rgba,
+                        textureName: _this.data.material.shift(), //shift hack to get the correct texturename
+                        opacitymap: null,
+                    });
             });
 
             meshes.push(mesh);
