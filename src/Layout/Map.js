@@ -150,6 +150,7 @@ export default class Map {
                     return entity;
                 }
             );
+            inst.entity = entity;
 
             result.props.instance = entity.inst;
             result.props.glgEntry = entity.glgEntry;

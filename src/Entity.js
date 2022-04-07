@@ -151,12 +151,8 @@ export default class Entity{
     }
 
     setRotation(x, y, z, w) {
-        let quaternion = new Quaternion(x, z, -y, w * -1);
-
-        let v = new Euler();
-        v.setFromQuaternion(quaternion);
-
-        this.mesh.rotation.copy(v);
+        let quaternion = new Quaternion(x, z, y, w);
+        this.mesh.quaternion.copy(quaternion);
     }
 
     #loadModel(){

@@ -17,6 +17,7 @@ import Grf from "./Plugin/Builder/Game/ManhuntGeneric/Grf.js";
 import Route from "./Waypoints/Route.js";
 import Result from "./Plugin/Loader/Result.js";
 import Waypoints from "./Waypoints.js";
+import Inst from "./Plugin/Builder/Game/ManhuntGeneric/Inst.js";
 
 export default class Studio{
 
@@ -110,8 +111,17 @@ export default class Studio{
             label: 'entity.inst',
             // enabled: false,
             callback: function (states) {
-                alert("Temporary disabled");
-            }
+
+                let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                if (studioScene instanceof SceneMap){
+                    // console.log("ok");
+                    let game = Games.getGame(studioScene.mapEntry.gameId);
+                    let level = studioScene.mapEntry.level;
+
+                    let binary = Inst.build(game, level, false);
+                    Save.output(binary, 'entity.inst');
+                    Studio.menu.closeAll();
+                }            }
         }));
 
         Studio.menu.addCategory(catSave);

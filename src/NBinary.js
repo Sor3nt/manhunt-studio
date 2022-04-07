@@ -251,8 +251,10 @@ export default class NBinary{
             offset++;
         });
 
-        view.setUint8(offset, delimiter);
-        offset++;
+        if (delimiter !== undefined){
+            view.setUint8(offset, delimiter);
+            offset++;
+        }
 
         for(let i = 0; i < padLen; i++){
             view.setUint8(offset, paddingChar);
@@ -264,6 +266,17 @@ export default class NBinary{
 
     end(){
         this.data = this.data.slice(0, this._current);
+    }
+
+    /**
+     *
+     * @param data {NBinary}
+     */
+    append(data){
+        data.setCurrent(0);
+        for(let i = 0; i < data.length(); i++){
+            this.setUInt8(data.consume(1, 'uint8'))
+        }
     }
 
 

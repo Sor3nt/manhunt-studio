@@ -157,30 +157,6 @@ export default class Walk {
 
     onObjectChanged(){
 
-        if (this.object.userData.entity === undefined)
-            return;
-
-        if (this.object.userData.entity.type === Studio.AREA_LOCATION){
-//not required, the position is readed from the  mesh
-        }else{
-            //todo: see area_location... change also here the logic
-            this.object.userData.entity.props.instance.setData({
-                position: {
-                    x: this.object.position.x,
-                    y: this.object.position.y,
-                    z: this.object.position.z,
-                },
-                rotation: {
-                    x: this.object.quaternion.x,
-                    y: this.object.quaternion.y,
-                    z: this.object.quaternion.z,
-                    w: this.object.quaternion.w
-                }
-            });
-
-        }
-
-
         this.orbit.target.copy(this.object.position);
     }
 

@@ -188,10 +188,10 @@ export default class Inst extends AbstractLoader{
 
         let game = false;
 
-        entityDataSize.forEach(function (size, index) {
+            entityDataSize.forEach(function (size, index) {
             let offset = binary.current();
             let endOffset = offset + size;
-            
+
             let glgRecord = binary.getString(0, true);
             let internalName = binary.getString(0, true);
 
@@ -232,7 +232,7 @@ export default class Inst extends AbstractLoader{
             result.gameFourCC = game;
 
             results.push(result);
-            
+
             binary.setCurrent(endOffset);
         });
 
@@ -251,7 +251,6 @@ export default class Inst extends AbstractLoader{
     static parse(binary, offset, endOffset, game){
         binary.setCurrent(offset);
 
-
         let glgRecord = binary.getString(0, true);
         let internalName = binary.getString(0, true);
 
@@ -265,66 +264,67 @@ export default class Inst extends AbstractLoader{
         let entityClass = binary.getString(0, true);
 
         let settings = [];
-        // if (binary.remain() > 0){
 
-            let field = 0;
-            while(binary.current() < endOffset){
-                let setting = {};
-                if (game === Games.GAMES.MANHUNT){
+        let fieldIndex = 0;
+        while(binary.current() < endOffset){
+            let setting = {
+                name : 'unk_' + fieldIndex,
+                hash: false,
+                type: 'int'
+            };
 
-                    if (entityClass === "Trigger_Inst"){
-                        switch (field) {
-                            case 1:
-                                settings['radius'] = binary.consume(4, 'float32');
-                                break;
-                            default:
-                                settings['unk_' + field] = binary.consume(4, 'int32');
-                        }
-                    }else{
-                        settings['unk_' + field] = binary.consume(4, 'int32');
+            if (game === Games.GAMES.MANHUNT){
+
+                if (entityClass === "Trigger_Inst"){
+                    switch (fieldIndex) {
+                        case 1:
+                            setting.name = 'radius';
+                            setting.type = 'flo';
+                            setting.value = binary.consume(4, 'float32');
+                            break;
+                        default:
+                            setting.value = binary.consume(4, 'int32');
                     }
+                }else{
+                    setting.value = binary.consume(4, 'int32');
+                }
+
+            }else{
+
+                setting.hash = binary.consume(4, 'int32');
+
+                if (Inst.map['m_' + setting.hash] !== undefined){
+                    setting.name = Inst.map['m_' + setting.hash];
+                }
+
+                setting.type = binary.consume(3, 'string');
+                binary.consume(1, 'uint8');
+
+                if (
+                    setting.name === "colourBlue" ||
+                    setting.name === "colourGreen" ||
+                    setting.name === "colourRed"
+                ){
+                    setting.value = parseInt(binary.consume(4, 'float32') * 255.0);
 
                 }else{
 
-                        //TODO....
-                    setting.hash = (binary.consume(4, 'int32'));
-                    // setting.hash = Inst.buf2hex(binary.consume(4, 'arraybuffer'));
-
-                    if (typeof Inst.map['m_' + setting.hash] !== "undefined"){
-                        setting.name = Inst.camelName(Inst.map['m_' + setting.hash]);
-                    }else{
-                        setting.name = "unk_" + setting.hash;
+                    if (setting.type === "int") {
+                        setting.value = binary.consume(4, 'uint32');
+                    }else if (setting.type === "boo"){
+                        setting.value = binary.consume(4, 'uint32');
+                    }else if (setting.type === "flo"){
+                        setting.value = binary.consume(4, 'float32');
+                    }else if (setting.type === "str"){
+                        setting.value = binary.getString(0, true);
                     }
-
-                    setting.type = binary.consume(3, 'string');
-                    binary.consume(1, 'uint8');
-
-                    if (
-                        setting.name === "colourBlue" ||
-                        setting.name === "colourGreen" ||
-                        setting.name === "colourRed"
-                    ){
-                        setting.value = parseInt(binary.consume(4, 'float32') * 255.0);
-
-                    }else{
-
-                        if (setting.type === "int") {
-                            setting.value = binary.consume(4, 'uint32');
-                        }else if (setting.type === "boo"){
-                            setting.value = binary.consume(4, 'uint32');
-                        }else if (setting.type === "flo"){
-                            setting.value = binary.consume(4, 'float32');
-                        }else if (setting.type === "str"){
-                            setting.value = binary.getString(0, true);
-                        }
-                    }
-
-                    settings[setting.name] = setting.value;
                 }
-
-                field++;
             }
-        // }
+
+            settings.push(setting);
+
+            fieldIndex++;
+        }
 
         return {
             glgRecord: glgRecord,
