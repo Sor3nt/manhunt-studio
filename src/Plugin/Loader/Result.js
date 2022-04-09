@@ -19,6 +19,9 @@ export default class Result{
     /**  @type {Group} */
     mesh = null;
 
+    /**  @type {Result} */
+    entity = null;
+
     gameFourCC = null;
     platformFourCC = null;
 
