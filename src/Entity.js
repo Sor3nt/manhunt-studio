@@ -151,7 +151,7 @@ export default class Entity{
     }
 
     setRotation(x, y, z, w) {
-        let quaternion = new Quaternion(x, z, y, w);
+        let quaternion = new Quaternion(x, y, z, w);
         this.mesh.quaternion.copy(quaternion);
     }
 

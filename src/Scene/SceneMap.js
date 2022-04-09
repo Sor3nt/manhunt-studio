@@ -88,6 +88,7 @@ export default class SceneMap extends SceneAbstract{
 
                 //todo check if mapai.grf is there...
                 Studio.menu.getById('waypoint').enable();
+                Studio.menu.getById('edit').enable();
 
                 StudioScene.changeScene(this.mapComponent.studioScene.name);
 

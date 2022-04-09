@@ -261,6 +261,9 @@ export default class Inst extends AbstractLoader{
         position.y = posZ;
 
         let rotation = binary.readXYZW();
+        let y = rotation.y;
+        rotation.y = rotation.z * -1;
+        rotation.z = y * -1;
         let entityClass = binary.getString(0, true);
 
         let settings = [];

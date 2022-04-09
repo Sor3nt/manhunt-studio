@@ -18,6 +18,7 @@ import Route from "./Waypoints/Route.js";
 import Result from "./Plugin/Loader/Result.js";
 import Waypoints from "./Waypoints.js";
 import Inst from "./Plugin/Builder/Game/ManhuntGeneric/Inst.js";
+import Entity from "./Entity.js";
 
 export default class Studio{
 
@@ -47,6 +48,9 @@ export default class Studio{
     static AREA_LOCATION = 13;
     static WAYPOINT_ROUTE = 14;
     static WAYPOINT_STOPPER = 15;
+
+    static clipboard = null;
+    static copyCount = 0;
 
     static registerPlugins(){
         Loader.registerPlugins();
@@ -126,6 +130,109 @@ export default class Studio{
 
         Studio.menu.addCategory(catSave);
 
+        /**
+         * Edit
+         */
+        let catEdit = new Category({
+            id: 'edit',
+            label: 'Edit',
+            enabled: true
+        });
+
+
+        catEdit.addType(new ActionType({
+            id: 'edit-copy',
+            label: 'Copy',
+            enabled: false,
+            callback: function (states) {
+                let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                if (studioScene instanceof SceneMap){
+                    Studio.menu.getById('edit-paste').enable();
+
+                    /**
+                     * @type {Walk}
+                     */
+                    let control = studioScene.sceneInfo.control;
+
+                    let ogEntity = control.object.userData.entity;
+                    if (ogEntity === undefined || ogEntity === null){
+                        console.error('no entity found on object', control.object);
+                        return;
+                    }
+
+                    Studio.clipboard = ogEntity;
+                    console.log();
+                }
+            }
+        }));
+
+        catEdit.addType(new ActionType({
+            id: 'edit-paste',
+            label: 'Paste',
+            enabled: false,
+            callback: function (states) {
+                let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                if (studioScene instanceof SceneMap){
+                    let game = Games.getGame(studioScene.mapEntry.gameId);
+
+
+                    let newInst = { ...Studio.clipboard.props.instance.data()};
+                    newInst.name += "_" + Studio.copyCount++;
+
+                    let instResult = new Result(
+                        Studio.INST,
+                        newInst.name,
+                        new ArrayBuffer(0),
+                        0,
+                        {
+                            glgRecord: newInst.glgRecord,
+                        },
+                        function(){
+                            return newInst;
+                        }
+                    );
+
+                    instResult.file = Studio.clipboard.props.instance.file;
+                    instResult.fileName = Studio.clipboard.props.instance.fileName;
+                    instResult.filePath = Studio.clipboard.props.instance.filePath;
+                    instResult.level = Studio.clipboard.props.instance.level;
+                    instResult.gameId = studioScene.mapEntry.gameId;
+
+                    game.addToStorage(instResult);
+
+                    let entity = new Entity(studioScene.mapEntry, instResult);
+                    let result = new Result(
+                        Studio.ENTITY,
+                        newInst.name,
+                        "",
+                        0,
+                        {
+                            className: newInst.entityClass
+                        },
+                        function(){
+                            return entity;
+                        }
+                    );
+                    result.level = studioScene.mapEntry.level;
+                    game.addToStorage(result);
+
+                    instResult.entity = entity;
+
+                    result.props.instance = entity.inst;
+                    result.props.glgEntry = entity.glgEntry;
+
+                    let mesh = result.data().getMesh();
+
+                    mesh.name = entity.name;
+                    mesh.userData.entity = result;
+                    result.mesh = mesh;
+                    studioScene.sceneInfo.scene.add(mesh);
+
+                }
+            }
+        }));
+
+        Studio.menu.addCategory(catEdit);
 
         /**
          * Waypoint

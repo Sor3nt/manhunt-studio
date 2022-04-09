@@ -73,7 +73,6 @@ export default class Inst extends AbstractBuilder{
             /*
              * Append Internal name
              */
-            console.log("write", instEntry.data().name);
             entry.writeString(instEntry.data().name, 0x00, true, 0x70);
 
             let mesh = instEntry.entity.mesh;
@@ -85,8 +84,8 @@ export default class Inst extends AbstractBuilder{
                 entry.setFloat32(instEntry.data().position.y);
 
                 entry.setFloat32(instEntry.data().rotation.x);
-                entry.setFloat32(instEntry.data().rotation.y);
-                entry.setFloat32(instEntry.data().rotation.z);
+                entry.setFloat32(instEntry.data().rotation.z * -1);
+                entry.setFloat32(instEntry.data().rotation.y * -1);
                 entry.setFloat32(instEntry.data().rotation.w);
 
             }else{
@@ -94,13 +93,10 @@ export default class Inst extends AbstractBuilder{
                 entry.setFloat32(mesh.position.z * -1);
                 entry.setFloat32(mesh.position.y);
 
-
-                console.log("have",mesh.quaternion, "need", instEntry.data().rotation);
                 entry.setFloat32(mesh.quaternion.x);
-                entry.setFloat32(mesh.quaternion.z);
-                entry.setFloat32(mesh.quaternion.y);
+                entry.setFloat32(mesh.quaternion.z * -1);
+                entry.setFloat32(mesh.quaternion.y * -1);
                 entry.setFloat32(mesh.quaternion.w);
-
             }
 
 

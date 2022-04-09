@@ -157,6 +157,29 @@ export default class Walk {
 
     onObjectChanged(){
 
+        if (this.object.userData.entity === undefined)
+            return;
+
+        if (this.object.userData.entity.props.instance !== undefined){
+            let inst = this.object.userData.entity.props.instance.data();
+
+            inst.position = {
+                x: this.object.position.x,
+                y: this.object.position.y,
+                z: this.object.position.z,
+            };
+
+            inst.rotation = {
+                x: this.object.quaternion.x,
+                y: this.object.quaternion.y,
+                z: this.object.quaternion.z,
+                w: this.object.quaternion.w
+            };
+
+
+        }
+
+
         this.orbit.target.copy(this.object.position);
     }
 
@@ -271,6 +294,8 @@ export default class Walk {
         this.transform.detach();
         this.transform.attach(object);
 
+        Studio.menu.getById('edit-copy').enable();
+
         if (object.userData.entity !== undefined)
             Event.dispatch(Event.VIEW_ENTRY, { entry: object.userData.entity });
     }
@@ -329,6 +354,7 @@ export default class Walk {
         // console.log("current mode", this.mode, "new mode", mode);
 
         if (this.mode === "transform" && mode !== "transform") {
+            Studio.menu.getById('edit-copy').disable();
             this.transform.detach();
             this.orbit.enabled = false;
 
