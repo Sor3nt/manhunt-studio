@@ -31,7 +31,7 @@ export default class AbstractComponent{
     }
 
     onFocus(){
-
+        console.debug("[Abstract] New Focus on", this.studioScene);
         if (this.studioScene !== null)
             StudioScene.changeScene(this.studioScene.name);
 

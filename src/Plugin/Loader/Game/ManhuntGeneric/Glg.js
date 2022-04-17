@@ -2,7 +2,7 @@ import AbstractLoader from "./../../Abstract.js";
 import Result from "../../Result.js";
 import NBinary from "../../../../NBinary.js";
 import Studio from "../../../../Studio.js";
-import {Vector4} from "./../../../../Vendor/three.module.js";
+import {Vector2, Vector3,Vector4} from "./../../../../Vendor/three.module.js";
 
 export default class Glg extends AbstractLoader{
     static name = "Model Config (INI/GLG Manhunt 1/2)";
@@ -36,16 +36,57 @@ export default class Glg extends AbstractLoader{
                 singleOption = singleOption.replace(/\s+/g, ' ');
                 var attrValue = singleOption.split(' ');
 
-                var attr = attrValue[0].trim();
-                var value = attrValue[1].trim();
+                let attr = attrValue[0].trim();
+                let value = singleOption.substr(attr.length + 1).trim();
 
-                if (attr === "LOD_DATA"){
-                    var vec4 = [];
+                if (['LOD_DATA'].indexOf(attr) !== -1) {
+                    let vec4 = [];
                     value.split(',').forEach(function (val) {
-                        vec4.push( parseInt(val) )
+                        vec4.push(parseInt(val))
+                    });
+
+                    value = vec4;
+
+                }else if (['HOLSTER_ROTATION', 'STRAP1_ROTATION', 'STRAP2_ROTATION'].indexOf(attr) !== -1){
+                    let vec4 = [];
+                    value.split(',').forEach(function (val) {
+                        vec4.push( parseFloat(val) )
                     });
 
                     value = new Vector4(vec4[0],vec4[1],vec4[2],vec4[3]);
+
+                }else if ([
+                    'HOLSTER_TRANSLATION',
+                    'STRAP1_TRANSLATION',
+                    'STRAP2_TRANSLATION',
+                    'FLASH_POS',
+                    'OBSTRUCT_POINT',
+                    'OBSTRUCT_POINT_ZOOM'
+                ].indexOf(attr) !== -1){
+
+                    let vec3 = [];
+                    value.split(',').forEach(function (val) {
+                        vec3.push( parseFloat(val) )
+                    });
+
+                    value = new Vector3(vec3[0],vec3[1],vec3[2]);
+                    console.log("ehh", value);
+
+                }else if (['MOVE_THRESHOLDS', 'AIM_LOCKON_ANGLES', 'EXECUTE_STAGE_TIMES', 'EXECUTE_STAGE_TIMES'].indexOf(attr) !== -1){
+                    let vec2 = [];
+                    value.split(',').forEach(function (val) {
+                        vec2.push( parseFloat(val) )
+                    });
+
+                    value = new Vector2(vec2[0],vec2[1]);
+
+                }else if (['ZOOM_LEVELS', 'ZOOM_MAX_ZONES'].indexOf(attr) !== -1){
+                    let vec2 = [];
+                    value.split(',').forEach(function (val) {
+                        vec2.push( parseInt(val) )
+                    });
+
+                    value = vec2;
                 }
 
                 options.push({
@@ -75,17 +116,41 @@ export default class Glg extends AbstractLoader{
                  * @return {NBinary}
                  */
                 getRawChunk: function () {
-                    var enc = new TextEncoder();
+                    function prepareFloat( val) {
+                        let txt = val + "";
+                        if (txt === "0")
+                            txt = "0.0";
+                        else if (txt.indexOf('.') === -1){
+                            txt += '.0';
+                        }
+
+                        return txt;
+                    }
+
 
                     let data = "";
                     options.forEach(function (option) {
-                        data += "    " + option.attr + (typeof option.value === "undefined" ? "" : " " + option.value) + "\n";
+                        if (option.value instanceof Vector4) {
+                            data += `    ${option.attr} ${prepareFloat(option.value.x)},${prepareFloat(option.value.y)},${prepareFloat(option.value.z)},${prepareFloat(option.value.w)}\n`;
+
+                        }else if (option.value instanceof Vector3){
+                            data += `    ${option.attr} ${prepareFloat(option.value.x)},${prepareFloat(option.value.y)},${prepareFloat(option.value.z)}\n`;
+
+                        }else if (option.value instanceof Vector2){
+                            data += `    ${option.attr} ${prepareFloat(option.value.x)},${prepareFloat(option.value.y)}\n`;
+                        }else if (Array.isArray(option.value)){
+                            data += `    ${option.attr} ${option.value.join(',')}\n`;
+
+                        }else{
+                            data += "    " + option.attr + (typeof option.value === "undefined" ? "" : " " + option.value) + "\n";
+                        }
                     });
 
                     let record = `RECORD ${name}\n${data}END\n\n`;
                     if (force)
                         record = "#FORCE\n" + record;
 
+                    var enc = new TextEncoder();
                     let buffer = enc.encode(record).buffer;
                     return new NBinary(buffer);
                 },
@@ -157,7 +222,7 @@ export default class Glg extends AbstractLoader{
             var optionsRaw = match.split("\n");
             var name = optionsRaw[0];
 
-            if (name === "dummy") return;
+            // if (name === "dummy") return;
             delete optionsRaw[0];
             delete optionsRaw[optionsRaw.length - 1];
 

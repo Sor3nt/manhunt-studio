@@ -119,6 +119,7 @@ export default class SceneMap extends SceneAbstract{
 
     }
 
+
     /**
      *
      * @param map {Group}

@@ -103,6 +103,7 @@ export default class FileDrop{
      * @param fileNamePath
      */
     processFile(file, fileNamePath){
+
         let _this = this;
         let reader = new FileReader();
 
@@ -143,9 +144,7 @@ export default class FileDrop{
                 Status.show(`${file.fileNamePath} parsed`);
 
                 parsed.forEach(function (entry) {
-
                     entry.setFilePath(file.fileNamePath);
-
                     _this.entries.push(entry);
                 });
 

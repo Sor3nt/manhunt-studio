@@ -23,6 +23,7 @@ import Dff from "./Plugin/Builder/Game/Manhunt/Dff.js";
 import Glg from "./Plugin/Builder/Game/ManhuntGeneric/Glg.js";
 import Txd from "./Plugin/Builder/Game/Manhunt/Txd.js";
 import Col from "./Plugin/Builder/Game/ManhuntGeneric/Col.js";
+import SceneModel from "./Scene/SceneModel.js";
 
 export default class Studio{
 
@@ -260,11 +261,12 @@ export default class Studio{
         catEdit.addType(new ActionType({
             id: 'edit-copy',
             label: 'Copy',
-            enabled: false,
+            enabled: true,
             callback: function (states) {
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                 if (studioScene instanceof SceneMap){
                     Studio.menu.getById('edit-paste').enable();
+
 
                     /**
                      * @type {Walk}
@@ -277,8 +279,21 @@ export default class Studio{
                         return;
                     }
 
-                    Studio.clipboard = ogEntity;
+                    Studio.clipboard = {
+                        level: studioScene.mapEntry.level,
+                        entity: ogEntity
+                    };
+
+                }else if (studioScene instanceof SceneModel){
+                    alert("not supported right now, sry");
+                    // Studio.clipboard = {
+                    //     level: studioScene.sceneInfo.lookAt.level,
+                    //     entity: studioScene.sceneInfo.lookAt
+                    // };
                 }
+
+                Studio.menu.closeAll();
+
             }
         }));
 
@@ -293,8 +308,9 @@ export default class Studio{
 
                     new Insert({
                         sceneInfo: studioScene.sceneInfo,
-                        entityToCopy: Studio.clipboard,
-                        sourceGame: Games.getGame(Studio.clipboard.props.instance.gameId),
+                        entityToCopy: Studio.clipboard.entity,
+                        sourceLevel: Studio.clipboard.level,
+                        sourceGame: Games.getGame(Studio.clipboard.entity.props.instance.gameId),
                         targetGame: Games.getGame(studioScene.mapEntry.gameId),
                         onPlaceCallback: function () {
                             console.log("OK");
@@ -311,7 +327,6 @@ export default class Studio{
                     document.body.requestPointerLock();
 
                     Studio.menu.closeAll();
-
                 }
             }
         }));

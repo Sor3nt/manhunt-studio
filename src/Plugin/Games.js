@@ -29,6 +29,7 @@ export default class Games{
      * @param game {Game}
      */
     static addGame(game){
+        console.debug("[Games] Add Game", game);
         Games.games.push(game);
     }
 

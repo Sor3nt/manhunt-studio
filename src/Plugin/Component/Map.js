@@ -3,7 +3,6 @@ import SceneMap from "../../Scene/SceneMap.js";
 import StudioScene from "../../Scene/StudioScene.js";
 import WebGL from "../../WebGL.js";
 import Studio from "../../Studio.js";
-import Storage from "../../Storage.js";
 import MeshHelper from "../../MeshHelper.js";
 import Status from "../../Status.js";
 import Games from "../Games.js";
@@ -70,6 +69,18 @@ export default class Map extends AbstractComponent{
         ){
             StudioScene.changeScene(this.studioScene.name);
         }
+
+
+        if (StudioScene.activeSceneInfo !== null && StudioScene.activeSceneInfo.studioScene instanceof SceneMap) {
+            /**
+             *
+             * @type {Walk}
+             */
+            let walk = StudioScene.activeSceneInfo.control;
+            walk.keyStates.modeSelectObject = false;
+            walk.setMode('fly');
+        }
+
 
 
     }

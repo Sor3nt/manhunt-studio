@@ -94,7 +94,21 @@ export default class Insert{
 
     /**
      *
-     * @param props {{sceneInfo: StudioSceneInfo,  onPlaceCallback: function, entityToCopy: Result, sourceGame: Game, targetGame: Game}}
+     * @type {String}
+     */
+    sourceLevel = "";
+
+
+    /**
+     *
+     * @type {String}
+     */
+    targetLevel = "";
+
+
+    /**
+     *
+     * @param props {{sceneInfo: StudioSceneInfo,  onPlaceCallback: function, entityToCopy: Result, sourceGame: Game, targetGame: Game, sourceLevel: string}}
      */
     constructor(props){
         this.sceneInfo = props.sceneInfo;
@@ -102,7 +116,9 @@ export default class Insert{
         this.entityToCopy = props.entityToCopy;
         this.sourceGame = props.sourceGame;
         this.targetGame = props.targetGame;
-
+        this.sourceLevel = props.sourceLevel;
+console.log("source", this.sourceGame);
+console.log("target", this.targetGame);
         this.sceneInfo.scene.add(this.getMesh());
 
         this.binding.mouseClick = this.onMouseClick.bind(this);
@@ -175,26 +191,37 @@ export default class Insert{
         if (this.mesh !== null)
             return this.mesh;
 
-        this.glg = this.getTargetGlg();
-        this.modelTexsCol = this.getTargetModelAndTextures();
+        if (this.sceneInfo.studioScene instanceof SceneMap) {
+            this.targetLevel = this.sceneInfo.studioScene.mapEntry.level;
 
-        this.targetInst = this.getTargetInstance();
+            this.glg = this.getTargetGlg();
+            this.modelTexsCol = this.getTargetModelAndTextures();
 
-        let entity = this.createEntity();
-        this.targetGame.addToStorage(entity);
+            this.targetInst = this.getTargetInstance();
 
-        //create relation back
-        this.targetInst.entity = entity;
+            let entity = this.createEntity();
+            this.targetGame.addToStorage(entity);
+
+            //create relation back
+            this.targetInst.entity = entity;
 
 
-        let mesh = entity.data().getMesh();
+            let mesh = entity.data().getMesh();
 
-        mesh.name = entity.name;
-        mesh.userData.entity = entity;
-        entity.mesh = mesh;
+            mesh.name = entity.name;
+            mesh.userData.entity = entity;
+            entity.mesh = mesh;
 
-        this.mesh = mesh;
-        return this.mesh;
+            this.mesh = mesh;
+            return this.mesh;
+
+
+        }else{
+            console.error("not inside scenee ?!");
+        }
+
+
+
     }
 
     createEntity(){
@@ -203,10 +230,10 @@ export default class Insert{
         let result = new Result(
             Studio.ENTITY,
             this.targetInst.name,
-            "",
+            new ArrayBuffer(0),
             0,
             {
-                className: this.targetInst.entityClass
+                className: this.targetInst.data().entityClass
             },
             function(){
                 return entity;
@@ -224,28 +251,19 @@ export default class Insert{
 
     getTargetGlg(){
         let sourceInstData = this.entityToCopy.props.instance.data();
-        let isSameGame = this.sourceGame.game === this.targetGame.game;
-
-        let level = "";
-        if (this.sceneInfo.studioScene instanceof SceneMap) {
-            level = this.sceneInfo.studioScene.mapEntry.level;
-        }else{
-            console.error("not inside scenee ?!");
-            return;
-        }
 
         let targetGlg = this.targetGame.findOneBy({
             type: Studio.GLG,
-            level: level,
-            name: sourceInstData.glgRecord + '_testing'
+            level: this.targetLevel,
+            name: sourceInstData.glgRecord
         });
 
         if (targetGlg === null){
-            console.log(`[Insert] Copy GLG/INI Record ${sourceInstData.glgRecord} to level ${level}.`);
+            console.log(`[Insert] Copy GLG/INI Record ${sourceInstData.glgRecord} to level ${this.targetLevel}.`);
 
             let sourceGlg = this.sourceGame.findOneBy({
                 type: Studio.GLG,
-                level: level,
+                level: this.sourceLevel,
                 name: sourceInstData.glgRecord
             });
 
@@ -253,7 +271,7 @@ export default class Insert{
             let glgNBinary = sourceGlg.props.getRawChunk();
 
             targetGlg = Glg.createResult(sourceGlg.name, glgNBinary, sourceGlg.data(), false);
-            targetGlg.level = level;
+            targetGlg.level = this.targetLevel;
             targetGlg.gameId = this.targetGame.gameId;
             targetGlg.file = sourceGlg.file;
             targetGlg.fileName = sourceGlg.fileName;
@@ -267,33 +285,30 @@ export default class Insert{
 
     getTargetModelCollision(){
 
-        let level = "";
-        if (this.sceneInfo.studioScene instanceof SceneMap) {
-            level = this.sceneInfo.studioScene.mapEntry.level;
-        }else{
-            console.error("not inside scenee ?!");
-            return;
-        }
-
-
         let colName = this.glg.props.getValue("COLLISION_DATA");
 
         let targetCol = this.targetGame.findOneBy({
             type: Studio.COLLISION,
-            level: level,
-            name: colName + '_testing'
+            level: this.targetLevel,
+            name: colName
         });
 
         if (targetCol !== null)
             return targetCol;
 
-        console.log(`[Insert] Copy Collision ${colName} to level ${level}.`);
+        console.log(`[Insert] Copy Collision ${colName} to level ${this.targetLevel}.`);
 
         let sourceCol = this.sourceGame.findOneBy({
             type: Studio.COLLISION,
-            level: level,
+            level: this.sourceLevel,
             name: colName
         });
+
+        console.log(sourceCol);
+        console.log(this.sourceGame.findBy({
+            type: Studio.COLLISION,
+        }));
+
 
         let colNBinary = sourceCol.props.getRawChunk();
 
@@ -318,7 +333,7 @@ export default class Insert{
             }
         );
 
-        targetCol.level = level;
+        targetCol.level = this.targetLevel;
         targetCol.gameId = this.targetGame.gameId;
         targetCol.file = sourceCol.file;
         targetCol.fileName = sourceCol.fileName;
@@ -331,13 +346,7 @@ export default class Insert{
     getTargetModelTextures( model ){
 
         let _this = this;
-        let level = "";
-        if (this.sceneInfo.studioScene instanceof SceneMap) {
-            level = this.sceneInfo.studioScene.mapEntry.level;
-        }else{
-            console.error("not inside scenee ?!");
-            return;
-        }
+
 
         /*
          * Get Textures from Model
@@ -351,15 +360,15 @@ export default class Insert{
             object.material.forEach(function (name) {
                 let targetTexture = _this.targetGame.findOneBy({
                     type: Studio.TEXTURE,
-                    name: name + '_testing',
-                    level: level
+                    name: name,
+                    level: _this.targetLevel
                 });
 
                 if (targetTexture === null){
                     let sourceTexture = _this.sourceGame.findOneBy({
                         type: Studio.TEXTURE,
                         name: name,
-                        // level: level //TODO we need here the source level or we get maybe a wrong result..
+                        level: _this.sourceLevel
                     });
 
                     if (materialToCopy.indexOf(sourceTexture) === -1)
@@ -412,14 +421,15 @@ export default class Insert{
             );
 
 
-            targetMaterial.level = level;
-            targetMaterial.gameId = _this.targetGame.gameId;
-            if (objects.length){
-                targetMaterial.file = objects[0].file;
-                targetMaterial.fileName = objects[0].fileName;
+            targetMaterial.level = _this.targetLevel;
+            if (_this.targetGame.game === Games.GAMES.MANHUNT){
+                targetMaterial.file = 'modelspc.txd';
+            }else{
+                targetMaterial.file = 'modelspc.tex';
             }
+            targetMaterial.fileName = 'modelspc';
 
-            console.log(`[Insert] Copy Texture ${material.name} to level ${level}.`);
+            console.log(`[Insert] Copy Texture ${material.name} to level ${_this.targetLevel}.`);
 
             _this.targetGame.addToStorage(targetMaterial);
 
@@ -433,32 +443,26 @@ export default class Insert{
     getTargetModelAndTextures(){
         let isSameGame = this.sourceGame.game === this.targetGame.game;
 
-        let level = "";
-        if (this.sceneInfo.studioScene instanceof SceneMap) {
-            level = this.sceneInfo.studioScene.mapEntry.level;
-        }else{
-            console.error("not inside scenee ?!");
-            return;
-        }
 
         let modelName = this.glg.props.getValue("MODEL");
 
         let targetModel = this.targetGame.findOneBy({
             type: Studio.MODEL,
-            level: level,
-            name: modelName + '_testing'
+            level: this.targetLevel,
+            name: modelName
         });
 
 
+        let sourceModel = this.sourceGame.findOneBy({
+            type: Studio.MODEL,
+            level: this.sourceLevel,
+            name: modelName
+        });
+
         let results = [];
         if (targetModel === null){
-            console.log(`[Insert] Copy Model ${modelName} to level ${level}.`);
+            console.log(`[Insert] Copy Model ${modelName} to level ${this.targetLevel}.`);
 
-            let sourceModel = this.sourceGame.findOneBy({
-                type: Studio.MODEL,
-                level: level,
-                name: modelName
-            });
 
 
             if (isSameGame === true){
@@ -496,29 +500,26 @@ export default class Insert{
                 );
 
 
-                let _this = this;
-                let targetCol = this.getTargetModelCollision();
-                let targetTextures = this.getTargetModelTextures(sourceModel);
-                targetTextures.forEach(function (targetTexture) {
-                    results.push(targetTexture);
-                });
-
-                targetModel.level = level;
-                targetModel.gameId = this.targetGame.gameId;
+                targetModel.level = this.targetLevel;
                 targetModel.file = sourceModel.file;
                 targetModel.fileName = sourceModel.fileName;
 
                 this.targetGame.addToStorage(targetModel);
 
                 results.push(targetModel);
-
             }else{
                 console.error("Copy not supported for model ", sourceModel);
             }
         }
 
-        return results;
 
+        results.push(this.getTargetModelCollision());
+        let targetTextures = this.getTargetModelTextures(sourceModel);
+        targetTextures.forEach(function (targetTexture) {
+            results.push(targetTexture);
+        });
+
+        return results;
     }
 
     getTargetInstance(){
@@ -527,20 +528,9 @@ export default class Insert{
 
         let isSameGame = this.sourceGame.game === this.targetGame.game;
 
-
-        let level = "";
-        if (this.sceneInfo.studioScene instanceof SceneMap) {
-            level = this.sceneInfo.studioScene.mapEntry.level;
-        }else{
-            console.error("not inside scenee ?!");
-            return;
-        }
-
         let targetFileName = "";
 
-        if (isSameGame)
-            targetFileName = this.entityToCopy.props.instance.file;
-        else if (
+        if (
             this.sourceGame.game === Games.GAMES.MANHUNT &&
             this.targetGame.game === Games.GAMES.MANHUNT_2
         )
@@ -550,6 +540,16 @@ export default class Insert{
             this.targetGame.game === Games.GAMES.MANHUNT
         )
             targetFileName = "entity.inst";
+        else if (
+            this.sourceGame.game === Games.GAMES.MANHUNT &&
+            this.targetGame.game === Games.GAMES.MANHUNT
+        )
+            targetFileName = "entity.inst";
+        else if (
+            this.sourceGame.game === Games.GAMES.MANHUNT_2 &&
+            this.targetGame.game === Games.GAMES.MANHUNT_2
+        )
+            targetFileName = "entity_pc.inst";
 
 
 
@@ -559,9 +559,9 @@ export default class Insert{
         while(searchFreeSlot){
             let checkTargetInst = this.targetGame.findOneBy({
                 type: Studio.INST,
-                level: level,
+                level: this.targetLevel,
                 file: targetFileName,
-                name: targetInstData.name + i === -1 ? "" :  "_" + i
+                name: sourceInstData.name + (i === -1 ? "" :  "_" + i)
             });
 
             searchFreeSlot = checkTargetInst !== null;
@@ -585,24 +585,11 @@ export default class Insert{
             }
         );
 
-        result.level = level;
-        result.gameId = this.targetGame.gameId;
+        result.level = this.targetLevel;
         result.fileName = targetFileName.split(".")[0];
         result.file = targetFileName;
 
-        //We copy & paste a entry within the same game
-        if (this.sourceGame.gameId === this.targetGame.gameId){
-            //Reuse the source information
-            result.filePath = this.entityToCopy.props.instance.filePath;
-
-            if (this.sceneInfo.studioScene instanceof SceneMap) {
-                result.level = this.sceneInfo.studioScene.mapEntry.level;
-            }
-        }else{
-            console.warn('Copy across')
-        }
-
-        console.log(`[Insert] Create Instance ${targetInstData.name} in level ${level}.`);
+        console.log(`[Insert] Create Instance ${targetInstData.name} in level ${this.targetLevel}.`, result);
         this.targetGame.addToStorage(result);
 
         return result;

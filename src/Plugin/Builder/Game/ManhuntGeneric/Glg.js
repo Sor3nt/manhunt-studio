@@ -25,6 +25,12 @@ export default class Glg extends AbstractBuilder{
 
 
         let binary = new NBinary(new ArrayBuffer(1024 * 1024));
+        if (game.game === Games.GAMES.MANHUNT){
+
+            var enc = new TextEncoder();
+            let buffer = enc.encode("# Player Character2\n\n").buffer;
+            binary.append(new NBinary(buffer))
+        }
         glgEntries.forEach(function (glg) {
             binary.append(glg.props.getRawChunk());
         });

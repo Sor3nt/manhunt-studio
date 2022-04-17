@@ -50,8 +50,8 @@ export default class Storage{
     static findOneBy( criteria ){
         let results = Storage.findBy(criteria);
         if (results.length > 1){
-            console.error("We found more then one result!");
-            debugger;
+            console.error("We found more then one result!", results);
+            // debugger;
         }
 
         if (results.length === 0)

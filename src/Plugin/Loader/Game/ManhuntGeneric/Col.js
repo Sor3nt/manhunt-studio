@@ -12,7 +12,7 @@ export default class Col extends AbstractLoader{
      */
     static canHandle(binary){
         function isNormal(n){
-            return (n < 1.0 && n > 0.0) || n === -0;
+            return (n <= 1.0 && n >= 0.0) || n === -0;
         }
 
         if (binary.remain() <= 0) return false;

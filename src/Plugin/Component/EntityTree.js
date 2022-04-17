@@ -2,6 +2,8 @@ import AbstractComponent from "./Abstract.js";
 import Studio from "./../../Studio.js";
 
 export class TreeNode{
+    name = "treeNode";
+
     element = jQuery('<li>');
 
     /**

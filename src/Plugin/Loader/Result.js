@@ -60,12 +60,12 @@ export default class Result{
         };
     }
 
-    setFilePath(path){
+    setFilePath(_path){
         //in some cases the function is called twice, ignore it
         if (this.level !== '' && this.filePath !== '' && this.file !== '' && this.fileName !== '' )
             return;
 
-        path = path.replace("\\", "/"); //normalize
+        let path = _path.replace("\\", "/"); //normalize
 
         let parts = path.split("/");
         let file = parts[parts.length - 1];
