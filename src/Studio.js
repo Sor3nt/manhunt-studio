@@ -108,20 +108,26 @@ export default class Studio{
 
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                 if (studioScene instanceof SceneMap){
-                    let game = Games.getGame(studioScene.mapEntry.gameId);
-                    let level = studioScene.mapEntry.level;
-
-                    let files = [];
-
-                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'entity.inst'    : 'entity_pc.inst', binary: Inst.build(game, level, false)});
-                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'pak/modelspc.dff'   : 'modelspc.mdl', binary: Dff.build(game, level)});
-                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'pak/modelspc.txd'   : 'modelspc.tex', binary: Txd.build(game, level)});
-                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'entityTypeData.ini' : 'resource3.glg', binary: Glg.build(game, level)});
-                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'collisions.col' : 'collisions_pc.col', binary: Col.build(game, level)});
-                    // files.push({ name: game.game === Games.GAMES.MANHUNT ? 'mapAI.grf'      : 'mapai_pc.grf', binary: Grf.build(game, level)});
-
-                    Save.outputZip(files);
+                    Status.show("Prepare Files...");
                     Studio.menu.closeAll();
+
+                    window.setTimeout(function () {
+                        let game = Games.getGame(studioScene.mapEntry.gameId);
+                        let level = studioScene.mapEntry.level;
+
+                        let files = [];
+
+                        files.push({ name: game.game === Games.GAMES.MANHUNT ? 'entity.inst'    : 'entity_pc.inst', binary: Inst.build(game, level, false)});
+                        files.push({ name: game.game === Games.GAMES.MANHUNT ? 'pak/modelspc.dff'   : 'modelspc.mdl', binary: Dff.build(game, level)});
+                        files.push({ name: game.game === Games.GAMES.MANHUNT ? 'pak/modelspc.txd'   : 'modelspc.tex', binary: Txd.build(game, level)});
+                        files.push({ name: game.game === Games.GAMES.MANHUNT ? 'entityTypeData.ini' : 'resource3.glg', binary: Glg.build(game, level)});
+                        files.push({ name: game.game === Games.GAMES.MANHUNT ? 'collisions.col' : 'collisions_pc.col', binary: Col.build(game, level)});
+                        // files.push({ name: game.game === Games.GAMES.MANHUNT ? 'mapAI.grf'      : 'mapai_pc.grf', binary: Grf.build(game, level)});
+
+                        Save.outputZip(files);
+                        Status.hide();
+                    },100);
+
                 }
             }
         }));
@@ -313,7 +319,7 @@ export default class Studio{
                         sourceGame: Games.getGame(Studio.clipboard.entity.props.instance.gameId),
                         targetGame: Games.getGame(studioScene.mapEntry.gameId),
                         onPlaceCallback: function () {
-                            console.log("OK");
+
                         }
                     });
 

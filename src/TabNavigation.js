@@ -149,7 +149,6 @@ export default class TabNavigation{
         this.activeRelation = this.relation[name];
         this.activeRelation.tab.addClass('active');
         this.activeRelation.component.element.show();
-console.log("jjjj", this.activeRelation.component);
         if (this.activeRelation.component.onFocus !== undefined)
             this.activeRelation.component.onFocus();
 

@@ -117,8 +117,6 @@ export default class Insert{
         this.sourceGame = props.sourceGame;
         this.targetGame = props.targetGame;
         this.sourceLevel = props.sourceLevel;
-console.log("source", this.sourceGame);
-console.log("target", this.targetGame);
         this.sceneInfo.scene.add(this.getMesh());
 
         this.binding.mouseClick = this.onMouseClick.bind(this);
@@ -303,12 +301,6 @@ console.log("target", this.targetGame);
             level: this.sourceLevel,
             name: colName
         });
-
-        console.log(sourceCol);
-        console.log(this.sourceGame.findBy({
-            type: Studio.COLLISION,
-        }));
-
 
         let colNBinary = sourceCol.props.getRawChunk();
 

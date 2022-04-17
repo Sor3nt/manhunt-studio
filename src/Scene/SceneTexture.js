@@ -69,7 +69,6 @@ export default class SceneTexture extends SceneAbstract{
         mat.name = 'displayTexture';
         mat.map = texture.createThreeTexture();
 
-        console.log(entry, texture, mat.map);
 //
 //         if (texture.hasAlphaMap()){
 //             // mat.alphaMap = texture.createThreeTextureAlphaMap();

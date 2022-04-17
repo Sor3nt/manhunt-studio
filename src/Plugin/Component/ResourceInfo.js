@@ -315,8 +315,6 @@ export default class ResourceInfo extends AbstractComponent{
                     value: materialInfo
                 });
 
-                // console.log(normalizedModel, object);
-
                 break;
             case Studio.TEXTURE:
                 /**

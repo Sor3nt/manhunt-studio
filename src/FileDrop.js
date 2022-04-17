@@ -43,7 +43,7 @@ export default class FileDrop{
         try {
             return await new Promise((resolve, reject) => fileEntry.file(resolve, reject));
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 

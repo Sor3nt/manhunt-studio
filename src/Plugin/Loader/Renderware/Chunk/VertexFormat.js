@@ -343,7 +343,7 @@ die;
                 break;
             }
             default:
-                console.log("unknown data type");
+                console.error("unknown data type");
                 debugger;
                 break;
         }

@@ -70,7 +70,6 @@ export default class Glg extends AbstractLoader{
                     });
 
                     value = new Vector3(vec3[0],vec3[1],vec3[2]);
-                    console.log("ehh", value);
 
                 }else if (['MOVE_THRESHOLDS', 'AIM_LOCKON_ANGLES', 'EXECUTE_STAGE_TIMES', 'EXECUTE_STAGE_TIMES'].indexOf(attr) !== -1){
                     let vec2 = [];
@@ -234,7 +233,6 @@ export default class Glg extends AbstractLoader{
 
 
         });
-        console.log(results);
 
         return results;
     }

@@ -2,7 +2,7 @@ import {FileLoader} from "./Vendor/three.module.js";
 import NBinary from "./NBinary.js";
 
 export default class Api{
-    
+
     static loader = new FileLoader();
 
     static load(gameId, file, callback) {
@@ -11,7 +11,6 @@ export default class Api{
             gameId: gameId,
             file: file
         }, function (data) {
-            // console.log(file);
             callback(data);
         });
     }

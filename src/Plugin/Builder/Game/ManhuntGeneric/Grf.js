@@ -157,9 +157,6 @@ export default class Grf extends AbstractBuilder{
             areaLocation.props.id = currentId;
             currentId++;
         });
-
-
-        console.log("final", areaLocations);
     }
 
     /**
