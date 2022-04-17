@@ -1,5 +1,3 @@
-// import Api from "./Api.js";
-// import Games from "./Plugin/Games.js";
 
 export default class Config {
 
@@ -17,12 +15,11 @@ export default class Config {
         'ini',      // Manhunt 1 INI Files
         'pak',      // Manhunt 1 Container file
         'grf',      // Manhunt 1/2 Waypoints
-
+        'col',      // Manhunt 1/2 Model Collisions
     ];
 
     //it is disabled because of perforamcen issue in the current three version
     static outlineActiveObject = false;
 
     static debugLevel = 0;
-
 }

@@ -498,6 +498,12 @@ export default class Renderware{
         return header;
     }
 
+    static getRawChunk(binary){
+        let header = Renderware.parseHeader(binary);
+        binary.setCurrent( binary.current() - 12  );
+        return binary.consume(header.size + 12, 'nbinary');
+    }
+
     /**
      *
      * @param binary {NBinary}
@@ -548,7 +554,7 @@ export default class Renderware{
     }
 
     /**
-     * 
+     *
      * @param binary {NBinary}
      * @returns {[]}
      */

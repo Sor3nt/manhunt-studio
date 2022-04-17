@@ -4,6 +4,11 @@ import { Face3, Vector2, Vector3, Vector4, Color } from './Vendor/three.module.j
 export default class NBinary{
 
     /**
+     * @type {ArrayBuffer|null}
+     */
+    data = null;
+
+    /**
      *
      * @param data {ArrayBuffer}
      * @param options
@@ -11,9 +16,6 @@ export default class NBinary{
     constructor(data, options){
         this._current = 0;
 
-        /**
-         * @type {ArrayBuffer}
-         */
         this.data = data;
         this.options = options || {};
         if (this.remain() <= 4) return;

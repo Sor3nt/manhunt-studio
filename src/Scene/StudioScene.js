@@ -37,7 +37,7 @@ export default class StudioScene{
 
     /**
      *
-     * @param name {string}
+     * @param name {string|undefined}
      * @returns {StudioSceneInfo}
      */
     static getStudioSceneInfo (name) {

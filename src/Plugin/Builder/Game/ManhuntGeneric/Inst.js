@@ -28,7 +28,6 @@ export default class Inst extends AbstractBuilder{
             type: Studio.INST
         });
 
-        // append record count
         let binary = new NBinary(new ArrayBuffer(1024 * 1024));
 
         //set count

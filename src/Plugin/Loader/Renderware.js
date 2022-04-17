@@ -91,7 +91,14 @@ export default class RenderwareLoader extends AbstractLoader{
                                     binary.setCurrent(info.offset);
                                     let tree = Renderware.parse(binary);
                                     return new NormalizeModel(tree.rootData);
+                                },
 
+                                /**
+                                 * @return {NBinary}
+                                 */
+                                getRawChunk: function () {
+                                    binary.setCurrent(info.offset);
+                                    return Renderware.getRawChunk(binary);
                                 }
                             },
                             function(){
@@ -122,7 +129,16 @@ export default class RenderwareLoader extends AbstractLoader{
                                 info.name,
                                 binary,
                                 info.offset,
-                                {},
+                                {
+
+                                    /**
+                                     * @return {NBinary}
+                                     */
+                                    getRawChunk: function () {
+                                        binary.setCurrent(info.offset);
+                                        return Renderware.getRawChunk(binary);
+                                    }
+                                },
                                 function(){
                                     binary.setCurrent(info.offset);
 

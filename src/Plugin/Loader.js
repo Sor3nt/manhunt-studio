@@ -7,6 +7,7 @@ import { default as TextureManhuntGenericIfp } from "./Loader/Game/ManhuntGeneri
 import { default as TextureManhuntGenericInst } from "./Loader/Game/ManhuntGeneric/Inst.js";
 import { default as TextureManhuntGenericMls } from "./Loader/Game/ManhuntGeneric/Mls.js";
 import { default as TextureManhuntGenericTvp } from "./Loader/Game/ManhuntGeneric/Tvp.js";
+import { default as CollisionManhuntGeneric } from "./Loader/Game/ManhuntGeneric/Col.js";
 import { default as ModelManhunt2Pc } from "./Loader/Game/Manhunt2/Pc/Model.js";
 import { default as MapManhunt2Pc } from "./Loader/Game/Manhunt2/Pc/Map.js";
 import { default as PakManhunt } from "./Loader/Generic/PAK.js";
@@ -38,6 +39,7 @@ export default class Loader{
         Loader.registerPlugin(TextureManhuntGenericInst);
         Loader.registerPlugin(TextureManhuntGenericMls);
         Loader.registerPlugin(TextureManhuntGenericTvp);
+        Loader.registerPlugin(CollisionManhuntGeneric);
 
         /**
          * Manhunt 2 parser

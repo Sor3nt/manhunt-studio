@@ -95,6 +95,7 @@ export default class Entity{
             return false;
 
         this.mesh = MeshHelper.convertFromNormalized( this.model.props.normalize(), this.model );
+        this.model.mesh = this.mesh;
 
         let head = this.glgEntry.props.getValue('HEAD');
         if (head !== false){

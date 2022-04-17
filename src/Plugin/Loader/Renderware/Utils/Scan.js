@@ -221,67 +221,7 @@ export default class Scan{
         binary.setCurrent(0);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     scan(){
-//         let binary = this.binary;
-//         let data = new Uint8Array(binary.data);
-//         let pos = 0;
-//         let chunkOffsets = [];
-//
-//         let version = [255, 255, 3, 24];
-//
-//         binary.setCurrent(0);
-//         let chunkStart = null;
-//         let chunkStartId = null;
-//         while(pos < data.byteLength){
-//             if (
-//                 data[pos] === version[0] &&
-//                 data[pos + 1] === version[1] &&
-//                 data[pos + 2] === version[2] &&
-//                 data[pos + 3] === version[3]
-//             ){
-//                 //Go back to chunk start
-//                 binary.setCurrent(pos - 8);
-//                 let id = binary.consume(4, 'uint32');
-//                 binary.seek(-4);
-//
-//                 if (chunkStart !== null){
-//                     let chunkSize = binary.current() - chunkStart;
-//                     let chunk = {
-//                         id: chunkStartId,
-//                         offset: chunkStart,
-//                         size: chunkSize
-//                     };
-//                     chunkOffsets.push(chunk);
-//                 }
-//
-//                 chunkStart = binary.current();
-//                 chunkStartId = id;
-//
-//
-//             }
-//
-//             pos++;
-//         }
-//
-//
-// console.log(chunkOffsets);
-//         exit;
-
-
-
 
 
         if (this.options.scanForNewChunks === true)
@@ -299,39 +239,5 @@ export default class Scan{
     }
 
 
-    static findFloatBlock(binary, count){
-        if(binary.remain() === 0) return;
-
-        let current = binary.current();
-
-        let floats = [];
-        let valid = false;
-        while(binary.remain() > 4){
-            let test = binary.consume(4, 'float32');
-
-            if (
-                isNaN(test) ||
-                test < -500.0 ||
-                test > 500.0 ||
-                (test < 0.000000001 && test > 0)
-            ){
-                if (floats.length === count){
-                    return floats;
-                }else if (floats.length > count){
-                    console.log("We have to much values! Count " + floats.length);
-                    debugger;
-                }
-                valid = false;
-                floats = [];
-                continue;
-            }
-
-            valid = true;
-            floats.push(test);
-
-        }
-
-        binary.setCurrent(current);
-    }
 }
 

@@ -18,7 +18,11 @@ import Route from "./Waypoints/Route.js";
 import Result from "./Plugin/Loader/Result.js";
 import Waypoints from "./Waypoints.js";
 import Inst from "./Plugin/Builder/Game/ManhuntGeneric/Inst.js";
-import Entity from "./Entity.js";
+import Insert from "./Transfer/Insert.js";
+import Dff from "./Plugin/Builder/Game/Manhunt/Dff.js";
+import Glg from "./Plugin/Builder/Game/ManhuntGeneric/Glg.js";
+import Txd from "./Plugin/Builder/Game/Manhunt/Txd.js";
+import Col from "./Plugin/Builder/Game/ManhuntGeneric/Col.js";
 
 export default class Studio{
 
@@ -48,7 +52,12 @@ export default class Studio{
     static AREA_LOCATION = 13;
     static WAYPOINT_ROUTE = 14;
     static WAYPOINT_STOPPER = 15;
+    static COLLISION = 16;
 
+    /**
+     *
+     * @type {Result|null}
+     */
     static clipboard = null;
     static copyCount = 0;
 
@@ -91,42 +100,150 @@ export default class Studio{
         });
 
         catSave.addType(new ActionType({
-            id: 'save-waypoint',
-            label: 'mapAI.grf (Waypoint)',
+            id: 'save-all',
+            label: 'Save Level',
             // enabled: false,
             callback: function (states) {
 
                 let studioScene = StudioScene.getStudioSceneInfo().studioScene;
                 if (studioScene instanceof SceneMap){
-                    // console.log("ok");
                     let game = Games.getGame(studioScene.mapEntry.gameId);
                     let level = studioScene.mapEntry.level;
 
-                    let binary = Grf.build(game, level);
-                    Save.output(binary, 'mapAI.grf');
+                    let files = [];
+
+                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'entity.inst'    : 'entity_pc.inst', binary: Inst.build(game, level, false)});
+                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'pak/modelspc.dff'   : 'modelspc.mdl', binary: Dff.build(game, level)});
+                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'pak/modelspc.txd'   : 'modelspc.tex', binary: Txd.build(game, level)});
+                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'entityTypeData.ini' : 'resource3.glg', binary: Glg.build(game, level)});
+                    files.push({ name: game.game === Games.GAMES.MANHUNT ? 'collisions.col' : 'collisions_pc.col', binary: Col.build(game, level)});
+                    // files.push({ name: game.game === Games.GAMES.MANHUNT ? 'mapAI.grf'      : 'mapai_pc.grf', binary: Grf.build(game, level)});
+
+                    Save.outputZip(files);
                     Studio.menu.closeAll();
                 }
-
             }
         }));
 
-        catSave.addType(new ActionType({
-            id: 'save-entity',
-            label: 'entity.inst',
-            // enabled: false,
+        let catExport = new Category({
+            id: 'save-level',
+            label: 'Level',
             callback: function (states) {
+                catExport.clear();
 
-                let studioScene = StudioScene.getStudioSceneInfo().studioScene;
-                if (studioScene instanceof SceneMap){
-                    // console.log("ok");
-                    let game = Games.getGame(studioScene.mapEntry.gameId);
-                    let level = studioScene.mapEntry.level;
+                catExport.addType(new ActionType({
+                    id: 'save-waypoint',
+                    label: 'mapAI.grf (Waypoint)',
+                    // enabled: false,
+                    callback: function (states) {
 
-                    let binary = Inst.build(game, level, false);
-                    Save.output(binary, 'entity.inst');
-                    Studio.menu.closeAll();
-                }            }
-        }));
+                        let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                        if (studioScene instanceof SceneMap){
+                            let game = Games.getGame(studioScene.mapEntry.gameId);
+                            let level = studioScene.mapEntry.level;
+
+                            let binary = Grf.build(game, level);
+                            Save.output(binary, 'mapAI.grf');
+                            Studio.menu.closeAll();
+                        }
+
+                    }
+                }));
+
+                catExport.addType(new ActionType({
+                    id: 'save-entity',
+                    label: 'entity.inst',
+                    // enabled: false,
+                    callback: function (states) {
+
+                        let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                        if (studioScene instanceof SceneMap){
+                            let game = Games.getGame(studioScene.mapEntry.gameId);
+                            let level = studioScene.mapEntry.level;
+
+                            let binary = Inst.build(game, level, false);
+                            Save.output(binary, 'entity.inst');
+                            Studio.menu.closeAll();
+                        }            }
+                }));
+
+                catExport.addType(new ActionType({
+                    id: 'save-modelmh1',
+                    label: 'modelspc.dff',
+                    // enabled: false,
+                    callback: function (states) {
+
+                        let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                        if (studioScene instanceof SceneMap){
+                            let game = Games.getGame(studioScene.mapEntry.gameId);
+                            let level = studioScene.mapEntry.level;
+
+                            let binary = Dff.build(game, level);
+                            Save.output(binary, 'modelspc.dff');
+                            Studio.menu.closeAll();
+                        }
+                    }
+                }));
+
+                catExport.addType(new ActionType({
+                    id: 'save-glg',
+                    label: 'entityTypeData.ini',
+                    // enabled: false,
+                    callback: function (states) {
+
+                        let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                        if (studioScene instanceof SceneMap){
+                            let game = Games.getGame(studioScene.mapEntry.gameId);
+                            let level = studioScene.mapEntry.level;
+
+                            let binary = Glg.build(game, level);
+                            Save.output(binary, game.game === Games.GAMES.MANHUNT ? 'entityTypeData.ini' : 'resource3.glg');
+                            Studio.menu.closeAll();
+                        }
+                    }
+                }));
+
+                catExport.addType(new ActionType({
+                    id: 'save-txd',
+                    label: 'modelspc.txd',
+                    // enabled: false,
+                    callback: function (states) {
+
+                        let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                        if (studioScene instanceof SceneMap){
+                            let game = Games.getGame(studioScene.mapEntry.gameId);
+                            let level = studioScene.mapEntry.level;
+
+                            let binary = Txd.build(game, level);
+                            Save.output(binary, game.game === Games.GAMES.MANHUNT ? 'modelspc.txd' : 'modelspc.mdl');
+                            Studio.menu.closeAll();
+                        }
+                    }
+                }));
+                catExport.addType(new ActionType({
+                    id: 'save-col',
+                    label: 'collisions.col',
+                    // enabled: false,
+                    callback: function (states) {
+
+                        let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+                        if (studioScene instanceof SceneMap){
+                            let game = Games.getGame(studioScene.mapEntry.gameId);
+                            let level = studioScene.mapEntry.level;
+
+                            let binary = Col.build(game, level);
+                            Save.output(binary, game.game === Games.GAMES.MANHUNT ? 'collisions.col' : 'collisions_pc.col');
+                            Studio.menu.closeAll();
+                        }
+                    }
+                }));
+
+
+            }
+
+        });
+        catSave.addSubCategory(catExport);
+
 
         Studio.menu.addCategory(catSave);
 
@@ -161,7 +278,6 @@ export default class Studio{
                     }
 
                     Studio.clipboard = ogEntity;
-                    console.log();
                 }
             }
         }));
@@ -170,63 +286,31 @@ export default class Studio{
             id: 'edit-paste',
             label: 'Paste',
             enabled: false,
-            callback: function (states) {
-                let studioScene = StudioScene.getStudioSceneInfo().studioScene;
+            callback: function () {
+                let studioSceneInfo = StudioScene.getStudioSceneInfo();
+                let studioScene = studioSceneInfo.studioScene;
                 if (studioScene instanceof SceneMap){
-                    let game = Games.getGame(studioScene.mapEntry.gameId);
 
-
-                    let newInst = { ...Studio.clipboard.props.instance.data()};
-                    newInst.name += "_" + Studio.copyCount++;
-
-                    let instResult = new Result(
-                        Studio.INST,
-                        newInst.name,
-                        new ArrayBuffer(0),
-                        0,
-                        {
-                            glgRecord: newInst.glgRecord,
-                        },
-                        function(){
-                            return newInst;
+                    new Insert({
+                        sceneInfo: studioScene.sceneInfo,
+                        entityToCopy: Studio.clipboard,
+                        sourceGame: Games.getGame(Studio.clipboard.props.instance.gameId),
+                        targetGame: Games.getGame(studioScene.mapEntry.gameId),
+                        onPlaceCallback: function () {
+                            console.log("OK");
                         }
-                    );
+                    });
 
-                    instResult.file = Studio.clipboard.props.instance.file;
-                    instResult.fileName = Studio.clipboard.props.instance.fileName;
-                    instResult.filePath = Studio.clipboard.props.instance.filePath;
-                    instResult.level = Studio.clipboard.props.instance.level;
-                    instResult.gameId = studioScene.mapEntry.gameId;
+                    /**
+                     * @type {Walk}
+                     */
+                    let control = studioSceneInfo.control;
+                    if (control.mode !== 'fly')
+                        control.setMode('fly');
 
-                    game.addToStorage(instResult);
+                    document.body.requestPointerLock();
 
-                    let entity = new Entity(studioScene.mapEntry, instResult);
-                    let result = new Result(
-                        Studio.ENTITY,
-                        newInst.name,
-                        "",
-                        0,
-                        {
-                            className: newInst.entityClass
-                        },
-                        function(){
-                            return entity;
-                        }
-                    );
-                    result.level = studioScene.mapEntry.level;
-                    game.addToStorage(result);
-
-                    instResult.entity = entity;
-
-                    result.props.instance = entity.inst;
-                    result.props.glgEntry = entity.glgEntry;
-
-                    let mesh = result.data().getMesh();
-
-                    mesh.name = entity.name;
-                    mesh.userData.entity = result;
-                    result.mesh = mesh;
-                    studioScene.sceneInfo.scene.add(mesh);
+                    Studio.menu.closeAll();
 
                 }
             }

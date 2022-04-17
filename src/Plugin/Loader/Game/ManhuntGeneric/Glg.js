@@ -63,6 +63,71 @@ export default class Glg extends AbstractLoader{
         return options;
     }
 
+    static createResult(name, binary, options, force){
+        let result = new Result(
+            Studio.GLG,
+            name,
+            binary,
+            0,
+            {
+
+                /**
+                 * @return {NBinary}
+                 */
+                getRawChunk: function () {
+                    var enc = new TextEncoder();
+
+                    let data = "";
+                    options.forEach(function (option) {
+                        data += "    " + option.attr + (typeof option.value === "undefined" ? "" : " " + option.value) + "\n";
+                    });
+
+                    let record = `RECORD ${name}\n${data}END\n\n`;
+                    if (force)
+                        record = "#FORCE\n" + record;
+
+                    let buffer = enc.encode(record).buffer;
+                    return new NBinary(buffer);
+                },
+
+                getValue: function(attr){
+                    if (attr === "NAME") return name;
+
+                    var found = false;
+                    options.forEach(function (option) {
+                        if (option.attr === attr) found = typeof option.value === "undefined" ? true : option.value;
+                    });
+
+                    if (found === "") found = false;
+
+                    return found;
+                },
+                getValues: function(attr, index){
+                    if (attr === "NAME") return [name];
+
+                    var found = [];
+                    options.forEach(function (option) {
+                        if (option.attr === attr) found.push(option.value);
+                    });
+
+                    if (typeof index !== "undefined") return found[index];
+
+                    return found;
+                }
+            },
+            function(){
+                return options;
+            }
+        );
+
+        result.props.class = result.props.getValue('CLASS');
+        result.props.model = result.props.getValue('MODEL');
+        result.props.force = force;
+
+        return result;
+
+    }
+
     /**
      *
      * @param binary {NBinary}
@@ -71,14 +136,21 @@ export default class Glg extends AbstractLoader{
      */
     static list(binary, options){
 
+        if (
+            options.fileNamePath.indexOf('entityTypeData.ini') === -1 &&
+            options.fileNamePath.indexOf('resource3.glg') === -1
+        ) return [];
+
         let results = [];
 
         let text = binary.toString();
-        text = text.replace(/\#.*/g, '');
         var matches = text.match(/(\#FORCE\n)?RECORD\s(.*\s)*?END/mig);
-
+        // var matches = text.match(/(\#FORCE\n)?RECORD\s(.*\s)*?END/mig);
         matches.forEach(function (match) {
 
+            let force = match.indexOf('#FORCE') !== -1;
+
+            match = match.replace(/#.*/g, '').trim();
             match = match.replace(/\r/g, '');
             match = match.substr(7);
 
@@ -91,50 +163,13 @@ export default class Glg extends AbstractLoader{
 
             let options = Glg.parseRecord(optionsRaw, name);
 
-
-            let result = new Result(
-                Studio.GLG,
-                name,
-                binary,
-                0,
-                {
-                    getValue: function(attr){
-                        if (attr === "NAME") return name;
-
-                        var found = false;
-                        options.forEach(function (option) {
-                            if (option.attr === attr) found = typeof option.value === "undefined" ? true : option.value;
-                        });
-
-                        if (found === "") found = false;
-
-                        return found;
-                    },
-                    getValues: function(attr, index){
-                        if (attr === "NAME") return [name];
-
-                        var found = [];
-                        options.forEach(function (option) {
-                            if (option.attr === attr) found.push(option.value);
-                        });
-
-                        if (typeof index !== "undefined") return found[index];
-
-                        return found;
-                    }
-                },
-                function(){
-                    return options;
-                }
-            );
-
-            result.props.class = result.props.getValue('CLASS');
-            result.props.model = result.props.getValue('MODEL');
+            let result = Glg.createResult(name, binary, options, force);
 
             results.push(result);
 
 
         });
+        console.log(results);
 
         return results;
     }
