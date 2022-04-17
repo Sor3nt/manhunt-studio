@@ -127,7 +127,7 @@ underline">Current Features</h5>
                                         Play animations from Manhunt 1 and 2<i class="fas fa-check"></i>️
                                     </li>
                                     <li>
-                                        <b>Move</b>, <b>Rotate</b> and save any game objects <i class="fas fa-check"></i>️
+                                        <b>Copy</b>, <b>Paste</b>, <b>Move</b>, <b>Rotate</b> and save any game objects <i class="fas fa-check"></i>️
                                     </li>
 
                                 </ul>
@@ -142,6 +142,8 @@ underline">Supported Formats</h6>
 
                                     <ul style="color: #fff;font-size: 10px">
                                         <li>Manhunt Animation (.ifp/.bin)</li>
+                                        <li>Manhunt Collision (.col)</li>
+                                        <li>Manhunt Settings (.glg/.ini)</li>
                                         <li>Manhunt Container Format (.pak)</li>
                                         <li>Manhunt Instances (.inst)</li>
                                         <li>Manhunt Map (scene1.bsp)</li>
@@ -155,7 +157,8 @@ underline">Supported Formats</h6>
                                 <br />
                                 <h5 style="font-family: 'GF Ordner Inverted'; color:#fff; text-decoration:
 underline">Changelog</h5>
-                                <ul style="color: #fff; font-size: 10px">
+                                <ul style="color: #fff; font-size: 10px;max-height: 48px;overflow: scroll;">
+                                    <li><b>17-04-2022</b>: Copy / Paste feature (Manhunt 1)</li>
                                     <li><b>19-03-2022</b>: Waypoint Editor</li>
                                     <li><b>07-11-2021</b>: Animation player</li>
                                     <li><b>23-08-2021</b>: Manhunt 2 Support, Semantic Entity View, Speed modifier,<br/> Transparence fixes, navigation fixes and much more</li>
