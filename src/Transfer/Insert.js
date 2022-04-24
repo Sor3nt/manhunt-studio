@@ -193,7 +193,7 @@ export default class Insert{
             this.targetLevel = this.sceneInfo.studioScene.mapEntry.level;
 
             this.glg = this.getTargetGlg();
-            this.modelTexsCol = this.getTargetModelAndTextures();
+            this.modelTexsCol = this.getTargetModelAndTextures(this.glg);
 
             this.targetInst = this.getTargetInstance();
 
@@ -266,6 +266,31 @@ export default class Insert{
             });
 
 
+            let head = sourceGlg.props.getValue('HEAD');
+            if (head !== false){
+
+                let sourceHeadGlg = this.sourceGame.findOneBy({
+                    type: Studio.GLG,
+                    level: this.sourceLevel,
+                    name: head
+                });
+
+                if (sourceHeadGlg === null){
+                    console.error(`[INSERT] Unable to find Head GLG ${head} for Model ${sourceInstData.glgRecord}`);
+                }else {
+
+                    let glgNBinary = sourceHeadGlg.props.getRawChunk();
+
+                    let targetHead = Glg.createResult(sourceHeadGlg.name, glgNBinary, sourceHeadGlg.data(), false);
+                    targetHead.level = this.targetLevel;
+                    targetHead.gameId = this.targetGame.gameId;
+                    targetHead.file = sourceHeadGlg.file;
+                    targetHead.fileName = sourceHeadGlg.fileName;
+
+                    this.targetGame.addToStorage(targetHead);
+                }
+            }
+
             let glgNBinary = sourceGlg.props.getRawChunk();
 
             targetGlg = Glg.createResult(sourceGlg.name, glgNBinary, sourceGlg.data(), false);
@@ -281,9 +306,11 @@ export default class Insert{
     }
 
 
-    getTargetModelCollision(){
+    getTargetModelCollision(sourceGlg){
 
-        let colName = this.glg.props.getValue("COLLISION_DATA");
+        let colName = sourceGlg.props.getValue("COLLISION_DATA");
+        if (colName === false)
+            return false;
 
         let targetCol = this.targetGame.findOneBy({
             type: Studio.COLLISION,
@@ -301,6 +328,11 @@ export default class Insert{
             level: this.sourceLevel,
             name: colName
         });
+
+        if (sourceCol === null){
+            console.log(`[Insert] Source Collision ${colName} was not found ?!.`);
+            return;
+        }
 
         let colNBinary = sourceCol.props.getRawChunk();
 
@@ -432,18 +464,29 @@ export default class Insert{
         return targetMaterials;
     }
 
-    getTargetModelAndTextures(){
+    getTargetModelAndTextures(sourceGlg){
         let isSameGame = this.sourceGame.game === this.targetGame.game;
 
+        let sourceHead = sourceGlg.props.getValue('HEAD');
+        if (sourceHead !== false){
 
-        let modelName = this.glg.props.getValue("MODEL");
+            let sourceHeadGlg = this.sourceGame.findOneBy({
+                type: Studio.GLG,
+                level: this.sourceLevel,
+                name: sourceHead
+            });
+
+            this.getTargetModelAndTextures(sourceHeadGlg);
+        }
+
+
+        let modelName = sourceGlg.props.getValue("MODEL");
 
         let targetModel = this.targetGame.findOneBy({
             type: Studio.MODEL,
             level: this.targetLevel,
             name: modelName
         });
-
 
         let sourceModel = this.sourceGame.findOneBy({
             type: Studio.MODEL,
@@ -455,14 +498,11 @@ export default class Insert{
         if (targetModel === null){
             console.log(`[Insert] Copy Model ${modelName} to level ${this.targetLevel}.`);
 
-
-
             if (isSameGame === true){
 
                 let modelNBinary = sourceModel.props.getRawChunk();
 
                 let targetModel;
-
 
                 targetModel = new Result(
                     Studio.MODEL,
@@ -500,12 +540,15 @@ export default class Insert{
 
                 results.push(targetModel);
             }else{
-                console.error("Copy not supported for model ", sourceModel);
+                console.error("[Insert] Copy not supported for model ", sourceModel);
+                debugger;
             }
         }
 
+        let targetCol = this.getTargetModelCollision(sourceGlg);
+        if (targetCol !== false)
+            results.push(targetCol);
 
-        results.push(this.getTargetModelCollision());
         let targetTextures = this.getTargetModelTextures(sourceModel);
         targetTextures.forEach(function (targetTexture) {
             results.push(targetTexture);
@@ -517,9 +560,6 @@ export default class Insert{
     getTargetInstance(){
         let sourceInstData = this.entityToCopy.props.instance.data();
         let targetInstData = { ...sourceInstData};
-
-        let isSameGame = this.sourceGame.game === this.targetGame.game;
-
         let targetFileName = "";
 
         if (
