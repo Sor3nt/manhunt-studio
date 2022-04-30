@@ -17,14 +17,9 @@ export default class Texture extends AbstractLoader{
         let fourCCCheck = AbstractLoader.checkFourCC(binary,1413759828);
         if (fourCCCheck === false) return false;
 
-        if (binary.length() <= 196)
-            return false;
-
-        binary.seek(192);
-        console.log("cur", binary.current());
-        die;
-        //not DDS
-        return binary.consume(4, 'uint32') !== 542327876;
+        binary.seek(53);
+        let val = binary.consume(4, 'uint32');
+        return val !== 0;
     }
 
     /**

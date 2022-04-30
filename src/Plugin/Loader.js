@@ -44,7 +44,7 @@ export default class Loader{
         /**
          * Manhunt 2 parser
          */
-        // Loader.registerPlugin(TextureManhunt2Psp); //disabled, the detection clash with pc :(
+        Loader.registerPlugin(TextureManhunt2Psp); //disabled, the detection clash with pc :(
         Loader.registerPlugin(TextureManhunt2Pc);
         Loader.registerPlugin(TextureManhunt2Wii);
         Loader.registerPlugin(ModelManhunt2Pc);
@@ -77,6 +77,7 @@ export default class Loader{
                 continue;
             }
 
+            console.log(options, plugin);
             binary.setCurrent(current);
             return plugin.list(binary, options);
         }
