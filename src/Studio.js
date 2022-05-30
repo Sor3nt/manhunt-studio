@@ -246,6 +246,29 @@ export default class Studio{
                 }));
 
 
+                catExport.addType(new ActionType({
+                    id: 'save-export',
+                    label: 'export (testing)',
+                    // enabled: false,
+                    callback: function (states) {
+
+                        let exporter = new OBJExporter();
+                        const result = exporter.parse( StudioScene.getStudioSceneInfo().scene );
+
+                        let blob = new Blob( [ result ], { type: 'application/octet-stream' } );
+
+                        const link = document.createElement("a");
+                        link.href = URL.createObjectURL(blob);
+                        link.download = "export.obj";
+                        link.click();
+                        link.remove();
+
+                        console.log(result);
+                    }
+                }));
+
+
+
             }
 
         });
@@ -253,6 +276,7 @@ export default class Studio{
 
 
         Studio.menu.addCategory(catSave);
+
 
         /**
          * Edit
