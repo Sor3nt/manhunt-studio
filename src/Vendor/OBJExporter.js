@@ -5,7 +5,7 @@ import {
 	Vector3
 } from './three.module.js';
 
-class OBJExporter {
+export default class OBJExporter {
 
 	parse( object ) {
 
