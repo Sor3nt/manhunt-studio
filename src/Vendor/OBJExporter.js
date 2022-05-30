@@ -308,5 +308,3 @@ export default class OBJExporter {
 	}
 
 }
-
-export { OBJExporter };
