@@ -24,6 +24,7 @@ import Glg from "./Plugin/Builder/Game/ManhuntGeneric/Glg.js";
 import Txd from "./Plugin/Builder/Game/Manhunt/Txd.js";
 import Col from "./Plugin/Builder/Game/ManhuntGeneric/Col.js";
 import SceneModel from "./Scene/SceneModel.js";
+import OBJExporter from "./Vendor/OBJExporter.js"
 
 export default class Studio{
 
