@@ -12,13 +12,15 @@ export default class Col extends AbstractLoader{
      */
     static canHandle(binary){
         function isNormal(n){
-            return (n <= 1.0 && n >= 0.0) || n === -0;
+            return (n <= 1.0 && n >= 0.00001) || n === -0;
         }
 
         if (binary.remain() <= 0) return false;
 
         let count = binary.consume(4, 'int32');
         if (count === 1413759828) return false; // TCDT (PSP 0.01 txd)
+        if (count === 1129074000) return false; // PMLC (PSP 0.01 dff)
+
         if (count < 0) return false;
 
         binary.getString(0x00, true);
