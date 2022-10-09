@@ -19,7 +19,7 @@ export default class Menu{
 
         let _this = this;
         Mouse.onMouseClick(function (e) {
-            if(e.path.indexOf(_this.element.get(0)) === -1){
+            if(e.path !== undefined && e.path.indexOf(_this.element.get(0)) === -1){
                 _this.closeAll();
             }
         });
