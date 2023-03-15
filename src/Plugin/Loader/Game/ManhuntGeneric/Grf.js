@@ -22,6 +22,12 @@ export default class Grf extends AbstractLoader{
     static canHandle(binary){
         if (binary.remain() <= 0) return false;
 
+
+
+        binary.setCurrent(0);
+        let fourCC = binary.consume(4, 'string');
+        if (fourCC === "GNIA") return true;
+
         binary.setCurrent(8);
 
         let isZero = binary.consume(4, 'int32');
@@ -137,7 +143,7 @@ export default class Grf extends AbstractLoader{
      *
      * @param binary
      * @param entryCount
-     * @param game
+     * @param game {}
      * @returns {{name: string, groupIndex: int, position: {x:double,y:double,z:double}, radius: double, nodeName: string, relation: int[], waypoints: mix[]}[]}
      */
     static parseArea(binary, entryCount, game){
@@ -152,9 +158,15 @@ export default class Grf extends AbstractLoader{
                 groupIndex: binary.int32(),
                 position: (function () {
                     let position = binary.readVector3();
-                    let y = position.y;
-                    position.y = position.z;
-                    position.z = y * -1;
+
+                    if (game === Games.GAMES.MANHUNT_2){
+
+                    }else{
+                        let y = position.y;
+                        position.y = position.z;
+                        position.z = y * -1;
+                    }
+
                     return position;
                 })(),
                 radius: binary.float32(),
